@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AIP — Atelier Informatique Potvin | Réparation & Assistance Nicolet</title>
+  <meta name="description" content="AIP Atelier Informatique Potvin : réparation, installation, débogage de PC et assistance à distance à Nicolet. Service rapide et fiable." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <!-- Header -->
+  <header class="site-header" id="header">
+    <div class="container nav">
+      <a class="brand" href="#accueil">
+        <img class="brand-logo" src="assets/logo.png" alt="AIP Atelier Informatique Potvin" />
+        <span class="brand-text">Atelier Informatique Potvin</span>
+      </a>
+      <button class="nav-toggle" id="navToggle" aria-label="Menu">☰</button>
+      <nav class="nav-links" id="navLinks">
+        <a href="#services">Services</a>
+        <a href="#avis">Avis</a>
+        <a href="#realisations">Réalisations</a>
+        <a href="#tarifs">Tarifs</a>
+        <a href="#pourquoi">Pourquoi nous</a>
+        <a href="#contact">Contact</a>
+        <a href="#contact" class="btn btn-primary nav-cta">Nous joindre</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Hero -->
+  <section class="hero" id="accueil">
+    <div class="container hero-inner">
+      <div class="hero-copy">
+        <span class="eyebrow">Nicolet · Québec</span>
+        <h1>Votre informatique, <span class="accent">entre de bonnes mains</span>.</h1>
+        <p class="lead">Réparation, installation et débogage de PC, plus une assistance à distance quand vous en avez besoin. Service honnête, rapide et sans jargon inutile.</p>
+        <div class="hero-actions">
+          <a href="tel:8193802999" class="btn btn-primary">📞 Appeler maintenant</a>
+          <a href="#contact" class="btn btn-ghost">Demander une soumission</a>
+        </div>
+        <ul class="hero-points">
+          <li>✓ Dépanneur local à Nicolet</li>
+          <li>✓ Assistance à distance sécurisée</li>
+          <li>✓ Diagnostic transparent</li>
+          <li class="rating-inline">★ <strong>5.0</strong> sur Google · 7 avis</li>
+        </ul>
+      </div>
+      <div class="hero-art" aria-hidden="true">
+        <div class="glow"></div>
+        <div class="screen">
+          <img src="assets/reparation2.jpg" alt="" class="screen-img" />
+          <div class="scan"></div>
+          <div class="screen-badge"><span class="dot"></span> Diagnostic en cours…</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Services -->
+  <section class="section" id="services">
+    <div class="container">
+      <div class="section-head">
+        <span class="eyebrow">Ce qu'on fait</span>
+        <h2>On fait de tout, en informatique.</h2>
+        <p class="muted">Un seul interlocuteur pour tous vos problèmes de PC — du plus simple au plus tordu.</p>
+      </div>
+      <div class="cards">
+        <article class="card">
+          <img class="card-img" src="assets/reparation2.jpg" alt="Réparation de PC" />
+          <div class="card-ico">🛠️</div>
+          <h3>Réparation de PC</h3>
+          <p>Ordinateur lent, écran bleu, ne démarre plus ? On diagnostique et on répare — sans vous vendre ce dont vous n'avez pas besoin.</p>
+        </article>
+        <article class="card">
+          <img class="card-img" src="assets/installation.jpg" alt="Installation et configuration" />
+          <div class="card-ico">⚙️</div>
+          <h3>Installation & configuration</h3>
+          <p>Nouveau poste, Windows, imprimante, réseau Wi-Fi, sauvegarde : on installe et on configure proprement du premier coup.</p>
+        </article>
+        <article class="card">
+          <img class="card-img" src="assets/debug.jpg" alt="Débogage et virus" />
+          <div class="card-ico">🐞</div>
+          <h3>Débogage & virus</h3>
+          <p>Plantages, logiciels qui coincent, infections malware : on nettoie, on stabilise et on sécurise votre système.</p>
+        </article>
+        <article class="card">
+          <img class="card-img" src="assets/remote.jpg" alt="Assistance à distance" />
+          <div class="card-ico">🌐</div>
+          <h3>Assistance à distance</h3>
+          <p>Un problème rapide ? On vous prend la main à distance en toute sécurité — souvent résolu en quelques minutes, sans déplacement.</p>
+        </article>
+        <article class="card">
+          <img class="card-img" src="assets/web-dev.jpg" alt="Création de site web" />
+          <div class="card-ico">🖥️</div>
+          <h3>Création de site web</h3>
+          <p>Site vitrine ou institutionnel, rapide et professionnel. Hébergement, nom de domaine et référencement local inclus.</p>
+        </article>
+        <article class="card">
+          <img class="card-img" src="assets/app-dev.jpg" alt="Création d'applications" />
+          <div class="card-ico">📱</div>
+          <h3>Création d'applications</h3>
+          <p>Outils sur mesure, applications de gestion ou utilitaires. De l'idée au livrable fonctionnel, adapté à votre réalité.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- À propos -->
+  <section class="section" id="apropos">
+    <div class="container about">
+      <div class="about-photo">
+        <img src="assets/photo.jpg" alt="Patrick Potvin, Atelier Informatique Potvin" />
+      </div>
+      <div class="about-copy">
+        <span class="eyebrow">À propos</span>
+        <h2>Patrick Potvin, votre dépanneur à Nicolet.</h2>
+        <p class="muted">Après des années à dépanner des PC dans la région, j'ai fondé AIP pour offrir un service informatique honnête et accessible. Réparation, installation, débogage et assistance à distance — je m'occupe de tout, vous reprenez le contrôle.</p>
+        <p class="muted">Note de 5.0★ sur Google, basée sur 7 avis clients : c'est ça, l'engagement AIP.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Pourquoi -->
+  <section class="section section-alt" id="pourquoi">
+    <div class="container">
+      <div class="section-head">
+        <span class="eyebrow">Pourquoi AIP</span>
+        <h2>Simple, local et fiable.</h2>
+      </div>
+      <div class="features">
+        <div class="feature"><strong>Local</strong><span>Basé à Nicolet, on connaît le terrain et on répond vite.</span></div>
+        <div class="feature"><strong>Honnête</strong><span>Diagnostic clair, prix juste, pas de surprise à la facture.</span></div>
+        <div class="feature"><strong>Polyvalent</strong><span>De la réparation à la config réseau, on couvre tout.</span></div>
+        <div class="feature"><strong>À distance</strong><span>Assistance à distance pour les urgences, sans attendre.</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Témoignages -->
+  <section class="section" id="avis">
+    <div class="container">
+      <div class="section-head">
+        <span class="eyebrow">Ce que disent les clients</span>
+        <h2>5.0★ sur Google · 7 avis</h2>
+      </div>
+      <div class="cards">
+        <article class="card review">
+          <div class="stars">★★★★★</div>
+          <p>« J'ai jamais vu quelqu'un d'autant serviable et professionnel en informatique. »</p>
+          <span class="review-author">— Client Google</span>
+        </article>
+        <article class="card review">
+          <div class="stars">★★★★★</div>
+          <p>« Une approche très humaniste. On se sent écouté, pas juste dépanneur. »</p>
+          <span class="review-author">— Client Google</span>
+        </article>
+        <article class="card review">
+          <div class="stars">★★★★★</div>
+          <p>« Rapide, honnête et clair. Mon PC est reparti comme neuf sans me vendre d'extras. »</p>
+          <span class="review-author">— Client Google</span>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- Réparations récentes -->
+  <section class="section section-alt" id="realisations">
+    <div class="container">
+      <div class="section-head">
+        <span class="eyebrow">Réparations récentes</span>
+        <h2>Des problèmes qu'on règle tous les jours.</h2>
+      </div>
+      <div class="features">
+        <div class="feature"><strong>SSD installé</strong><span>Ordinateur passé de 4 à 30 secondes au démarrage.</span></div>
+        <div class="feature"><strong>Virus supprimé</strong><span>Nettoyage complet + sécurisation, sans perte de données.</span></div>
+        <div class="feature"><strong>PC accéléré</strong><span>Dépoussiérage, optimisation et mise à jour du système.</span></div>
+        <div class="feature"><strong>Transfert de données</strong><span>Vers un nouveau PC, sans perdre un seul fichier.</span></div>
+        <div class="feature"><strong>Écran bleu corrigé</strong><span>Diagnostic de la cause réelle, pas juste un redémarrage.</span></div>
+        <div class="feature"><strong>Wi-Fi rétabli</strong><span>Configuration réseau et imprimante remise en place.</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Tarifs -->
+  <section class="section" id="tarifs">
+    <div class="container">
+      <div class="section-head">
+        <span class="eyebrow">Tarifs transparents</span>
+        <h2>Un ordre de grandeur, sans surprise.</h2>
+        <p class="muted">Les prix exacts sont confirmés après diagnostic. Voici les bases.</p>
+      </div>
+      <div class="cards">
+        <article class="card price">
+          <h3>Diagnostic</h3>
+          <div class="price-amt">45 $</div>
+          <p class="muted small">Évaluation complète et soumission claire (gratuit si réparation effectuée).</p>
+        </article>
+        <article class="card price">
+          <h3>Assistance à distance</h3>
+          <div class="price-amt">50 $</div>
+          <p class="muted small">Par session (jusqu'à 45 min), problèmes courants résolus sans déplacement.</p>
+        </article>
+        <article class="card price">
+          <h3>Taux horaire</h3>
+          <div class="price-amt">65 $/h</div>
+          <p class="muted small">Réparation, optimisation et configuration en atelier ou à domicile.</p>
+        </article>
+        <article class="card price">
+          <h3>Site web vitrine</h3>
+          <div class="price-amt">Dès 850 $</div>
+          <p class="muted small">Devis sur mesure selon le nombre de pages et les fonctionnalités intégrées.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact -->
+  <section class="section" id="contact">
+    <div class="container contact">
+      <div class="contact-copy">
+        <span class="eyebrow">Contact</span>
+        <h2>Parlons de votre problème.</h2>
+        <p class="muted">Appelez directement ou écrivez — on revient vers vous rapidement.</p>
+        <ul class="contact-list">
+          <li><span>Téléphone</span><a href="tel:8193802999">819 380-2999</a></li>
+          <li><span>Courriel</span><a href="mailto:pot20pat@gmail.com">pot20pat@gmail.com</a></li>
+          <li><span>Adresse</span>462 Rue D. N. St Cyr, Nicolet, QC J3T 1H3</li>
+          <li><span>Avis Google</span><a href="https://www.google.com/search?q=AIP+Atelier+Informatique+Potvin+Nicolet" target="_blank" rel="noopener">5.0★ · 7 avis</a></li>
+        </ul>
+      </div>
+      <div class="contact-card">
+        <div class="contact-glow"></div>
+        <h3>Demande rapide</h3>
+        <p class="muted small">Laissez vos coordonnées, on vous rappelle.</p>
+        <form id="contactForm" action="mailto:pot20pat@gmail.com" method="post" enctype="text/plain">
+          <input type="text" name="nom" placeholder="Votre nom" required />
+          <input type="tel" name="tel" placeholder="Téléphone" required />
+          <textarea name="message" rows="4" placeholder="Décrivez votre problème…" required></textarea>
+          <button type="submit" class="btn btn-primary full">Envoyer la demande</button>
+        </form>
+        <p class="form-note">Ce formulaire ouvre votre client courriel pré-rempli (aucun serveur requis).</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <div class="brand">
+        <img class="brand-logo" src="assets/logo.png" alt="AIP Atelier Informatique Potvin" />
+        <span class="brand-text">Atelier Informatique Potvin</span>
+      </div>
+      <p class="muted small">© 2026 AIP — Atelier Informatique Potvin. 462 Rue D. N. St Cyr, Nicolet, Québec. Tous droits réservés.</p>
+      <nav class="footer-links">
+        <a href="#services">Services</a>
+        <a href="#contact">Contact</a>
+        <a href="tel:8193802999">819 380-2999</a>
+      </nav>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>

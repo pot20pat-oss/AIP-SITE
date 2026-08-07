@@ -1,0 +1,14 @@
+# OS / editor
+.vs/
+.idea/
+Thumbs.db
+Desktop.ini
+.DS_Store
+
+# Vendor
+node_modules/
+
+# Secrets / local
+.env
+secrets*
+*.pfx
