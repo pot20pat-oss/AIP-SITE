@@ -41,22 +41,39 @@
     });
   }
 
-  // Formulaire : envoi réel via POST + confirmation visuelle (pas de mailto)
+  // Formulaire : envoi en AJAX (fetch) vers le Worker, reste sur la page
   var form = document.getElementById('contactForm');
   if (form) {
     form.addEventListener('submit', function (e) {
-      // Laisse le navigateur faire le POST vers action= (Formspree/Worker).
-      // On affiche une confirmation après un court délai si toujours sur la page.
+      e.preventDefault(); // reste sur le site, pas de redirection vers le Worker
       var status = document.getElementById('formStatus');
       var btn = form.querySelector('button[type="submit"]');
-      if (status && btn) {
-        setTimeout(function () {
-          if (document.body.contains(form)) {
-            btn.disabled = true;
-            btn.textContent = 'Envoi en cours…';
-          }
-        }, 50);
-      }
+      if (btn) { btn.disabled = true; btn.textContent = 'Envoi en cours…'; }
+      if (status) { status.style.display = 'none'; }
+
+      var data = new FormData(form);
+      fetch(form.action, {
+        method: 'POST',
+        body: data,
+        headers: { 'Accept': 'application/json' }
+      })
+      .then(function () {
+        if (status) {
+          status.style.display = 'block';
+          status.style.color = '#34d399';
+          status.textContent = 'Merci ! On vous rappelle sous peu.';
+        }
+        form.reset();
+        if (btn) { btn.disabled = false; btn.textContent = 'Envoyer la demande'; }
+      })
+      .catch(function () {
+        if (status) {
+          status.style.display = 'block';
+          status.style.color = '#f87171';
+          status.textContent = 'Erreur d\'envoi. Réessayez ou écrivez à pot20pat@gmail.com';
+        }
+        if (btn) { btn.disabled = false; btn.textContent = 'Envoyer la demande'; }
+      });
     });
   }
 })();
