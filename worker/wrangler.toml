@@ -1,20 +1,15 @@
 name = "aip-contact"
-main = "worker/index.js"
+main = "index.js"
 compatibility_date = "2025-01-01"
 
-# KV namespace pour stocker les soumissions (crée avec: wrangler kv namespace create AIP_CONTACTS)
+# KV namespace pour stocker les soumissions
 [[kv_namespaces]]
 binding = "AIP_CONTACTS"
-id = "REPLACE_WITH_KV_ID"
+id = "6ac387156fa8456890f4ccf15017e95d"
 
-# Email Routing binding (optionnel) — nécessite ton domaine sur Cloudflare + Email Routing activé.
-# Si tu ne veux pas d'email auto, commente ce bloc ; le Worker stocke quand même dans KV.
-[send_email]
+# Email Routing binding (optionnel)
+# Nécessite : domaine sur Cloudflare + Email Routing activé + adresse source configurée.
+# Si tu ne veux pas d'email auto, commente ce bloc ; le worker stocke quand même dans KV.
+[[send_email]]
 name = "SEND_EMAIL"
 destination_address = "pot20pat@gmail.com"
-allowed_outgoing_addresses = ["pot20pat@gmail.com"]
-
-# Route sur ton domaine (remplace par ton domaine Cloudflare réel)
-routes = [
-  { pattern = "contact.atelierpotvin.ca", custom_domain = true }
-]
