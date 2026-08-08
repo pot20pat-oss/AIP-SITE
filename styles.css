@@ -135,6 +135,21 @@ a { color: inherit; text-decoration: none; }
 .feature strong { display: block; color: var(--accent-2); font-size: 17px; margin-bottom: 8px; }
 .feature span { color: var(--muted); font-size: 15px; }
 
+/* Case studies (AVANT / APRÈS) */
+.cases { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; }
+.case { background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius); padding: 24px; box-shadow: var(--shadow); }
+.case h3 { margin: 0 0 18px; font-size: 18px; color: var(--text); }
+.case-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; align-items: stretch; }
+.case-col { display: flex; flex-direction: column; gap: 4px; text-align: center; padding: 14px 10px; background: var(--bg-2); border: 1px solid var(--line); border-radius: 10px; }
+.case-label { font-size: 11px; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); }
+.case-val { font-size: 19px; font-weight: 800; color: var(--text); }
+.case-val.small { font-size: 13px; font-weight: 600; line-height: 1.35; }
+.case-val.good { color: #34d399; }
+.case-sub { font-size: 12px; color: var(--muted); }
+
+@media (max-width: 900px) { .cases { grid-template-columns: 1fr; } }
+
+
 /* Contact */
 .contact { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: start; }
 .contact h2 { font-size: clamp(26px, 3.5vw, 38px); font-weight: 800; margin: 0 0 12px; }

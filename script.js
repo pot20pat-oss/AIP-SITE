@@ -41,14 +41,22 @@
     });
   }
 
-  // Formulaire : feedback visuel (le vrai envoi se fait via mailto)
+  // Formulaire : envoi réel via POST + confirmation visuelle (pas de mailto)
   var form = document.getElementById('contactForm');
   if (form) {
-    form.addEventListener('submit', function () {
-      setTimeout(function () {
-        var btn = form.querySelector('button[type="submit"]');
-        if (btn) { btn.textContent = 'Ouverture de votre courriel…'; }
-      }, 100);
+    form.addEventListener('submit', function (e) {
+      // Laisse le navigateur faire le POST vers action= (Formspree/Worker).
+      // On affiche une confirmation après un court délai si toujours sur la page.
+      var status = document.getElementById('formStatus');
+      var btn = form.querySelector('button[type="submit"]');
+      if (status && btn) {
+        setTimeout(function () {
+          if (document.body.contains(form)) {
+            btn.disabled = true;
+            btn.textContent = 'Envoi en cours…';
+          }
+        }, 50);
+      }
     });
   }
 })();

@@ -216,20 +216,49 @@
     </div>
   </section>
 
-  <!-- Réparations récentes -->
+  <!-- Études de cas (AVANT / APRÈS) -->
   <section class="section section-alt" id="realisations">
     <div class="container">
       <div class="section-head">
-        <span class="eyebrow">Réparations récentes</span>
-        <h2>Des problèmes qu'on règle tous les jours.</h2>
-        <p class="muted">Exemples d'interventions typiques réalisées à l'atelier.</p>
+        <span class="eyebrow">Résultats mesurables</span>
+        <h2>Ce qu'on règle, en chiffres.</h2>
+        <p class="muted">Pas de promesse vague. Voici des interventions réelles avec leur impact mesuré.</p>
       </div>
+      <div class="cases">
+        <article class="case">
+          <h3>SSD installé — PC HP</h3>
+          <div class="case-grid">
+            <div class="case-col"><span class="case-label">Avant</span><span class="case-val">4 min 03 s</span><span class="case-sub">démarrage complet</span></div>
+            <div class="case-col"><span class="case-label">Intervention</span><span class="case-val small">Diagnostic + HDD → SSD + migration</span></div>
+            <div class="case-col"><span class="case-label">Après</span><span class="case-val good">30 s</span><span class="case-sub">~87 % plus rapide</span></div>
+          </div>
+        </article>
+        <article class="case">
+          <h3>Virus éliminé — PC familial</h3>
+          <div class="case-grid">
+            <div class="case-col"><span class="case-label">Avant</span><span class="case-val">Inutilisable</span><span class="case-sub">pop-ups, lenteur, risque vol données</span></div>
+            <div class="case-col"><span class="case-label">Intervention</span><span class="case-val small">Nettoyage complet + sécurisation</span></div>
+            <div class="case-col"><span class="case-label">Après</span><span class="case-val good">0 perte</span><span class="case-sub">données sauves, système propre</span></div>
+          </div>
+        </article>
+        <article class="case">
+          <h3>Écran bleu corrigé</h3>
+          <div class="case-grid">
+            <div class="case-col"><span class="case-label">Avant</span><span class="case-val">2-3 crash/jour</span><span class="case-sub">impossible à utiliser</span></div>
+            <div class="case-col"><span class="case-label">Intervention</span><span class="case-val small">Cause réelle trouvée (pilote), pas redémarrage</span></div>
+            <div class="case-col"><span class="case-label">Après</span><span class="case-val good">0 crash</span><span class="case-sub">stable depuis</span></div>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- Réparations récentes -->
+  <section class="section section-alt" id="realisations-list" style="padding-top:0;">
+    <div class="container">
       <div class="features">
-        <div class="feature"><strong>SSD installé</strong><span>PC HP : démarrage passé de 4 min à 30 s après remplacement du disque.</span></div>
-        <div class="feature"><strong>Virus supprimé</strong><span>Nettoyage complet + sécurisation, sans perte de données.</span></div>
-        <div class="feature"><strong>PC accéléré</strong><span>Dépoussiérage, optimisation et mise à jour du système.</span></div>
         <div class="feature"><strong>Transfert de données</strong><span>Migration complète vers un nouveau PC, sans perdre un fichier.</span></div>
-        <div class="feature"><strong>Écran bleu corrigé</strong><span>Diagnostic de la cause réelle, pas juste un redémarrage.</span></div>
+        <div class="feature"><strong>PC accéléré</strong><span>Dépoussiérage, optimisation et mise à jour du système.</span></div>
         <div class="feature"><strong>Wi-Fi rétabli</strong><span>Configuration réseau et imprimante remise en place.</span></div>
       </div>
     </div>
@@ -336,13 +365,14 @@
         <div class="contact-glow"></div>
         <h3>Demande rapide</h3>
         <p class="muted small">Laissez vos coordonnées, on vous rappelle.</p>
-        <form id="contactForm" action="mailto:pot20pat@gmail.com" method="post" enctype="text/plain">
+        <form id="contactForm" action="https://contact.atelierpotvin.ca" method="POST">
           <input type="text" name="nom" placeholder="Votre nom" required />
           <input type="tel" name="tel" placeholder="Téléphone" required />
           <textarea name="message" rows="4" placeholder="Décrivez votre problème…" required></textarea>
           <button type="submit" class="btn btn-primary full">Envoyer la demande</button>
+          <p id="formStatus" class="form-note" style="display:none;color:#34d399;"></p>
         </form>
-        <p class="form-note">Le bouton ouvre votre client courriel pré-rempli. Si rien ne s'ouvre (mobile sans app mail), écrivez directement à <a href="mailto:pot20pat@gmail.com">pot20pat@gmail.com</a> ou appelez au <a href="tel:8193802999">819 380-2999</a>.</p>
+        <p class="form-note">Ou écrivez directement à <a href="mailto:pot20pat@gmail.com">pot20pat@gmail.com</a> / appelez au <a href="tel:8193802999">819 380-2999</a>.</p>
       </div>
     </div>
   </section>
