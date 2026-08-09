@@ -61,7 +61,7 @@ export default {
       const body = `Nouvelle demande AIP\n\nDe : ${nom}\nTél : ${tel}\n\n${message}\n\n(${ts})`;
       ctx.waitUntil(env.SEND_EMAIL.send({
         from: 'contact@atelierpotvin.ca',
-        to: 'pot20pat@gmail.com',
+        to: 'contact@atelierpotvin.ca',
         subject: `Demande AIP — ${nom}`,
         body,
       }).catch(() => {}));

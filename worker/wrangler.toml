@@ -12,4 +12,4 @@ id = "6ac387156fa8456890f4ccf15017e95d"
 # Si tu ne veux pas d'email auto, commente ce bloc ; le worker stocke quand même dans KV.
 [[send_email]]
 name = "SEND_EMAIL"
-destination_address = "pot20pat@gmail.com"
+destination_address = "contact@atelierpotvin.ca"
