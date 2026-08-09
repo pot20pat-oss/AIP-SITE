@@ -5,7 +5,7 @@
   --panel-2: #23263400;
   --line: #2a2d3c;
   --text: #eef0f6;
-  --muted: #9aa0b4;
+  --muted: #b4b9cc;
   --accent: #6366f1;
   --accent-2: #818cf8;
   --accent-soft: rgba(99, 102, 241, 0.14);
@@ -127,7 +127,7 @@ a { color: inherit; text-decoration: none; }
 .section-alt { background: linear-gradient(180deg, transparent, rgba(99,102,241,.05), transparent); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
 .section-head { text-align: center; max-width: 640px; margin: 0 auto 48px; }
 .section-head h2 { font-size: clamp(26px, 3.5vw, 38px); font-weight: 800; margin: 0 0 12px; letter-spacing: -0.02em; }
-.muted { color: var(--muted); }
+.muted { color: var(--muted); text-shadow: 0 1px 2px rgba(0,0,0,.35); }
 .small { font-size: 14px; }
 
 /* Cards */
