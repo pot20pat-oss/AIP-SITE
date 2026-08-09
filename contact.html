@@ -77,7 +77,18 @@
         <form id="contactForm" action="https://aip-contact.pot20pat.workers.dev" method="POST">
           <input type="text" name="nom" placeholder="Votre nom" required />
           <input type="tel" name="tel" placeholder="Téléphone" required />
+          <input type="email" name="email" placeholder="Courriel (facultatif)" />
+          <select name="type" required>
+            <option value="" disabled selected>Type de problème…</option>
+            <option value="lent">Ordinateur lent</option>
+            <option value="virus">Virus / écran bleu</option>
+            <option value="wifi">Wi-Fi / réseau</option>
+            <option value="imprimante">Imprimante</option>
+            <option value="installation">Installation</option>
+            <option value="autre">Autre</option>
+          </select>
           <textarea name="message" rows="4" placeholder="Décrivez votre problème…" required></textarea>
+          <label class="consent"><input type="checkbox" name="consentement" required /> J'accepte d'être recontacté au sujet de ma demande.</label>
           <button type="submit" class="btn btn-primary full">Envoyer la demande</button>
           <p id="formStatus" class="form-note" style="display:none;color:#34d399;"></p>
         </form>

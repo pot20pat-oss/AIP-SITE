@@ -182,6 +182,13 @@ a { color: inherit; text-decoration: none; }
   padding: 13px 14px; color: var(--text); font: inherit; font-size: 15px; resize: vertical;
 }
 #contactForm input:focus, #contactForm textarea:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); }
+#contactForm select {
+  width: 100%; background: #fff; border: 1px solid var(--line); border-radius: 10px;
+  padding: 13px 14px; color: var(--text); font: inherit; font-size: 15px; cursor: pointer;
+}
+#contactForm select:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); }
+.consent { display: flex; align-items: flex-start; gap: 8px; font-size: 13px; color: var(--muted); margin-top: 2px; }
+.consent input { margin-top: 2px; accent-color: var(--accent); }
 .form-note { font-size: 12px; color: var(--muted); margin: 4px 0 0; }
 
 /* Map (OpenStreetMap embed, no API key) */
