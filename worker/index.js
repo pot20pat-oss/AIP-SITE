@@ -44,9 +44,16 @@ export default {
     const id = ts + '-' + Math.random().toString(36).slice(2, 8);
     const record = { id, ts, nom, tel, message };
 
-    // Store in KV (always)
+    // Store in KV (always) — await to guarantee write before responding
     if (env.AIP_CONTACTS) {
-      ctx.waitUntil(env.AIP_CONTACTS.put(id, JSON.stringify(record)));
+      try {
+        await env.AIP_CONTACTS.put(id, JSON.stringify(record));
+      } catch (e) {
+        // non-fatal for the user, but log it
+        console.error('KV put failed', e);
+      }
+    } else {
+      console.error('AIP_CONTACTS binding missing');
     }
 
     // Forward by email if Email Routing is bound
