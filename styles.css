@@ -21,9 +21,9 @@ body {
   margin: 0;
   font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
   background:
-    radial-gradient(55% 45% at 12% 5%, rgba(37,99,235,.10), transparent 60%),
-    radial-gradient(45% 45% at 88% 12%, rgba(124,58,237,.08), transparent 60%),
-    radial-gradient(60% 55% at 50% 100%, rgba(37,99,235,.07), transparent 60%),
+    radial-gradient(55% 45% at 12% 5%, rgba(37,99,235,.18), transparent 60%),
+    radial-gradient(45% 45% at 88% 12%, rgba(124,58,237,.14), transparent 60%),
+    radial-gradient(60% 55% at 50% 100%, rgba(37,99,235,.15), transparent 60%),
     var(--bg);
   background-attachment: fixed;
   color: var(--text);
@@ -83,12 +83,12 @@ a { color: inherit; text-decoration: none; }
 .hero { padding: 80px 0 70px; position: relative; overflow: hidden; }
 .hero::before {
   content: ""; position: absolute; inset: 0; z-index: 0;
-  background: url('assets/hero-tech.jpg') center/cover no-repeat;
-  opacity: 0.18; filter: brightness(1) contrast(1.02) saturate(1.05);
+  background: url('assets/bg-mesh.png') center/cover no-repeat;
+  opacity: 0.55;
 }
 .hero::after {
   content: ""; position: absolute; inset: 0; z-index: 0;
-  background: linear-gradient(90deg, rgba(248,250,252,0.92) 0%, rgba(248,250,252,0.70) 50%, rgba(248,250,252,0.55) 100%);
+  background: linear-gradient(90deg, rgba(248,250,252,0.80) 0%, rgba(248,250,252,0.55) 50%, rgba(248,250,252,0.40) 100%);
 }
 .hero-inner { display: grid; grid-template-columns: 1.05fr 0.95fr; gap: 48px; align-items: center; position: relative; z-index: 1; }
 .eyebrow { display: inline-block; font-size: 13px; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; color: var(--accent); margin-bottom: 14px; }
