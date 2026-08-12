@@ -29,6 +29,7 @@ body {
   color: var(--text);
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
 }
 /* Grain texture très discret (noise SVG inline) */
 body::before {
@@ -228,6 +229,7 @@ a { color: inherit; text-decoration: none; }
 /* Responsive */
 @media (max-width: 900px) {
   .cards, .features { grid-template-columns: repeat(2, 1fr); }
+  .cards.creation-grid, .portfolio-grid { grid-template-columns: 1fr; }
   .hero-inner, .contact { grid-template-columns: 1fr; }
   .hero-art { order: -1; }
 }
