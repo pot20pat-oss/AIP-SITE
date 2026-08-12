@@ -239,10 +239,16 @@ a { color: inherit; text-decoration: none; }
   .nav-links a { padding: 12px 0; }
   .nav-toggle { display: block; }
   .cards, .features, .cases { grid-template-columns: 1fr; }
+  .cards.creation-grid { grid-template-columns: 1fr; }
+  .portfolio-grid { grid-template-columns: 1fr; }
   .hero { padding: 56px 0 40px; }
+  .hero-art { display: none; }
+  .hero-points li { font-size: 15px; }
   .case { width: 100%; max-width: 100%; box-sizing: border-box; }
   .case-grid { grid-template-columns: 1fr; }
   .case-col { text-align: left; }
+  .section { padding: 54px 0; }
+  .container { padding: 0 18px; }
 }
 
 /* Bouton flottant mobile (CTA collant) */
