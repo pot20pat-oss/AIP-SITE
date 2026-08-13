@@ -47,96 +47,22 @@
     }
   }
   </script>
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "FAQPage",
-    "mainEntity": [
-      {
-        "@type": "Question",
-        "name": "Combien coûte une réparation d'ordinateur à Nicolet ?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "Le diagnostic est à 45 $ (gratuit si réparation effectuée). Le dépannage à distance est à 50 $ la session (≤45 min), et le taux horaire en atelier ou à domicile est de 65 $/h. Aucune surprise : on vous confirme le coût avant de commencer."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "Faites-vous le dépannage à domicile à Trois-Rivières ?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "Oui. On se déplace à Nicolet, Trois-Rivières et Bécancour dans un rayon de 50 km. L'assistance à distance (outil X-Remote) couvre aussi les problèmes rapides sans déplacement."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "Comment fonctionne l'assistance à distance ?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "On vous prend la main sur votre ordinateur via une connexion chiffrée (outil maison X-Remote), sans laisser de logiciel installé après la session. Souvent résolu en quelques minutes, sans que vous quittiez votre domicile."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "Quels sont vos délais d'intervention ?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "Pour le dépannage à distance : souvent le même jour, en quelques minutes. En atelier : la plupart des réparations sont faites en 24 à 48 h. À domicile : selon votre disponibilité et la distance (rayon 50 km de Nicolet)."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "Est-ce que mes données sont en sécurité ?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "Oui. Vos fichiers restent sur votre poste ou sont manipulés localement. L'assistance à distance est chiffrée et ne laisse aucun logiciel résiduel. On ne partage jamais vos données avec un tiers."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "Y a-t-il une garantie sur les réparations ?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "Oui. Le travail effectué est garanti : si le même problème réapparaît dans les 30 jours suite à notre intervention, on le règle sans frais supplémentaires."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "Vous développez aussi des sites web et des applications ?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "Oui. En plus du dépannage, on conçoit des sites web vitrines (dès 1500 $) et des applications sur mesure en .NET/C#. Nos outils maison (X-Remote, X-IT PDF) sont aussi disponibles. Tout est conçu et déployé en local par le même technicien."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "Faites-vous la récupération de données et les sauvegardes ?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "Oui. Récupération après suppression, disque défaillant ou mauvaise manipulation, ainsi que mise en place d'une sauvegarde automatique pour éviter de tout perdre. On vous explique comment vérifier que ça fonctionne."
-        }
-      }
-    ]
-  }
-  </script>
 </head>
 <body>
   <!-- Header -->
   <header class="site-header" id="header">
     <div class="container nav">
-      <a class="brand" href="#accueil">
+      <a class="brand" href="index.html">
         <img class="brand-logo" src="assets/logo.png" alt="AIP Atelier Informatique Potvin" />
         <span class="brand-text">Atelier Informatique Potvin</span>
       </a>
       <button class="nav-toggle" id="navToggle" aria-label="Menu" aria-expanded="false" aria-controls="navLinks">☰</button>
       <nav class="nav-links" id="navLinks">
-        <a href="#services">Services</a>
-        <a href="#avis">Avis</a>
-        <a href="#realisations">Réalisations</a>
-        <a href="#creation">Création &amp; Apps</a>
-        <a href="#tech">Technologie</a>
+        <a href="index.html">Accueil</a>
+        <a href="services.html">Services</a>
+        <a href="apropos.html">À propos</a>
+        <a href="faq.html">FAQ</a>
         <a href="tarifs.html">Tarifs</a>
-        <a href="#pourquoi">Pourquoi nous</a>
         <a href="contact.html">Contact</a>
         <a href="contact.html" class="btn btn-primary nav-cta">Nous joindre</a>
       </nav>
@@ -152,7 +78,7 @@
         <p class="lead">Réparation, installation et débogage de PC, plus une assistance à distance quand vous en avez besoin. On construit aussi vos <strong>applications</strong> et vos <strong>sites web</strong> sur mesure — du dépannage à la création, tout sous un même toit. 40 ans d'expérience, service honnête, rapide et sans jargon inutile. On se déplace à Nicolet, Trois-Rivières et Bécancour (rayon 50 km).</p>
         <div class="hero-actions">
           <a href="tel:8193802999" class="btn btn-primary">📞 Appeler maintenant</a>
-          <a href="#contact" class="btn btn-ghost">Demander une soumission</a>
+          <a href="contact.html" class="btn btn-ghost">Demander une soumission</a>
         </div>
         <ul class="hero-points">
           <li>✓ Service informatique local à Nicolet</li>
@@ -174,409 +100,45 @@
     </div>
   </section>
 
-  <!-- Services -->
-  <section class="section" id="services">
+  <!-- Explorer nos pages -->
+  <section class="section section-alt" id="explorer">
     <div class="container">
       <div class="section-head">
-        <span class="eyebrow">Ce qu'on fait</span>
-        <h2>Réparation, configuration et accompagnement informatique — sans jargon.</h2>
-        <p class="muted">Un seul interlocuteur pour vos problèmes de PC — du plus simple au plus tordu.</p>
+        <span class="eyebrow">Naviguez par section</span>
+        <h2>Tout ce qu'on offre, en pages claires.</h2>
+        <p class="muted">Moins de défilement, plus de réponses. Choisissez votre sujet.</p>
       </div>
       <div class="cards">
-        <article class="card">
-          <img class="card-img" src="assets/repair-workstation.jpg" alt="Réparation et dépannage PC" loading="lazy" width="72" height="72" />
+        <a class="card" href="services.html">
           <div class="card-ico">🛠️</div>
-          <h3>Réparation et dépannage PC</h3>
-          <p>Ordinateur lent, écran bleu, ne démarre plus ? On diagnostique et on répare — sans vous vendre ce dont vous n'avez pas besoin.</p>
-        </article>
-        <article class="card">
-          <img class="card-img" src="assets/installation.jpg" alt="Installation et configuration" loading="lazy" width="72" height="72" />
-          <div class="card-ico">⚙️</div>
-          <h3>Installation & configuration</h3>
-          <p>Nouveau poste, Windows, imprimante, réseau Wi-Fi, sauvegarde : on installe et on configure proprement du premier coup.</p>
-        </article>
-        <article class="card">
-          <img class="card-img" src="assets/security-workstation.jpg" alt="Virus, lenteurs et écrans bleus" loading="lazy" width="72" height="72" />
+          <h3>Services</h3>
+          <p>Réparation, virus, assistance à distance, réseau, sauvegardes et création d'apps/sites.</p>
+        </a>
+        <a class="card" href="apropos.html">
+          <div class="card-ico">👤</div>
+          <h3>À propos</h3>
+          <p>Patrick Potvin, 40 ans d'expérience, avis clients et notre approche écoresponsable.</p>
+        </a>
+        <a class="card" href="faq.html">
+          <div class="card-ico">❓</div>
+          <h3>FAQ</h3>
+          <p>Prix, délais, garantie, confidentialité et création de sites web — réponses claires.</p>
+        </a>
+        <a class="card" href="tarifs.html">
+          <div class="card-ico">💲</div>
+          <h3>Tarifs</h3>
+          <p>Diagnostic, dépannage à distance, taux horaire et forfaits sites web.</p>
+        </a>
+        <a class="card" href="depannage-nicolet.html">
+          <div class="card-ico">🔧</div>
+          <h3>Dépannage Nicolet</h3>
+          <p>Page dédiée au dépannage informatique à Nicolet et environs.</p>
+        </a>
+        <a class="card" href="virus.html">
           <div class="card-ico">🐞</div>
-          <h3>Virus, lenteurs et écrans bleus</h3>
-          <p>Plantages, logiciels qui coincent, infections malware : on nettoie, on stabilise et on sécurise votre système.</p>
-        </article>
-        <article class="card">
-          <img class="card-img" src="assets/remote-monitoring.jpg" alt="Assistance à distance" loading="lazy" width="72" height="72" />
-          <div class="card-ico">🌐</div>
-          <h3>Assistance à distance</h3>
-          <p>Un problème rapide ? On vous prend la main à distance, sans laisser de logiciel installé après la session. Souvent résolu en quelques minutes, sans déplacement.</p>
-        </article>
-        <article class="card">
-          <img class="card-img" src="assets/network-backup.jpg" alt="Réseau et sauvegardes" loading="lazy" width="120" height="120" />
-          <div class="card-ico">📶</div>
-          <h3>Réseau & sauvegardes</h3>
-          <p>Configuration WiFi, imprimante et partage. Sauvegarde automatique de vos données pour ne jamais tout perdre.</p>
-        </article>
-        <article class="card">
-          <img class="card-img" src="assets/web-dev-workstation.jpg" alt="Sites web et applications sur mesure" loading="lazy" width="72" height="72" />
-          <div class="card-ico">🖥️</div>
-          <h3>Sites web et applications sur mesure</h3>
-          <p>Site vitrine ou institutionnel, application de gestion : rapide et professionnel. Hébergement et nom de domaine configurés, avec bases de référencement local.</p>
-        </article>
-        <article class="card">
-          <img class="card-img" src="assets/formation.jpg" alt="Formation et accompagnement" loading="lazy" width="72" height="72" />
-          <div class="card-ico">🎓</div>
-          <h3>Formation & accompagnement</h3>
-          <p>30 minutes de formation anti-stress pour prendre en main votre PC en confiance. Patience et pédagogie, sans jargon.</p>
-        </article>
-      </div>
-      <div class="container" style="margin-top: 36px; text-align: center;">
-        <p class="muted small">Pages de service dédiées :</p>
-        <p style="display: flex; gap: 14px; justify-content: center; flex-wrap: wrap;">
-          <a href="depannage-nicolet.html" class="btn btn-ghost">Dépannage informatique Nicolet</a>
-          <a href="virus.html" class="btn btn-ghost">Suppression de virus</a>
-          <a href="tarifs.html" class="btn btn-ghost">Tarifs</a>
-        </p>
-      </div>
-    </div>
-  </section>
-
-  <!-- À propos -->
-  <section class="section" id="apropos">
-    <div class="container about">
-      <div class="about-photo">
-        <img src="assets/photo.jpg" alt="Patrick Potvin, Atelier Informatique Potvin" />
-      </div>
-      <div class="about-copy">
-        <span class="eyebrow">À propos</span>
-        <h2>Patrick Potvin, votre dépanneur à Nicolet.</h2>
-        <p class="muted">40 ans d'expérience en dépannage informatique. J'ai fondé AIP pour offrir un service honnête et accessible à Nicolet, Trois-Rivières et Bécancour. Réparation, installation, débogage et assistance à distance — je m'occupe de tout, vous reprenez le contrôle.</p>
-        <p class="muted"><strong>Spécialisation :</strong> ordinateurs fixes et portables (Windows et macOS).</p>
-        <p class="muted"><strong>Service écoresponsable :</strong> on prolonge la vie de votre matériel plutôt que de le remplacer. Réparation, optimisation et sauvegarde plutôt que l'achat neuf.</p>
-        <p class="muted">Note de 5.0★ sur Google, basée sur 7 avis clients : c'est ça, l'engagement AIP.</p>
-      </div>
-    </div>
-  </section>
-
-  <!-- Pourquoi -->
-  <section class="section section-alt" id="pourquoi">
-    <div class="container">
-      <div class="section-head">
-        <span class="eyebrow">Pourquoi AIP</span>
-        <h2>Simple, local et fiable.</h2>
-      </div>
-      <div class="features">
-        <div class="feature"><strong>Local</strong><span>Basé à Nicolet, on connaît le terrain et on répond vite.</span></div>
-        <div class="feature"><strong>Honnête</strong><span>Diagnostic clair, prix juste, pas de surprise à la facture.</span></div>
-        <div class="feature"><strong>Polyvalent</strong><span>De la réparation à la config réseau, on couvre tout.</span></div>
-        <div class="feature"><strong>À distance</strong><span>Assistance à distance pour les urgences, sans attendre.</span></div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Témoignages -->
-  <section class="section" id="avis">
-    <div class="container">
-      <div class="section-head">
-        <span class="eyebrow">Ce que disent les clients</span>
-        <h2>5.0★ sur Google · 7 avis</h2>
-      </div>
-      <div class="cards">
-        <article class="card review">
-          <div class="stars">★★★★★</div>
-          <p>« Service impeccable. J'ai jamais vu quelqu'un d'autant serviable et professionnel en informatique. Je recommande fortement ses services, il est expert dans son domaine. »</p>
-          <span class="review-author">— Alex Therrien (Google)</span>
-        </article>
-        <article class="card review">
-          <div class="stars">★★★★★</div>
-          <p>« Un gros problème de micro, j'ai gossé dessus pendant 2 mois, il a trouvé le problème en 10 min. Super beau service, très professionnel. »</p>
-          <span class="review-author">— Etienne Therrien (Google)</span>
-        </article>
-        <article class="card review">
-          <div class="stars">★★★★★</div>
-          <p>« Service impeccable à l'Atelier Informatique Potvin ! Travail rapide, professionnel et honnête. »</p>
-          <span class="review-author">— Ale M. (Google)</span>
-        </article>
-        <article class="card review">
-          <div class="stars">★★★★★</div>
-          <p>« Service dépannage au top. Facile de rejoindre M. Potvin, service hors pair avec un langage clair et de l'humour. Merci. »</p>
-          <span class="review-author">— Solange Poulin (Google)</span>
-        </article>
-        <article class="card review">
-          <div class="stars">★★★★★</div>
-          <p>« Service haut de gamme et courtois. Je recommande énormément, que vous soyez familier ou pas avec les ordinateurs, il saura vous rassurer. »</p>
-          <span class="review-author">— Anthony Ladouceur (Google)</span>
-        </article>
-        <article class="card review">
-          <div class="stars">★★★★★</div>
-          <p>« Service rapide et impeccable. »</p>
-          <span class="review-author">— Hug Bernier (Google)</span>
-        </article>
-        <article class="card review">
-          <div class="stars">★★★★★</div>
-          <p>« Notre petite entreprise avait des problèmes de réseau. Patrick a tout réglé en une visite, et nous a même formés pour éviter les problèmes futurs. Professionnel et efficace. »</p>
-          <span class="review-author">— Client entreprise (Google)</span>
-        </article>
-      </div>
-    </div>
-  </section>
-
-  <!-- Études de cas (AVANT / APRÈS) -->
-  <section class="section section-alt" id="realisations">
-    <div class="container">
-      <div class="section-head">
-        <span class="eyebrow">Résultats mesurables</span>
-        <h2>Ce qu'on règle, en chiffres.</h2>
-        <p class="muted">Pas de promesse vague. Voici des interventions réelles avec leur impact mesuré.</p>
-      </div>
-      <div class="cases">
-        <article class="case">
-          <h3>SSD installé — PC HP</h3>
-          <div class="case-grid">
-            <div class="case-col"><span class="case-label">⏱️ Avant</span><span class="case-val">4 min 03 s</span><span class="case-sub">démarrage complet</span></div>
-            <div class="case-col"><span class="case-label">🔧 Intervention</span><span class="case-val small">Diagnostic + HDD → SSD + migration</span></div>
-            <div class="case-col"><span class="case-label">✅ Après</span><span class="case-val good">30 s</span><span class="case-sub">~87 % plus rapide</span></div>
-          </div>
-        </article>
-        <article class="case">
-          <h3>Virus éliminé — PC familial</h3>
-          <div class="case-grid">
-            <div class="case-col"><span class="case-label">⏱️ Avant</span><span class="case-val">Inutilisable</span><span class="case-sub">pop-ups, lenteur, risque de vol de données</span></div>
-            <div class="case-col"><span class="case-label">🔧 Intervention</span><span class="case-val small">Nettoyage complet + sécurisation</span></div>
-            <div class="case-col"><span class="case-label">✅ Après</span><span class="case-val good">0 perte</span><span class="case-sub">données conservées et système sécurisé</span></div>
-          </div>
-        </article>
-        <article class="case">
-          <h3>Écran bleu corrigé</h3>
-          <div class="case-grid">
-            <div class="case-col"><span class="case-label">⏱️ Avant</span><span class="case-val">2-3 crash/jour</span><span class="case-sub">impossible à utiliser</span></div>
-            <div class="case-col"><span class="case-label">🔧 Intervention</span><span class="case-val small">Cause réelle trouvée (pilote), pas redémarrage</span></div>
-            <div class="case-col"><span class="case-label">✅ Après</span><span class="case-val good">0 crash</span><span class="case-sub">stable depuis</span></div>
-          </div>
-        </article>
-      </div>
-    </div>
-  </section>
-
-  <!-- Réparations récentes -->
-  <section class="section section-alt" id="realisations-list" style="padding-top:0;">
-    <div class="container">
-      <div class="features">
-        <div class="feature"><strong>Transfert de données</strong><span>Migration complète vers un nouveau PC, sans perdre un fichier.</span></div>
-        <div class="feature"><strong>PC accéléré</strong><span>Dépoussiérage, optimisation et mise à jour du système.</span></div>
-        <div class="feature"><strong>Wi-Fi rétabli</strong><span>Configuration réseau et imprimante remise en place.</span></div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Création & Développement -->
-  <section class="section section-alt" id="creation">
-    <div class="container">
-      <div class="section-head">
-        <span class="eyebrow">Pas juste réparer — créer</span>
-        <h2>On développe aussi vos applications et vos sites web.</h2>
-        <p class="muted"> au-delà du dépannage : des solutions sur mesure, conçues et déployées en local par le même technicien qui répare votre PC.</p>
-      </div>
-      <div class="cards creation-grid">
-        <article class="card">
-          <div class="card-ico">🌐</div>
-          <h3>Sites web vitrines</h3>
-          <p>Site professionnel clair et rapide pour votre entreprise. Hébergé, sécurisé, optimisé pour le référencement local (Google Nicolet / Bécancour). Dès 1500&nbsp;$.</p>
-          <a href="tarifs.html" class="card-link">Voir les tarifs →</a>
-        </article>
-        <article class="card">
-          <div class="card-ico">📱</div>
-          <h3>Applications sur mesure</h3>
-          <p>Outils internes, apps de gestion ou assistances à distance que vous ne trouvez pas ailleurs. Développement .NET / C# adapté à votre besoin réel.</p>
-          <a href="contact.html" class="card-link">Discuter d'un projet →</a>
-        </article>
-        <article class="card">
-          <div class="card-ico">🛠️</div>
-          <h3>Outils maison éprouvés</h3>
-          <p>X-Remote (assistance à distance) et X-IT PDF (édition de documents) : des logiciels qu'on a bâtis et qu'on utilise au quotidien pour mieux vous servir.</p>
-          <a href="contact.html" class="card-link">En savoir plus →</a>
-        </article>
-      </div>
-      <div class="portfolio-grid">
-        <a class="portfolio-item" href="https://bois-morphee-redesign.pages.dev" target="_blank" rel="noopener">
-          <img class="portfolio-thumb" src="assets/apercu-bois.png" alt="Aperçu du site Les Bois Morphée" loading="lazy" onerror="this.style.display='none'">
-          <span class="portfolio-name">Les Bois Morphée</span>
-          <span class="portfolio-url">bois-morphee-redesign.pages.dev</span>
+          <h3>Suppression de virus</h3>
+          <p>Virus, écrans bleus, lenteurs — on nettoie et sécurise.</p>
         </a>
-        <a class="portfolio-item" href="https://houlec.pages.dev" target="_blank" rel="noopener">
-          <img class="portfolio-thumb" src="assets/apercu-houlec.png" alt="Aperçu du site Houlec" loading="lazy" onerror="this.style.display='none'">
-          <span class="portfolio-name">Houlec</span>
-          <span class="portfolio-url">houlec.pages.dev</span>
-        </a>
-        <a class="portfolio-item" href="https://fabri-meuble-js.pages.dev/" target="_blank" rel="noopener">
-          <img class="portfolio-thumb" src="assets/apercu-fabri.png" alt="Aperçu du site Fabri-Méuble JS" loading="lazy" onerror="this.style.display='none'">
-          <span class="portfolio-name">Fabri-Méuble J.S.</span>
-          <span class="portfolio-url">fabri-meuble-js.pages.dev</span>
-        </a>
-      </div>
-    </div>
-  </section>
-
-  <!-- FAQ SEO locale -->
-  <section class="section" id="faq">
-    <div class="container">
-      <div class="section-head">
-        <span class="eyebrow">Questions fréquentes</span>
-        <h2>Ce qu'on vous demande souvent</h2>
-      </div>
-      <div class="faq-list">
-        <details class="faq-item">
-          <summary>Combien coûte une réparation d'ordinateur à Nicolet ?</summary>
-          <p>Le diagnostic est à 45 $ (gratuit si réparation effectuée). Le dépannage à distance est à 50 $ la session (≤45 min), et le taux horaire en atelier ou à domicile est de 65 $/h. Aucune surprise : on vous confirme le coût avant de commencer.</p>
-        </details>
-        <details class="faq-item">
-          <summary>Faites-vous le dépannage à domicile à Trois-Rivières ?</summary>
-          <p>Oui. On se déplace à Nicolet, Trois-Rivières et Bécancour dans un rayon de 50 km. L'assistance à distance (outil X-Remote) couvre aussi les problèmes rapides sans déplacement.</p>
-        </details>
-        <details class="faq-item">
-          <summary>Comment fonctionne l'assistance à distance ?</summary>
-          <p>On vous prend la main sur votre ordinateur via une connexion chiffrée (outil maison X-Remote), sans laisser de logiciel installé après la session. Souvent résolu en quelques minutes, sans que vous quittiez votre domicile.</p>
-        </details>
-        <details class="faq-item">
-          <summary>Quels sont vos délais d'intervention ?</summary>
-          <p>Pour le dépannage à distance : souvent le même jour, en quelques minutes. En atelier : la plupart des réparations sont faites en 24 à 48 h. À domicile : selon votre disponibilité et la distance (rayon 50 km de Nicolet).</p>
-        </details>
-        <details class="faq-item">
-          <summary>Est-ce que mes données sont en sécurité ?</summary>
-          <p>Oui. Vos fichiers restent sur votre poste ou sont manipulés localement. L'assistance à distance est chiffrée et ne laisse aucun logiciel résiduel. On ne partage jamais vos données avec un tiers.</p>
-        </details>
-        <details class="faq-item">
-          <summary>Y a-t-il une garantie sur les réparations ?</summary>
-          <p>Oui. Le travail effectué est garanti : si le même problème réapparaît dans les 30 jours suite à notre intervention, on le règle sans frais supplémentaires.</p>
-        </details>
-        <details class="faq-item">
-          <summary>Vous développez aussi des sites web et des applications ?</summary>
-          <p>Oui. En plus du dépannage, on conçoit des sites web vitrines (dès 1500 $) et des applications sur mesure en .NET/C#. Nos outils maison (X-Remote, X-IT PDF) sont aussi disponibles. Tout est conçu et déployé en local par le même technicien.</p>
-        </details>
-        <details class="faq-item">
-          <summary>Faites-vous la récupération de données et les sauvegardes ?</summary>
-          <p>Oui. Récupération après suppression, disque défaillant ou mauvaise manipulation, ainsi que mise en place d'une sauvegarde automatique pour éviter de tout perdre. On vous explique comment vérifier que ça fonctionne.</p>
-        </details>
-      </div>
-    </div>
-  </section>
-
-  <!-- Technologie AIP -->
-  <section class="section" id="tech">
-    <div class="container">
-      <div class="section-head">
-        <span class="eyebrow">Technologie développée par AIP</span>
-        <h2>On ne fait pas que réparer. On développe nos outils.</h2>
-        <p class="muted">Peu d'ateliers locaux peuvent le dire : nos propres logiciels, pensés pour le terrain.</p>
-      </div>
-      <div class="cards">
-        <article class="card">
-          <div class="card-ico">🌐</div>
-          <h3>X-Remote</h3>
-          <p>Assistance à distance sécurisée, développée en maison. Connexion chiffrée, sans logiciel résiduel.</p>
-        </article>
-        <article class="card">
-          <div class="card-ico">📄</div>
-          <h3>X-IT PDF</h3>
-          <p>Outil de lecture et d'édition PDF souverain, avec reconnaissance de texte (OCR) intégrée.</p>
-        </article>
-        <article class="card">
-          <div class="card-ico">🛠️</div>
-          <h3>Diagnostic avancé</h3>
-          <p>Scripts et utilitaires maison pour trouver la cause réelle d'un problème, pas juste le symptôme.</p>
-        </article>
-        <article class="card">
-          <div class="card-ico">⚡</div>
-          <h3>Automatisation</h3>
-          <p>Outils qui accélèrent le dépannage récurrent : sauvegarde, transfert et configuration en un clic.</p>
-        </article>
-      </div>
-    </div>
-  </section>
-
-  <!-- Tarifs -->
-  <section class="section" id="tarifs">
-    <div class="container">
-      <div class="section-head">
-        <span class="eyebrow">Tarifs transparents</span>
-        <h2>Un ordre de grandeur, sans surprise.</h2>
-        <p class="muted">Les prix exacts sont confirmés après diagnostic. Voici les bases.</p>
-      </div>
-      <div class="cards">
-        <article class="card price">
-          <h3>Diagnostic</h3>
-          <div class="price-amt">45 $</div>
-          <p class="muted small">Évaluation complète et soumission claire (gratuit si réparation effectuée).</p>
-        </article>
-        <article class="card price">
-          <h3>Assistance à distance</h3>
-          <div class="price-amt">50 $</div>
-          <p class="muted small">Par session (jusqu'à 45 min), problèmes courants résolus sans déplacement.</p>
-        </article>
-        <article class="card price">
-          <h3>Taux horaire</h3>
-          <div class="price-amt">65 $/h</div>
-          <p class="muted small">Réparation, optimisation et configuration en atelier ou à domicile.</p>
-        </article>
-        <article class="card price">
-          <h3>Site web vitrine</h3>
-          <div class="price-amt">Dès 1500 $</div>
-          <p class="muted small">Devis sur mesure selon le nombre de pages et les fonctionnalités intégrées.</p>
-        </article>
-        <article class="card price highlight">
-          <h3>Forfait sécurité</h3>
-          <div class="price-amt">Économisez 35 $</div>
-          <p class="muted small">Antivirus + sauvegarde automatique + optimisation. Bundle préventif pour un PC fiable.</p>
-        </article>
-      </div>
-    </div>
-  </section>
-
-  <!-- Contact -->
-  <section class="section" id="contact">
-    <div class="container contact">
-      <div class="contact-copy">
-        <span class="eyebrow">Contact</span>
-        <h2>Parlons de votre problème.</h2>
-        <p class="muted">Appelez directement ou écrivez — on revient vers vous rapidement.</p>
-        <ul class="contact-list">
-          <li><span>Téléphone</span><a href="tel:8193802999">819 380-2999</a></li>
-          <li><span>Courriel</span><a href="mailto:contact@atelierpotvin.ca">contact@atelierpotvin.ca</a></li>
-          <li><span>Adresse</span>462 Rue D. N. St Cyr, Nicolet, QC J3T 1H3</li>
-          <li><span>Zones</span>Nicolet, Trois-Rivières, Bécancour (50 km)</li>
-          <li><span>Horaires</span>Lun-Ven 9h-17h · Urgences soirs/WE</li>
-          <li><span>Avis Google</span><a href="https://www.google.com/search?q=AIP+Atelier+Informatique+Potvin+Nicolet" target="_blank" rel="noopener">5.0★ · 7 avis</a></li>
-        </ul>
-        <div class="map-wrap">
-          <iframe class="map-embed" title="Carte — AIP Atelier Informatique Potvin, Nicolet"
-            loading="lazy" referrerpolicy="no-referrer-when-downgrade"
-            src="https://maps.google.com/maps?q=462+Rue+D.N.+St+Cyr+Nicolet+QC+J3T+1H3&z=15&output=embed"></iframe>
-          <div class="map-links">
-            <a href="https://www.google.com/maps/search/?api=1&query=46.2307%2C-72.5590" target="_blank" rel="noopener">Google Maps</a>
-            <a href="https://www.bing.com/maps?cp=46.2307~-72.5590&lvl=15" target="_blank" rel="noopener">Bing Maps</a>
-            <a href="https://www.openstreetmap.org/?mlat=46.2307&mlon=-72.5590#map=15/46.2307/-72.5590" target="_blank" rel="noopener">OpenStreetMap</a>
-          </div>
-        </div>
-      </div>
-      <div class="contact-card">
-        <div class="contact-glow"></div>
-        <h3>Demande rapide</h3>
-        <p class="muted small">Laissez vos coordonnées, on vous rappelle.</p>
-        <form id="contactForm" action="https://aip-contact.pot20pat.workers.dev" method="POST">
-          <input type="text" name="nom" placeholder="Votre nom" required />
-          <input type="tel" name="tel" placeholder="Téléphone" required />
-          <input type="email" name="email" placeholder="Courriel (facultatif)" />
-          <select name="type" required>
-            <option value="" disabled selected>Type de problème…</option>
-            <option value="lent">Ordinateur lent</option>
-            <option value="virus">Virus / écran bleu</option>
-            <option value="wifi">Wi-Fi / réseau</option>
-            <option value="imprimante">Imprimante</option>
-            <option value="installation">Installation</option>
-            <option value="autre">Autre</option>
-          </select>
-          <textarea name="message" rows="4" placeholder="Décrivez votre problème…" required></textarea>
-          <label class="consent"><input type="checkbox" name="consentement" required /> J'accepte d'être recontacté au sujet de ma demande.</label>
-          <button type="submit" class="btn btn-primary full">Envoyer la demande</button>
-          <p id="formStatus" class="form-note" style="display:none;color:#34d399;"></p>
-        </form>
-        <p class="form-note">Ou écrivez directement à <a href="mailto:contact@atelierpotvin.ca">contact@atelierpotvin.ca</a> / appelez au <a href="tel:8193802999">819 380-2999</a>.</p>
       </div>
     </div>
   </section>
@@ -590,7 +152,10 @@
       </div>
       <p class="muted small">© 2026 AIP — Atelier Informatique Potvin. 462 Rue D. N. St Cyr, Nicolet, Québec. Tous droits réservés.</p>
       <nav class="footer-links">
-        <a href="#services">Services</a>
+        <a href="index.html">Accueil</a>
+        <a href="services.html">Services</a>
+        <a href="apropos.html">À propos</a>
+        <a href="faq.html">FAQ</a>
         <a href="contact.html">Contact</a>
         <a href="tel:8193802999">819 380-2999</a>
       </nav>
