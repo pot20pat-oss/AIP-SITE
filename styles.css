@@ -167,7 +167,10 @@ a { color: inherit; text-decoration: none; }
 .portfolio-thumb { width: 100%; height: 160px; object-fit: cover; border-radius: 10px; margin-bottom: 12px; background: #eef2f7; display: block; }
 
 /* Features */
-.features { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
+.gallery-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 28px; }
+.gallery-grid img { width: 100%; height: 200px; object-fit: cover; border-radius: 12px; border: 1px solid var(--line); box-shadow: 0 8px 22px rgba(15,23,42,.06); }
+@media (max-width: 900px) { .gallery-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 620px) { .gallery-grid { grid-template-columns: 1fr; } .gallery-grid img { height: 220px; } }
 .feature { background: #fff; border: 1px solid var(--line); border-radius: var(--radius); padding: 24px; box-shadow: 0 10px 30px rgba(15,23,42,.05); }
 .feature strong { display: block; color: var(--accent); font-size: 17px; margin-bottom: 8px; }
 .feature span { color: var(--muted); font-size: 15px; }
