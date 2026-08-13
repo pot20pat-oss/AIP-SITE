@@ -256,7 +256,8 @@ a { color: inherit; text-decoration: none; }
   .cards.creation-grid { grid-template-columns: 1fr; }
   .portfolio-grid { grid-template-columns: 1fr; }
   .hero { padding: 56px 0 40px; }
-  .hero-art { display: block; margin-top: 28px; max-width: 320px; margin-left: auto; margin-right: auto; }
+  .hero-inner { display: flex; flex-direction: column; }
+  .hero-art { display: block; order: 2; margin-top: 28px; max-width: 280px; margin-left: auto; margin-right: auto; }
   .hero-points li { font-size: 15px; }
   .case { width: 100%; max-width: 100%; box-sizing: border-box; }
   .case-grid { grid-template-columns: 1fr; }
