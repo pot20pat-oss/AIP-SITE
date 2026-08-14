@@ -172,7 +172,7 @@ async function updatePreview(){
     const iconsDep=["🛠️","🔧","🐞","💲"],iconsCre=["🌐","📱","👤","❓"];
     const linksDep=["services.html","depannage-nicolet.html","virus.html","tarifs.html"];
     const linksCre=["services.html#creation","services.html#creation","apropos.html","faq.html"];
-    const card=(t,d,href,ico)=>`<a class="card" href="${href}"><div class="card-ico">${ico}</div><h3>${t}</h3><p>${d}</p></a>`;
+    const card=(t,d,href,ico)=>`<a class="card" href="${href}"><div class="card-ico" style="font-size:30px;line-height:1">${ico}</div><h3>${t}</h3><p>${d}</p></a>`;
     const depCards=svc.depannage.map((x,i)=>card(x.title,x.desc,linksDep[i],iconsDep[i])).join("\n");
     const creCards=svc.creation.map((x,i)=>card(x.title,x.desc,linksCre[i],iconsCre[i])).join("\n");
     const revs=liveData.avis.data.reviews.map(r=>`<article class="card review"><div class="stars">★★★★★</div><p>« ${r.text} »</p><span class="review-author">— ${r.author}</span></article>`).join("\n");
