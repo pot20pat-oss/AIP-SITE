@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>CMS AIP</title>
+  <style>
+    body{font-family:Segoe UI,sans-serif;background:#0f172a;color:#e2e8f0;padding:20px;max-width:900px;margin:0 auto}
+    h1{color:#6366f1}
+    .box{background:#1e293b;padding:16px;border-radius:10px;margin:12px 0}
+    textarea{width:100%;min-height:140px;background:#0f172a;color:#e2e8f0;border:1px solid #334155;border-radius:6px;font-family:monospace;padding:10px}
+    button{background:#6366f1;color:#fff;border:0;padding:10px 18px;border-radius:6px;cursor:pointer;margin-top:8px}
+    input{padding:8px;border-radius:6px;border:1px solid #334155;background:#0f172a;color:#e2e8f0}
+    .msg{color:#4ade80;margin-top:8px}
+    .err{color:#f87171}
+    a{color:#94a3b8}
+  </style>
+</head>
+<body>
+  <h1>CMS AIP — Édition du contenu</h1>
+  <div class="box">
+    <label>Token GitHub (ghp_... — il reste dans ton navigateur, pas envoyé ailleurs) :</label><br>
+    <input id="token" type="password" style="width:400px" placeholder="ghp_...">
+    <button onclick="loadAll()">Charger le contenu</button>
+  </div>
+  <div id="forms"></div>
+  <p><a href="index.html">← Retour au site</a></p>
+
+<script>
+const REPO="pot20pat-oss/AIP-SITE", BRANCH="main";
+const FILES=["hero","footer","tarifs","avis","services"];
+
+async function ghGet(file){
+  const tk=document.getElementById("token").value;
+  const r=await fetch(`https://api.github.com/repos/${REPO}/contents/content/${file}.json?ref=${BRANCH}`,{headers:{Authorization:"token "+tk,Accept:"application/vnd.github.v3+json"}});
+  const d=await r.json();
+  if(d.content) return {text:decodeURIComponent(escape(atob(d.content.replace(/\n/g,"")))), sha:d.sha};
+  return {text:"{}", sha:null};
+}
+
+async function loadAll(){
+  const forms=document.getElementById("forms");
+  forms.innerHTML="<p>Chargement...</p>";
+  let h="";
+  for(const f of FILES){
+    try{
+      const {text}=await ghGet(f);
+      h+=`<div class="box"><h3>${f}.json</h3><form onsubmit="save(event,'${f}')"><textarea name="c">${text.replace(/</g,"&lt;")}</textarea><br><button>Sauver ${f}</button><span id="m-${f}"></span></form></div>`;
+    }catch(e){ h+=`<div class="box err">Erreur ${f}: ${e.message}</div>`; }
+  }
+  forms.innerHTML=h;
+}
+
+async function save(e,f){
+  e.preventDefault();
+  const tk=document.getElementById("token").value;
+  const content=document.querySelector(`form[onsubmit="save(event,'${f}')"] textarea`).value;
+  const {sha}=await ghGet(f);
+  const encoded=btoa(unescape(encodeURIComponent(content)));
+  const r=await fetch(`https://api.github.com/repos/${REPO}/contents/content/${f}.json`,{method:"PUT",headers:{Authorization:"token "+tk,"Content-Type":"application/json",Accept:"application/vnd.github.v3+json"},body:JSON.stringify({message:"CMS: maj "+f,content:encoded,sha,branch:BRANCH})});
+  const m=document.getElementById("m-"+f);
+  if(r.ok){ m.innerHTML=' <span class="msg">✓ Sauvegardé</span>'; }
+  else { m.innerHTML=' <span class="err">Erreur '+r.status+'</span>'; }
+}
+</script>
+</body>
+</html>
