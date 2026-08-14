@@ -10,8 +10,7 @@ Patrick a 40 ans d'expérience. Téléphone : 819 380-2999. Diagnostic : 45 $. D
 Si la question est urgente ou nécessite un rendez-vous, dis poliment de appeler Patrick au 819 380-2999.
 Réponds en 2-4 phrases maximum. Ne mentionne jamais que tu es une IA.`;
 
-const HERMES_ENDPOINT = 'https://api.nousresearch.com/v1/chat/completions';
-const HERMES_MODEL = 'tencent/hy3:free';
+const HERMES_ENDPOINT = 'https://integrate.api.nvidia.com/v1/chat/completions';
 
 export default {
   async fetch(request, env, ctx) {
@@ -53,7 +52,7 @@ async function handleBot(request, env, ctx) {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + env.HERMES_KEY },
       body: JSON.stringify({
-        model: HERMES_MODEL,
+        model: env.HERMES_MODEL || 'meta/llama-3.1-8b-instruct',
         messages: [ { role: 'system', content: AIP_SYS }, { role: 'user', content: msg } ],
         max_tokens: 400,
         temperature: 0.7,
