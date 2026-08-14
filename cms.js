@@ -36,14 +36,30 @@ const FILES={
     }}
 };
 const IMGDESC={
-  "photo.jpg":"Photo de Patrick (accueil + à propos)","atelier-ram.jpg":"Atelier — mémoire RAM",
-  "atelier-soudure.jpg":"Atelier — soudure","atelier-ecran.jpg":"Atelier — écrans","logo.png":"Logo entreprise",
-  "favicon.ico":"Icône onglet","hero-bg.jpg":"Fond page d'accueil","hero-pattern.png":"Motif déco accueil",
-  "pattern.png":"Motif déco général","og-image.jpg":"Image partage réseaux","tsp.jpg":"Image TSP","fb.jpg":"Image Facebook",
-  "reparation.jpg":"Réparation","virus.jpg":"Virus/sécurité","reseau.jpg":"Réseau","sauvegarde.jpg":"Sauvegarde",
-  "siteweb.jpg":"Site web","formation.jpg":"Formation","logo-site.jpg":"Logo site","logoiqui.png":"Logo secondaire",
-  "phone.svg":"Icône téléphone","mail.svg":"Icône courriel"
+  "photo.jpg":{cat:"Accueil",desc:"Photo de Patrick (accueil + à propos)",size:"1024×1280",fmt:"jpg/png",max:"2 Mo"},
+  "hero-bg.jpg":{cat:"Accueil",desc:"Fond page d'accueil",size:"1600×900",fmt:"jpg",max:"1.5 Mo"},
+  "hero-pattern.png":{cat:"Accueil",desc:"Motif déco accueil",size:"400×400",fmt:"png",max:"500 Ko"},
+  "pattern.png":{cat:"Général",desc:"Motif déco général",size:"400×400",fmt:"png",max:"500 Ko"},
+  "atelier-ram.jpg":{cat:"Services",desc:"Atelier — mémoire RAM",size:"1200×800",fmt:"jpg",max:"1 Mo"},
+  "atelier-soudure.jpg":{cat:"Services",desc:"Atelier — soudure",size:"1200×800",fmt:"jpg",max:"1 Mo"},
+  "atelier-ecran.jpg":{cat:"Services",desc:"Atelier — écrans",size:"1200×800",fmt:"jpg",max:"1 Mo"},
+  "reparation.jpg":{cat:"Services",desc:"Réparation",size:"1200×800",fmt:"jpg",max:"1 Mo"},
+  "virus.jpg":{cat:"Services",desc:"Virus/sécurité",size:"1200×800",fmt:"jpg",max:"1 Mo"},
+  "reseau.jpg":{cat:"Services",desc:"Réseau",size:"1200×800",fmt:"jpg",max:"1 Mo"},
+  "sauvegarde.jpg":{cat:"Services",desc:"Sauvegarde",size:"1200×800",fmt:"jpg",max:"1 Mo"},
+  "siteweb.jpg":{cat:"Services",desc:"Site web",size:"1200×800",fmt:"jpg",max:"1 Mo"},
+  "formation.jpg":{cat:"Services",desc:"Formation",size:"1200×800",fmt:"jpg",max:"1 Mo"},
+  "logo.png":{cat:"Branding",desc:"Logo entreprise",size:"200×200",fmt:"png",max:"300 Ko"},
+  "logo-site.jpg":{cat:"Branding",desc:"Logo site",size:"200×200",fmt:"jpg/png",max:"300 Ko"},
+  "logoiqui.png":{cat:"Branding",desc:"Logo secondaire",size:"200×200",fmt:"png",max:"300 Ko"},
+  "favicon.ico":{cat:"Branding",desc:"Icône onglet",size:"64×64",fmt:"ico",max:"100 Ko"},
+  "og-image.jpg":{cat:"Réseaux",desc:"Image partage réseaux",size:"1200×630",fmt:"jpg",max:"1 Mo"},
+  "tsp.jpg":{cat:"Réseaux",desc:"Image TSP",size:"1200×630",fmt:"jpg",max:"1 Mo"},
+  "fb.jpg":{cat:"Réseaux",desc:"Image Facebook",size:"1200×630",fmt:"jpg",max:"1 Mo"},
+  "phone.svg":{cat:"Icônes",desc:"Icône téléphone",size:"24×24",fmt:"svg",max:"50 Ko"},
+  "mail.svg":{cat:"Icônes",desc:"Icône courriel",size:"24×24",fmt:"svg",max:"50 Ko"}
 };
+const IMGCAT=["Accueil","Services","Branding","Réseaux","Icônes","Général"];
 let cache={}, liveData={};
 function headers(){return{Authorization:"Bearer "+document.getElementById("token").value,Accept:"application/vnd.github+json"};}
 function toB64(s){return btoa(unescape(encodeURIComponent(s)));}
@@ -129,20 +145,42 @@ async function save(sec){
   }catch(e){m.className="msg err";m.textContent="✗ Erreur: "+e.message;}
 }
 function renderImages(panel){
-  let h=`<div class="card"><h3>Photos du site</h3><p class="hint">Choisis une image sur ton ordinateur pour la remplacer. Même nom = même emplacement.</p>`;
-  for(const name of Object.keys(IMGDESC)){
-    h+=`<div class="imgrow"><img src="assets/${name}" onerror="this.style.opacity=.2"><div style="flex:1"><div class="name">${name}</div><div class="desc">${IMGDESC[name]}</div>`+
-       `<input type="file" accept="image/*" onchange="uploadImg('${name}',this)" style="margin-top:6px"></div></div>`;
+  let h=`<div class="card"><h3>Photos &amp; images du site</h3><p class="hint">Remplace une image en choisissant un fichier. <b>Même nom = même emplacement</b> sur le site. Les tailles recommandées sont indicatives.</p>`;
+  for(const cat of IMGCAT){
+    const names=Object.keys(IMGDESC).filter(n=>IMGDESC[n].cat===cat);
+    if(!names.length)continue;
+    h+=`<div class="imgcat"><h4>${cat}</h4>`;
+    for(const name of names){
+      const m=IMGDESC[name];
+      h+=`<div class="imgrow">
+        <img src="assets/${name}" onerror="this.style.opacity=.2" id="prev-${name}">
+        <div style="flex:1">
+          <div class="name">${name}</div>
+          <div class="desc">${m.desc}</div>
+          <div class="meta">📐 ${m.size} · 📁 ${m.fmt} · ⚖️ max ${m.max}</div>
+          <img id="new-${name}" style="display:none;max-width:120px;margin-top:6px;border:2px solid #22c55e;border-radius:6px">
+          <input type="file" accept="image/*" onchange="previewThenUpload('${name}',this)" style="margin-top:6px">
+          <span id="ok-${name}" class="ok" style="display:none">✓ Remplacée</span>
+        </div>
+      </div>`;
+    }
+    h+=`</div>`;
   }
   h+=`</div><div id="img-err" class="err" style="margin-top:10px"></div>`;
   panel.innerHTML=h;
 }
-async function uploadImg(name,input){
+async function previewThenUpload(name,input){
   const file=input.files[0];
   if(!file)return;
-  if(file.size>8e6){toast("Image trop grosse (max 8 Mo)",false);return;}
+  const m=IMGDESC[name];
+  const maxBytes=parseMax(m.max);
+  if(file.size>maxBytes){toast("✗ "+name+": trop lourde ("+Math.round(file.size/1024)+" Ko > "+m.max+")",false);return;}
   const errBox=document.getElementById("img-err");
   if(errBox)errBox.textContent="";
+  // apercu avant/apres
+  const reader=new FileReader();
+  reader.onload=e=>{const pv=document.getElementById("new-"+name);if(pv){pv.src=e.target.result;pv.style.display="block";}};
+  reader.readAsDataURL(file);
   toast("Envoi de "+name+"...");
   try{
     const r0=await fetch(`https://api.github.com/repos/${REPO}/contents/assets/${name}?ref=${BRANCH}`,{headers:headers()});
@@ -151,10 +189,12 @@ async function uploadImg(name,input){
     const r=await fetch(`https://api.github.com/repos/${REPO}/contents/assets/${name}`,{method:"PUT",headers:headers(),
       body:JSON.stringify({message:"CMS: img "+name,content:b64,sha})});
     if(!r.ok){const t=await r.text();throw new Error("PUT "+r.status+" "+t.slice(0,300));}
+    const ok=document.getElementById("ok-"+name);if(ok){ok.style.display="inline";}
     toast("✓ "+name+" remplacée");
     updatePreview();
-  }catch(e){console.error(e);const m="✗ "+name+": "+e.message;toast(m,false);if(errBox)errBox.textContent=m;}
+  }catch(e){console.error(e);const msg="✗ "+name+": "+e.message;toast(msg,false);if(errBox)errBox.textContent=msg;}
 }
+function parseMax(s){const n=parseInt(s);if(s.includes("Mo"))return n*1e6;if(s.includes("Ko"))return n*1024;return 8e6;}
 function fileToB64(file){return new Promise((res,rej)=>{const fr=new FileReader();fr.onload=()=>res(fr.result.split(",")[1]);fr.onerror=rej;fr.readAsDataURL(file);});}
 async function updatePreview(){
   if(!document.getElementById("preview").classList.contains("show"))return;
