@@ -48,12 +48,18 @@ let cache={}, liveData={};
 function headers(){return{Authorization:"Bearer "+document.getElementById("token").value,Accept:"application/vnd.github+json"};}
 function toB64(s){return btoa(unescape(encodeURIComponent(s)));}
 function toast(m,ok){const t=document.getElementById("toast");t.textContent=m;t.className="toast show";setTimeout(()=>t.className="toast",2600);}
+function b64ToUtf8(b64){
+  const bin=atob(b64);
+  const bytes=new Uint8Array(bin.length);
+  for(let i=0;i<bin.length;i++)bytes[i]=bin.charCodeAt(i);
+  return new TextDecoder("utf-8").decode(bytes);
+}
 async function ghGetRaw(path){
   const r=await fetch(`https://api.github.com/repos/${REPO}/contents/${path}?ref=${BRANCH}`,{headers:headers()});
   if(!r.ok)throw new Error("GET "+path+": "+r.status);
   const j=await r.json();
-  if(path.endsWith(".json"))return {sha:j.sha,data:JSON.parse(decodeURIComponent(escape(atob(j.content))))};
-  return {sha:j.sha,text:atob(j.content)};
+  if(path.endsWith(".json"))return {sha:j.sha,data:JSON.parse(b64ToUtf8(j.content))};
+  return {sha:j.sha,text:b64ToUtf8(j.content)};
 }
 async function ghPutRaw(path,content,sha,msg){
   return fetch(`https://api.github.com/repos/${REPO}/contents/${path}`,{method:"PUT",headers:headers(),
@@ -128,25 +134,26 @@ function renderImages(panel){
     h+=`<div class="imgrow"><img src="assets/${name}" onerror="this.style.opacity=.2"><div style="flex:1"><div class="name">${name}</div><div class="desc">${IMGDESC[name]}</div>`+
        `<input type="file" accept="image/*" onchange="uploadImg('${name}',this)" style="margin-top:6px"></div></div>`;
   }
-  h+=`</div>`;
+  h+=`</div><div id="img-err" class="err" style="margin-top:10px"></div>`;
   panel.innerHTML=h;
 }
 async function uploadImg(name,input){
   const file=input.files[0];
   if(!file)return;
   if(file.size>8e6){toast("Image trop grosse (max 8 Mo)",false);return;}
+  const errBox=document.getElementById("img-err");
+  if(errBox)errBox.textContent="";
   toast("Envoi de "+name+"...");
   try{
-    console.log("uploadImg",name,file.name,file.size);
     const r0=await fetch(`https://api.github.com/repos/${REPO}/contents/assets/${name}?ref=${BRANCH}`,{headers:headers()});
     const sha=r0.ok?(await r0.json()).sha:undefined;
     const b64=await fileToB64(file);
     const r=await fetch(`https://api.github.com/repos/${REPO}/contents/assets/${name}`,{method:"PUT",headers:headers(),
       body:JSON.stringify({message:"CMS: img "+name,content:b64,sha})});
-    if(!r.ok){const t=await r.text();throw new Error("PUT "+r.status+" "+t.slice(0,200));}
+    if(!r.ok){const t=await r.text();throw new Error("PUT "+r.status+" "+t.slice(0,300));}
     toast("✓ "+name+" remplacée");
     updatePreview();
-  }catch(e){console.error(e);toast("✗ "+name+": "+e.message,false);}
+  }catch(e){console.error(e);const m="✗ "+name+": "+e.message;toast(m,false);if(errBox)errBox.textContent=m;}
 }
 function fileToB64(file){return new Promise((res,rej)=>{const fr=new FileReader();fr.onload=()=>res(fr.result.split(",")[1]);fr.onerror=rej;fr.readAsDataURL(file);});}
 async function updatePreview(){
