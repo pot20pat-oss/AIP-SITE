@@ -25,6 +25,11 @@
     <button onclick="loadAll()">Charger le contenu</button>
   </div>
   <div id="forms"></div>
+  <div class="box">
+    <h3>Images (assets/)</h3>
+    <p>Sélectionne un fichier pour remplacer une image du site. Le nom doit correspondre exactement.</p>
+    <div id="img-forms"></div>
+  </div>
   <p><a href="index.html">← Retour au site</a></p>
 
 <script>
@@ -72,6 +77,36 @@ async function save(e,f){
   if(r.ok){ m.innerHTML=' <span class="msg">✓ Sauvegardé</span>'; }
   else { m.innerHTML=' <span class="err">Erreur '+r.status+'</span>'; }
 }
+
+const IMG_FILES=["photo.jpg","atelier-ram.jpg","atelier-soudure.jpg","atelier-ecran.jpg","logo.png","bg-mesh.png","hero-tech.jpg","hero-repair.jpg","app-dev.jpg","remote.jpg","installation.jpg","reseau-router.jpg","reparation2.jpg","web-dev.jpg","web-dev-workstation.jpg","repair-workstation.jpg","security-workstation.jpg","remote-monitoring.jpg","network-backup.jpg","formation.jpg","debug.jpg","apercu-bois.png","apercu-fabri.png","apercu-houlec.png"];
+
+function renderImgForms(){
+  const box=document.getElementById("img-forms");
+  let h="";
+  for(const img of IMG_FILES){
+    h+=`<div style="margin:8px 0"><label style="display:inline-block;width:200px">${img}</label><input type="file" id="file-${img}" accept="image/*"><button onclick="uploadImg('${img}')">Upload</button><span id="mi-${img}"></span></div>`;
+  }
+  box.innerHTML=h;
+}
+
+async function uploadImg(img){
+  const tk=document.getElementById("token").value;
+  const fileInput=document.getElementById("file-"+img);
+  if(!fileInput.files.length){ alert("Choisis un fichier pour "+img); return; }
+  const file=fileInput.files[0];
+  const buf=await file.arrayBuffer();
+  const b64=btoa(String.fromCharCode(...new Uint8Array(buf)));
+  // recupere sha existant
+  let sha=null;
+  const gr=await fetch(`https://api.github.com/repos/${REPO}/contents/assets/${img}?ref=${BRANCH}`,{headers:{Authorization:"Bearer "+tk,Accept:"application/vnd.github.v3+json"}});
+  if(gr.ok){ const gd=await gr.json(); sha=gd.sha; }
+  const r=await fetch(`https://api.github.com/repos/${REPO}/contents/assets/${img}`,{method:"PUT",headers:{Authorization:"Bearer "+tk,"Content-Type":"application/json",Accept:"application/vnd.github.v3+json"},body:JSON.stringify({message:"CMS: image "+img,content:b64,sha,branch:BRANCH})});
+  const m=document.getElementById("mi-"+img);
+  if(r.ok){ m.innerHTML=' <span class="msg">✓ '+img+' mis à jour</span>'; }
+  else { m.innerHTML=' <span class="err">Erreur '+r.status+'</span>'; }
+}
+
+renderImgForms();
 </script>
 </body>
 </html>
