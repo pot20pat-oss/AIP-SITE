@@ -1,112 +1,169 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>CMS AIP</title>
-  <style>
-    body{font-family:Segoe UI,sans-serif;background:#0f172a;color:#e2e8f0;padding:20px;max-width:900px;margin:0 auto}
-    h1{color:#6366f1}
-    .box{background:#1e293b;padding:16px;border-radius:10px;margin:12px 0}
-    textarea{width:100%;min-height:140px;background:#0f172a;color:#e2e8f0;border:1px solid #334155;border-radius:6px;font-family:monospace;padding:10px}
-    button{background:#6366f1;color:#fff;border:0;padding:10px 18px;border-radius:6px;cursor:pointer;margin-top:8px}
-    input{padding:8px;border-radius:6px;border:1px solid #334155;background:#0f172a;color:#e2e8f0}
-    .msg{color:#4ade80;margin-top:8px}
-    .err{color:#f87171}
-    a{color:#94a3b8}
-  </style>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>CMS — Atelier Potvin</title>
+<style>
+  :root{--bg:#0f172a;--card:#1e293b;--acc:#6366f1;--txt:#e2e8f0;--mut:#94a3b8;--line:#334155;--ok:#22c55e;--err:#ef4444}
+  *{box-sizing:border-box}
+  body{margin:0;font-family:Segoe UI,system-ui,sans-serif;background:var(--bg);color:var(--txt);display:flex;min-height:100vh}
+  .side{width:240px;background:#0b1120;border-right:1px solid var(--line);padding:24px 16px;position:fixed;height:100vh;overflow:auto}
+  .side h1{font-size:18px;margin:0 0 4px;color:#fff}
+  .side .sub{font-size:12px;color:var(--mut);margin-bottom:24px}
+  .nav a{display:block;padding:10px 12px;border-radius:8px;color:var(--mut);text-decoration:none;margin-bottom:4px;font-size:14px}
+  .nav a:hover,.nav a.active{background:var(--card);color:#fff}
+  .main{margin-left:240px;flex:1;padding:32px}
+  .topbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:24px;gap:16px;flex-wrap:wrap}
+  .topbar input{padding:10px 12px;border-radius:8px;border:1px solid var(--line);background:var(--card);color:var(--txt);font-size:14px}
+  .btnb{background:var(--acc);color:#fff;border:none;padding:10px 18px;border-radius:8px;font-weight:600;cursor:pointer;font-size:14px}
+  .btnb:hover{filter:brightness(1.1)}
+  .chk{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--mut)}
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+  @media(max-width:900px){.grid{grid-template-columns:1fr}.side{width:100%;position:relative;height:auto}.main{margin-left:0}}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:20px}
+  .card h3{margin:0 0 16px;font-size:15px;color:#fff;display:flex;justify-content:space-between;align-items:center}
+  .card h3 .msg{font-size:12px;font-weight:400}
+  .msg.ok{color:var(--ok)} .msg.err{color:var(--err)}
+  label{display:block;font-size:12px;color:var(--mut);margin:12px 0 4px}
+  input.f,textarea.f{width:100%;padding:10px 12px;border-radius:8px;border:1px solid var(--line);background:#0b1120;color:var(--txt);font-size:14px;font-family:inherit}
+  textarea.f{min-height:90px;resize:vertical}
+  .wy{border:1px solid var(--line);border-radius:8px;background:#0b1120;padding:10px 12px;min-height:80px;color:var(--txt);font-size:14px}
+  .wy:focus{outline:1px solid var(--acc)}
+  .img-row{display:flex;gap:10px;align-items:center;margin:10px 0;flex-wrap:wrap}
+  .img-row span{font-size:13px;flex:1;min-width:120px}
+  .img-row input[type=file]{font-size:12px;flex:2}
+  .img-row button{background:var(--line);color:#fff;border:none;padding:8px 12px;border-radius:6px;cursor:pointer;font-size:12px}
+  .img-row button:hover{background:var(--acc)}
+  .hidden{display:none}
+  .tab{display:none} .tab.active{display:block}
+</style>
 </head>
 <body>
-  <h1>CMS AIP — Édition du contenu</h1>
-  <div class="box">
-    <label>Token GitHub (ghp_... — il reste dans ton navigateur si tu coches « Se souvenir ») :</label><br>
-    <input id="token" type="password" style="width:400px" placeholder="ghp_...">
-    <label style="margin-left:8px"><input type="checkbox" id="remember"> Se souvenir</label>
-    <button onclick="loadAll()">Charger le contenu</button>
+<div class="side">
+  <h1>CMS Atelier Potvin</h1>
+  <div class="sub">Édition du site</div>
+  <nav class="nav">
+    <a href="#" class="active" data-tab="content">📝 Contenu</a>
+    <a href="#" data-tab="images">🖼️ Images</a>
+  </nav>
+</div>
+<div class="main">
+  <div class="topbar">
+    <div class="chk"><input type="checkbox" id="remember"><label for="remember" style="margin:0">Se souvenir du token</label></div>
+    <div style="display:flex;gap:10px;align-items:center">
+      <input id="token" type="password" placeholder="Token GitHub ghp_..." style="width:260px">
+      <button class="btnb" onclick="loadAll()">Charger</button>
+    </div>
   </div>
-  <div id="forms"></div>
-  <div class="box">
-    <h3>Images (assets/)</h3>
-    <p>Sélectionne un fichier pour remplacer une image du site. Le nom doit correspondre exactement.</p>
-    <div id="img-forms"></div>
+
+  <div class="tab active" id="tab-content">
+    <div class="grid" id="forms"></div>
   </div>
-  <p><a href="index.html">← Retour au site</a></p>
+
+  <div class="tab" id="tab-images">
+    <div class="card">
+      <h3>Images du site (assets/)</h3>
+      <div id="img-forms"></div>
+    </div>
+  </div>
+
+  <p style="margin-top:24px"><a href="index.html" style="color:var(--mut)">← Retour au site</a></p>
+</div>
 
 <script>
 const REPO="pot20pat-oss/AIP-SITE", BRANCH="main";
-const FILES=["hero","footer","tarifs","avis","services"];
+const FILES={
+  hero:{label:"Accueil — Hero",fields:{eyebrow:"Surtitre (ex: Nicolet · Québec)",h1:"Titre principal H1",lead:"Paragraphe lead",intro:"Paragraphe intro (40 ans)",points:"Points (un par ligne)",cta:"Texte bouton principal",cta2:"Texte bouton secondaire",note:"Note sous boutons"}},
+  footer:{label:"Pied de page",fields:{copyright:"Copyright",phone:"Téléphone",address:"Adresse"}},
+  tarifs:{label:"Tarifs",fields:{diagnostic:"Diagnostic ($)",remote:"Assistance à distance ($)",horaire:"À l'heure ($)",site:"Site web ($)"}},
+  avis:{label:"Avis Google",fields:{count:"Nombre d'avis (chiffre)"}},
+  services:{label:"Cartes services (accueil)",fields:{dep1:"Carte 1 — titre",dep1d:"Carte 1 — description",dep2:"Carte 2 — titre",dep2d:"Carte 2 — description",dep3:"Carte 3 — titre",dep3d:"Carte 3 — description",dep4:"Carte 4 — titre",dep4d:"Carte 4 — description",cre1:"Création 1 — titre",cre1d:"Création 1 — description",cre2:"Création 2 — titre",cre2d:"Création 2 — description",cre3:"Création 3 — titre",cre3d:"Création 3 — description",cre4:"Création 4 — titre",cre4d:"Création 4 — description"}}
+};
+const IMGS=["photo.jpg","atelier-ram.jpg","atelier-soudure.jpg","atelier-ecran.jpg","atelier-micro.jpg","atelier-cable.jpg","atelier-carte.jpg","hero-bg.jpg","hero-office.jpg","hero-laptop.jpg","hero-circuit.jpg","logo.png","favicon.ico","icon-192.png","icon-512.png","og-image.jpg","service-virus.jpg","service-reseau.jpg","service-sauvegarde.jpg","service-formation.jpg","creation-site.jpg","creation-app.jpg","creation-automatisation.jpg","creation-formations.jpg"];
 
-// Pre-remplir depuis localStorage au chargement
-(function(){
-  const t=localStorage.getItem("aip_cms_token");
-  if(t){ document.getElementById("token").value=t; document.getElementById("remember").checked=true; }
-})();
+(function(){const t=localStorage.getItem("aip_cms_token");if(t){document.getElementById("token").value=t;document.getElementById("remember").checked=true;}})();
 
+document.querySelectorAll(".nav a").forEach(a=>a.onclick=()=>{
+  document.querySelectorAll(".nav a").forEach(x=>x.classList.remove("active"));
+  a.classList.add("active");
+  document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"));
+  document.getElementById("tab-"+a.dataset.tab).classList.add("active");
+  return false;
+});
+
+function headers(tk){return{Authorization:"Bearer "+tk,Accept:"application/vnd.github+json"}}
 async function ghGet(file){
   const tk=document.getElementById("token").value;
-  const r=await fetch(`https://api.github.com/repos/${REPO}/contents/content/${file}.json?ref=${BRANCH}`,{headers:{Authorization:"Bearer "+tk,Accept:"application/vnd.github.v3+json"}});
-  const d=await r.json();
-  if(d.content) return {text:decodeURIComponent(escape(atob(d.content.replace(/\n/g,"")))), sha:d.sha};
-  return {text:"{}", sha:null};
+  const r=await fetch(`https://api.github.com/repos/${REPO}/contents/content/${file}.json?ref=${BRANCH}`,{headers:headers(tk)});
+  if(!r.ok) throw new Error("GET "+r.status);
+  const j=await r.json();
+  return {sha:j.sha,data:JSON.parse(atob(j.content))};
 }
+async function ghPut(path,content,sha,tk){
+  const body={message:"CMS: maj "+path,content,branch:BRANCH};
+  if(sha)body.sha=sha;
+  const r=await fetch(`https://api.github.com/repos/${REPO}/contents/${path}`,{method:"PUT",headers:{...headers(tk),"Content-Type":"application/json"},body:JSON.stringify(body)});
+  return r;
+}
+function toB64(s){return btoa(unescape(encodeURIComponent(s)));}
 
 async function loadAll(){
   const tk=document.getElementById("token").value;
-  if(!tk){ alert("Entre ton token GitHub d'abord"); return; }
-  if(document.getElementById("remember").checked){ localStorage.setItem("aip_cms_token", tk); }
-  const forms=document.getElementById("forms");
-  forms.innerHTML="<p>Chargement...</p>";
+  if(!tk){alert("Entre ton token GitHub");return;}
+  if(document.getElementById("remember").checked)localStorage.setItem("aip_cms_token",tk);
+  const forms=document.getElementById("forms");forms.innerHTML="<p style='color:var(--mut)'>Chargement...</p>";
   let h="";
-  for(const f of FILES){
-    try{
-      const {text}=await ghGet(f);
-      h+=`<div class="box"><h3>${f}.json</h3><form onsubmit="save(event,'${f}')"><textarea name="c">${text.replace(/</g,"&lt;")}</textarea><br><button>Sauver ${f}</button><span id="m-${f}"></span></form></div>`;
-    }catch(e){ h+=`<div class="box err">Erreur ${f}: ${e.message}</div>`; }
-  }
-  forms.innerHTML=h;
+  try{
+    for(const [f,cfg] of Object.entries(FILES)){
+      const {data}=await ghGet(f);
+      h+=`<div class="card"><h3>${cfg.label} <span class="msg" id="m-${f}"></span></h3>`;
+      for(const [k,lab] of Object.entries(cfg.fields)){
+        const val=data[k]||"";
+        const wy=val.includes("\n")||val.length>80;
+        h+=`<label>${lab}</label>`;
+        h+= wy ? `<div class="wy" contenteditable="true" id="wy-${f}-${k}">${val.replace(/\n/g,"<br>")}</div>` : `<input class="f" id="in-${f}-${k}" value="${val.replace(/"/g,'&quot;')}">`;
+      }
+      h+=`<button class="btnb" style="margin-top:16px" onclick="save('${f}')">Sauver ${cfg.label}</button></div>`;
+    }
+    forms.innerHTML=h;
+  }catch(e){forms.innerHTML='<p class="msg err">Erreur: '+e.message+'</p>';}
+  loadImgs();
 }
-
-async function save(e,f){
-  e.preventDefault();
+function fieldVal(f,k,wy){
+  if(wy){return document.getElementById("wy-"+f+"-"+k).innerText;}
+  return document.getElementById("in-"+f+"-"+k).value;
+}
+async function save(f){
   const tk=document.getElementById("token").value;
-  const content=document.querySelector(`form[onsubmit="save(event,'${f}')"] textarea`).value;
-  const {sha}=await ghGet(f);
-  const encoded=btoa(unescape(encodeURIComponent(content)));
-  const r=await fetch(`https://api.github.com/repos/${REPO}/contents/content/${f}.json`,{method:"PUT",headers:{Authorization:"Bearer "+tk,"Content-Type":"application/json",Accept:"application/vnd.github.v3+json"},body:JSON.stringify({message:"CMS: maj "+f,content:encoded,sha,branch:BRANCH})});
-  const m=document.getElementById("m-"+f);
-  if(r.ok){ m.innerHTML=' <span class="msg">✓ Sauvegardé</span>'; }
-  else { m.innerHTML=' <span class="err">Erreur '+r.status+'</span>'; }
+  const cfg=FILES[f];
+  try{
+    const {sha,data}=await ghGet(f);
+    for(const k of Object.keys(cfg.fields)){
+      const wy=String(data[k]||"").includes("\n")||String(data[k]||"").length>80;
+      data[k]=fieldVal(f,k,wy);
+    }
+    const r=await ghPut(`content/${f}.json`,toB64(JSON.stringify(data,null,2)),sha,tk);
+    document.getElementById("m-"+f).innerHTML=r.ok?'<span class="msg ok">✓ Sauvegardé</span>':'<span class="msg err">Erreur '+r.status+'</span>';
+  }catch(e){document.getElementById("m-"+f).innerHTML='<span class="msg err">'+e.message+'</span>';}
 }
-
-const IMG_FILES=["photo.jpg","atelier-ram.jpg","atelier-soudure.jpg","atelier-ecran.jpg","logo.png","bg-mesh.png","hero-tech.jpg","hero-repair.jpg","app-dev.jpg","remote.jpg","installation.jpg","reseau-router.jpg","reparation2.jpg","web-dev.jpg","web-dev-workstation.jpg","repair-workstation.jpg","security-workstation.jpg","remote-monitoring.jpg","network-backup.jpg","formation.jpg","debug.jpg","apercu-bois.png","apercu-fabri.png","apercu-houlec.png"];
-
-function renderImgForms(){
+function loadImgs(){
   const box=document.getElementById("img-forms");
-  let h="";
-  for(const img of IMG_FILES){
-    h+=`<div style="margin:8px 0"><label style="display:inline-block;width:200px">${img}</label><input type="file" id="file-${img}" accept="image/*"><button onclick="uploadImg('${img}')">Upload</button><span id="mi-${img}"></span></div>`;
-  }
-  box.innerHTML=h;
+  box.innerHTML=IMGS.map(n=>`<div class="img-row"><span>${n}</span><input type="file" id="file-${n}" accept="image/*"><button onclick="upImg('${n}')">Upload</button></div>`).join("");
 }
-
-async function uploadImg(img){
+async function upImg(name){
   const tk=document.getElementById("token").value;
-  const fileInput=document.getElementById("file-"+img);
-  if(!fileInput.files.length){ alert("Choisis un fichier pour "+img); return; }
-  const file=fileInput.files[0];
+  const file=document.getElementById("file-"+name).files[0];
+  if(!file){alert("Choisis un fichier");return;}
   const buf=await file.arrayBuffer();
   const b64=btoa(String.fromCharCode(...new Uint8Array(buf)));
-  // recupere sha existant
-  let sha=null;
-  const gr=await fetch(`https://api.github.com/repos/${REPO}/contents/assets/${img}?ref=${BRANCH}`,{headers:{Authorization:"Bearer "+tk,Accept:"application/vnd.github.v3+json"}});
-  if(gr.ok){ const gd=await gr.json(); sha=gd.sha; }
-  const r=await fetch(`https://api.github.com/repos/${REPO}/contents/assets/${img}`,{method:"PUT",headers:{Authorization:"Bearer "+tk,"Content-Type":"application/json",Accept:"application/vnd.github.v3+json"},body:JSON.stringify({message:"CMS: image "+img,content:b64,sha,branch:BRANCH})});
-  const m=document.getElementById("mi-"+img);
-  if(r.ok){ m.innerHTML=' <span class="msg">✓ '+img+' mis à jour</span>'; }
-  else { m.innerHTML=' <span class="err">Erreur '+r.status+'</span>'; }
+  try{
+    const r=await fetch(`https://api.github.com/repos/${REPO}/contents/assets/${name}?ref=${BRANCH}`,{headers:headers(tk)});
+    const sha=r.ok?(await r.json()).sha:null;
+    const res=await ghPut(`assets/${name}`,b64,sha,tk);
+    alert(res.ok?name+" remplacé ✓":("Erreur "+res.status));
+  }catch(e){alert("Erreur: "+e.message);}
 }
-
-renderImgForms();
 </script>
 </body>
 </html>
