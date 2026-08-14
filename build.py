@@ -68,8 +68,8 @@ if os.path.exists(DIST):
     shutil.rmtree(DIST)
 os.makedirs(DIST, exist_ok=True)
 
-# copier assets/ css/ js/ sans ecraser les templates
-for d in ["assets", "worker"]:
+# copier assets/ css/ js/ admin/ worker/ sans ecraser les templates
+for d in ["assets", "worker", "admin"]:
     src = os.path.join(ROOT, d)
     if os.path.exists(src):
         shutil.copytree(src, os.path.join(DIST, d), dirs_exist_ok=True)
