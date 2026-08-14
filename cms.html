@@ -31,6 +31,9 @@
   .btn-ghost{background:#eef2ff;color:#4338ca;border:1px solid #c7d2fe}
   .msg{font-size:13px;margin-left:10px}
   .msg.ok{color:#16a34a}.msg.err{color:#dc2626}
+  .save-state{margin-top:14px;padding:10px 14px;border-radius:9px;background:#f0fdf4;border:1px solid #bbf7d0;font-size:13px;color:#166534;min-height:20px}
+  .save-state.publishing{background:#fffbeb;border-color:#fde68a;color:#92400e}
+  .save-state.updated{background:#eff6ff;border-color:#bfdbfe;color:#1e40af}
   .imgrow{display:flex;align-items:center;gap:14px;padding:12px 0;border-bottom:1px solid #f1f5f9}
   .imgrow:last-child{border:none}
   .imgrow img{width:60px;height:60px;object-fit:cover;border-radius:8px;border:1px solid #e2e8f0}
@@ -79,6 +82,7 @@
   <main>
     <div class="crumb">Tu es dans : <b id="crumb">Page d'accueil</b></div>
     <div id="panel"></div>
+  <div id="save-state" class="save-state"></div>
   </main>
 </div>
 

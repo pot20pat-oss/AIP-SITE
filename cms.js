@@ -127,7 +127,7 @@ function show(sec,el){
         `<span style="font-size:12px;color:#64748b">${cur?("actuel: "+cur):"défaut"}</span></div>`;
     });
   }
-  h+=`<div style="margin-top:18px;display:flex;gap:10px;align-items:center"><button class="btn" onclick="save('${sec}')">Enregistrer</button><button class="btn btn-ghost" onclick="scrollToPreview('${sec}')">👁 Voir dans le preview</button><span class="msg" id="m-${sec}"></span></div></div>`;
+  h+=`<div style="margin-top:18px;display:flex;gap:10px;align-items:center;flex-wrap:wrap"><button class="btn" onclick="save('${sec}')">Enregistrer les modifications</button><button class="btn btn-ghost" onclick="scrollToPreview('${sec}')">👁 Voir dans le preview</button><button class="btn btn-ghost" onclick="revert('${sec}')">Rétablir la dernière version</button><button class="btn btn-ghost" onclick="window.open('https://atelierpotvin.ca/','_blank')">Voir le site publié</button><span class="msg" id="m-${sec}"></span></div></div>`;
   panel.innerHTML=h;
 }
 function parentGo(sec){show(sec,document.querySelector('nav a[data-sec="'+sec+'"]'));}
@@ -155,6 +155,7 @@ async function save(sec){
     data[k]=v;
   }
   m.className="msg";m.textContent="Enregistrement...";
+  setState("publishing","Publication en cours…");
   try{
     const r=await ghPutRaw(`content/${sec}.json`,toB64(JSON.stringify(data,null,2)),cache[sec].sha,"CMS: maj "+sec);
     if(!r.ok)throw new Error("PUT "+r.status);
@@ -162,7 +163,23 @@ async function save(sec){
     liveData[sec]=cache[sec];
     m.className="msg ok";m.textContent="✓ Enregistré";
     toast("✓ "+FILES[sec].label+" mis à jour");
-  }catch(e){m.className="msg err";m.textContent="✗ Erreur: "+e.message;}
+    const now=new Date();
+    const stamp="Dernière sauvegarde : "+now.toLocaleDateString("fr-CA")+" à "+now.toLocaleTimeString("fr-CA",{hour:"2-digit",minute:"2-digit"});
+    localStorage.setItem("aip_lastsave",stamp);
+    setState("updated","✓ Site mis à jour — "+stamp+" (quelques minutes pour le site public)");
+    dirty[sec]=false;
+    sessionStorage.removeItem("aip_draft_"+sec);
+  }catch(e){m.className="msg err";m.textContent="✗ Erreur: "+e.message;setState("idle","✗ Erreur d'enregistrement");}
+}
+function setState(cls,msg){
+  const s=document.getElementById("save-state");
+  if(!s)return;
+  s.className="save-state"+(cls&&cls!=="idle"?" "+cls:"");
+  s.textContent=msg||"";
+}
+function revert(sec){
+  if(!confirm("Rétablir la dernière version enregistrée ? Vos modifications non enregistrées seront perdues."))return;
+  ghGetRaw(`content/${sec}.json`).then(j=>{cache[sec]=j;liveData[sec]=j;show(sec,document.querySelector('nav a[data-sec="'+sec+'"]'));setState("idle","✓ Dernière version rechargée");});
 }
 function renderImages(panel){
   let h=`<div class="card"><h3>Photos &amp; images du site</h3><p class="hint">Remplace une image en choisissant un fichier. <b>Même nom = même emplacement</b> sur le site. Les tailles recommandées sont indicatives.</p>`;
