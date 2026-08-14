@@ -168,12 +168,20 @@ async function updatePreview(){
         html=html.split("{{"+f+"_"+k+"}}").join(d[k]);
       }
     }
+    const svc=liveData.services.data;
+    const iconsDep=["🛠️","🔧","🐞","💲"],iconsCre=["🌐","📱","👤","❓"];
+    const linksDep=["services.html","depannage-nicolet.html","virus.html","tarifs.html"];
+    const linksCre=["services.html#creation","services.html#creation","apropos.html","faq.html"];
+    const card=(t,d,href,ico)=>`<a class="card" href="${href}"><div class="card-ico">${ico}</div><h3>${t}</h3><p>${d}</p></a>`;
+    const depCards=svc.depannage.map((x,i)=>card(x.title,x.desc,linksDep[i],iconsDep[i])).join("\n");
+    const creCards=svc.creation.map((x,i)=>card(x.title,x.desc,linksCre[i],iconsCre[i])).join("\n");
+    const revs=liveData.avis.data.reviews.map(r=>`<article class="card review"><div class="stars">★★★★★</div><p>« ${r.text} »</p><span class="review-author">— ${r.author}</span></article>`).join("\n");
     html=html.replace(/{{avis_count}}/g,liveData.avis.data.count);
     html=html.replace(/{{footer_phone}}/g,liveData.footer.data.phone);
     html=html.replace(/{{footer_copyright}}/g,liveData.footer.data.copyright);
-    html=html.replace(/{{reviews_block}}/g,"");
-    html=html.replace(/{{dep_cards}}/g,"");
-    html=html.replace(/{{cre_cards}}/g,"");
+    html=html.replace(/{{reviews_block}}/g,revs);
+    html=html.replace(/{{dep_cards}}/g,depCards);
+    html=html.replace(/{{cre_cards}}/g,creCards);
     document.getElementById("pframe").srcdoc=html;
   }catch(e){/* preview silencieux */}
 }
