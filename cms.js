@@ -201,7 +201,7 @@ async function updatePreview(){
   try{
     const tpl=await ghGetRaw("index.html");
     let html=tpl.text;
-    html=html.replace("<head>","<head>\n<base href=\"https://atelierpotvin.ca/\">");
+    html=html.replace("<head>","<head>\n<base href=\"https://atelierpotvin.ca/\">\n<style>.cms-edit{cursor:pointer;outline:2px dashed transparent;transition:outline .15s}.cms-edit:hover{outline:2px dashed #6366f1;background:rgba(99,102,241,.06)}.cms-edit::after{content:'✎ modifier';position:absolute;top:6px;right:6px;background:#6366f1;color:#fff;font:12px sans-serif;padding:2px 6px;border-radius:4px;opacity:0}.cms-edit:hover::after{opacity:1}</style>\n<script>window.addEventListener('DOMContentLoaded',()=>{const M={accueil:'hero',explorer:'services',avis-accueil:'avis','site-footer':'footer'};for(const id in M){const el=document.getElementById(id);if(el){el.classList.add('cms-edit');el.style.position='relative';el.onclick=()=>window.parent.show(M[id],window.parent.document.querySelector('nav a[data-sec=\"'+M[id]+'\"]'));}}const cards=document.querySelectorAll('.services-grid .card');cards.forEach(c=>{c.classList.add('cms-edit');c.style.position='relative';c.onclick=e=>{e.preventDefault();window.parent.show('services',window.parent.document.querySelector('nav a[data-sec=\"services\"]'));}});});<\/script>");
     for(const f of Object.keys(FILES)){
       const d=liveData[f].data;
       for(const k of Object.keys(d)){
