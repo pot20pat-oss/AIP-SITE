@@ -153,6 +153,7 @@ async function updatePreview(){
   try{
     const tpl=await ghGetRaw("index.html");
     let html=tpl.text;
+    html=html.replace("<head>","<head>\n<base href=\"https://atelierpotvin.ca/\">");
     for(const f of Object.keys(FILES)){
       const d=liveData[f].data;
       for(const k of Object.keys(d)){
