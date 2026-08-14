@@ -1,6 +1,5 @@
 backend:
-  name: netlify
-  repo: pot20pat-oss/AIP-SITE
+  name: git-gateway
   branch: main
 
 media_folder: "assets"
