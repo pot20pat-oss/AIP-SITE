@@ -20,7 +20,15 @@
     <form class="bot-input" id="bot-form">
       <input id="bot-text" type="text" placeholder="Votre question…" autocomplete="off" />
       <button type="submit">Envoyer</button>
-    </form>`;
+    </form>
+    <button id="bot-rdv" type="button">📅 Prendre un rendez-vous</button>
+    <div id="bot-rdv-form" style="display:none; padding:10px; border-top:1px solid var(--line); background:#fff;">
+      <input id="rdv-nom" type="text" placeholder="Votre nom" style="width:100%;margin-bottom:6px;padding:8px;border:1px solid var(--line);border-radius:8px" />
+      <input id="rdv-tel" type="text" placeholder="Téléphone" style="width:100%;margin-bottom:6px;padding:8px;border:1px solid var(--line);border-radius:8px" />
+      <textarea id="rdv-prob" placeholder="Votre problème" style="width:100%;margin-bottom:6px;padding:8px;border:1px solid var(--line);border-radius:8px;font-family:inherit"></textarea>
+      <input id="rdv-cren" type="text" placeholder="Créneau souhaité (ex: mardi 14h)" style="width:100%;margin-bottom:8px;padding:8px;border:1px solid var(--line);border-radius:8px" />
+      <button id="rdv-send" type="button" style="width:100%;background:linear-gradient(135deg,#16a34a,#22c55e);color:#fff;border:none;border-radius:10px;padding:10px;font-weight:600;cursor:pointer">Envoyer la demande</button>
+    </div>`;
 
   document.body.appendChild(btn);
   document.body.appendChild(win);
@@ -41,7 +49,30 @@
     win.classList.toggle('open');
     if (win.classList.contains('open')) text.focus();
   });
-  win.querySelector('#bot-close').addEventListener('click', () => win.classList.remove('open'));
+  win.querySelector('#bot-rdv').addEventListener('click', () => {
+    const f = win.querySelector('#bot-rdv-form');
+    f.style.display = f.style.display === 'none' ? 'block' : 'none';
+  });
+  win.querySelector('#rdv-send').addEventListener('click', async () => {
+    const nom = win.querySelector('#rdv-nom').value.trim();
+    const tel = win.querySelector('#rdv-tel').value.trim();
+    if (!nom || !tel) { alert('Nom et téléphone requis'); return; }
+    const payload = {
+      mode: 'rdv',
+      nom, tel,
+      probleme: win.querySelector('#rdv-prob').value.trim(),
+      creneau: win.querySelector('#rdv-cren').value.trim(),
+    };
+    const busy = document.createElement('div');
+    busy.className = 'bot-msg bot-bot'; busy.textContent = '…'; msgs.appendChild(busy);
+    try {
+      const r = await fetch(BOT_API, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+      const j = await r.json();
+      busy.remove();
+      if (j.ok) addMsg('bot', escapeHtml(j.reply));
+      else addMsg('bot', 'Erreur lors de l’envoi. Appelez Patrick au <strong>819 380-2999</strong>.');
+    } catch { busy.remove(); addMsg('bot', 'Problème de connexion. Appelez Patrick au <strong>819 380-2999</strong>.'); }
+  });
 
   form.addEventListener('submit', async (e) => {
     e.preventDefault();

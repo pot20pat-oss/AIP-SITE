@@ -3,12 +3,21 @@
 // Deploy : wrangler deploy (voir wrangler.toml).
 
 const AIP_SYS = `Tu es l'assistant d'Atelier Informatique Potvin (AIP), tenu par Patrick Potvin à Nicolet, Québec.
-Tu réponds en français, de façon courtoise, simple et rassurante, sans jargon technique.
-Entreprise : dépannage informatique, réparation PC, suppression de virus, réseau Wi-Fi, assistance à distance, sauvegardes, création de sites web et applications sur mesure.
-Zone desservie : Nicolet, Trois-Rivières, Bécancour et environs (50 km). Service à domicile ou à distance.
-Patrick a 40 ans d'expérience. Téléphone : 819 380-2999. Diagnostic : 45 $. Dépense horaire raisonnable.
-Si la question est urgente ou nécessite un rendez-vous, dis poliment de appeler Patrick au 819 380-2999.
-Réponds en 2-4 phrases maximum. Ne mentionne jamais que tu es une IA.`;
+Tu réponds en français, courtois, simple, rassurant, sans jargon.
+Services : dépannage PC, réparation, suppression de virus, réseau Wi-Fi, assistance à distance, sauvegardes, création de sites web et applications sur mesure.
+Zone : Nicolet, Trois-Rivières, Bécancour et environs (50 km). À domicile ou à distance.
+Patrick : 40 ans d'expérience. Tél : 819 380-2999.
+
+TARIFS RÉELS (donne-les si on demande le prix, sans jamais "estimer la valeur" d'un projet) :
+- Diagnostic : 45 $
+- Assistance à distance : 50 $ / session
+- Dépannage à domicile : taux horaire raisonnable, devis avant travail
+- Site web vitrine : à partir de 1500 $ (selon pages/contenu)
+- Application sur mesure : sur estimation selon les besoins
+- Suppression virus / optimisation : forfait selon le cas, dis de demander un diagnostic
+
+Si l'utilisateur veut un rendez-vous, dis-lui de cliquer "Prendre un rendez-vous" dans le chat (le formulaire collecte nom, téléphone, problème, créneau souhaité). Ne fais pas de faux rendez-vous toi-même.
+Réponds en 2-4 phrases max. Ne dis jamais que tu es une IA.`;
 
 const HERMES_ENDPOINT = 'https://integrate.api.nvidia.com/v1/chat/completions';
 
@@ -17,12 +26,23 @@ export default {
     const url = new URL(request.url);
     const path = url.pathname;
 
-    if (path === '/bot') {
-      return handleBot(request, env, ctx);
-    }
+    if (path === '/bot') return handleBot(request, env, ctx);
+    if (path === '/bot/telegram') return handleTelegramWebhook(request, env, ctx);
     return handleContact(request, env, ctx);
   },
 };
+
+async function sendTelegram(env, text) {
+  if (!env.TG_BOT_TOKEN || !env.TG_CHAT_ID) return false;
+  try {
+    await fetch(`https://api.telegram.org/bot${env.TG_BOT_TOKEN}/sendMessage`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ chat_id: env.TG_CHAT_ID, text, parse_mode: 'HTML' }),
+    });
+    return true;
+  } catch { return false; }
+}
 
 async function handleBot(request, env, ctx) {
   const origin = request.headers.get('origin') || '*';
@@ -32,20 +52,28 @@ async function handleBot(request, env, ctx) {
     'Access-Control-Allow-Headers': 'Content-Type',
   };
 
-  if (request.method === 'OPTIONS') {
-    return new Response(null, { status: 204, headers: cors });
-  }
-  if (request.method !== 'POST') {
-    return new Response('Méthode non autorisée', { status: 405, headers: cors });
-  }
-  if (!env.HERMES_KEY) {
-    return new Response(JSON.stringify({ ok: false, error: 'Clé Hermes non configurée' }), { status: 500, headers: { ...cors, 'Content-Type': 'application/json' } });
-  }
+  if (request.method === 'OPTIONS') return new Response(null, { status: 204, headers: cors });
+  if (request.method !== 'POST') return new Response('Méthode non autorisée', { status: 405, headers: cors });
 
   let data;
   try { data = await request.json(); } catch { return new Response('Requête invalide', { status: 400, headers: cors }); }
+
+  // Mode rendez-vous : collecte structurée -> Telegram
+  if (data.mode === 'rdv') {
+    const nom = (data.nom || '').toString().slice(0, 100).trim();
+    const tel = (data.tel || '').toString().slice(0, 40).trim();
+    const prob = (data.probleme || '').toString().slice(0, 500).trim();
+    const cren = (data.creneau || '').toString().slice(0, 200).trim();
+    if (!nom || !tel) return new Response(JSON.stringify({ ok: false, error: 'Nom et téléphone requis' }), { status: 422, headers: { ...cors, 'Content-Type': 'application/json' } });
+
+    const txt = `🔔 <b>Nouvelle demande de rendez-vous AIP</b>\n\n👤 <b>${nom}</b>\n📞 ${tel}\n🛠 <b>Problème :</b> ${prob || '(non précisé)'}\n📅 <b>Creneau souhaité :</b> ${cren || '(non précisé)'}\n\nConfirme le creneau ou recontacte le client.`;
+    const sent = await sendTelegram(env, txt);
+    return new Response(JSON.stringify({ ok: true, sent, reply: `Merci ${nom} ! Votre demande de rendez-vous a été envoyée à Patrick. Il vous contactera au ${tel} pour confirmer le créneau.` }), { status: 200, headers: { ...cors, 'Content-Type': 'application/json' } });
+  }
+
   const msg = (data.message || '').toString().slice(0, 2000);
   if (!msg) return new Response('Message vide', { status: 422, headers: cors });
+  if (!env.HERMES_KEY) return new Response(JSON.stringify({ ok: false, error: 'Clé non configurée' }), { status: 500, headers: { ...cors, 'Content-Type': 'application/json' } });
 
   try {
     const r = await fetch(HERMES_ENDPOINT, {
@@ -54,7 +82,7 @@ async function handleBot(request, env, ctx) {
       body: JSON.stringify({
         model: env.HERMES_MODEL || 'meta/llama-3.1-8b-instruct',
         messages: [ { role: 'system', content: AIP_SYS }, { role: 'user', content: msg } ],
-        max_tokens: 400,
+        max_tokens: 250,
         temperature: 0.7,
       }),
     });
@@ -68,6 +96,17 @@ async function handleBot(request, env, ctx) {
   } catch (e) {
     return new Response(JSON.stringify({ ok: false, error: String(e) }), { status: 500, headers: { ...cors, 'Content-Type': 'application/json' } });
   }
+}
+
+// Webhook Telegram (Tranche B - boucle 2 sens) : Patrick répond -> on stocke le créneau confirmé
+async function handleTelegramWebhook(request, env, ctx) {
+  if (request.method !== 'POST') return new Response('POST only', { status: 405 });
+  try {
+    const u = await request.json();
+    // logique minimal : on stocke le dernier message de Patrick dans KV (à lier au lead plus tard)
+    console.log('TG update', JSON.stringify(u).slice(0, 300));
+    return new Response('ok');
+  } catch { return new Response('err', { status: 400 }); }
 }
 
 async function handleContact(request, env, ctx) {
