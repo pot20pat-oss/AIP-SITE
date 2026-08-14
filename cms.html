@@ -19,8 +19,9 @@
 <body>
   <h1>CMS AIP — Édition du contenu</h1>
   <div class="box">
-    <label>Token GitHub (ghp_... — il reste dans ton navigateur, pas envoyé ailleurs) :</label><br>
+    <label>Token GitHub (ghp_... — il reste dans ton navigateur si tu coches « Se souvenir ») :</label><br>
     <input id="token" type="password" style="width:400px" placeholder="ghp_...">
+    <label style="margin-left:8px"><input type="checkbox" id="remember"> Se souvenir</label>
     <button onclick="loadAll()">Charger le contenu</button>
   </div>
   <div id="forms"></div>
@@ -29,6 +30,12 @@
 <script>
 const REPO="pot20pat-oss/AIP-SITE", BRANCH="main";
 const FILES=["hero","footer","tarifs","avis","services"];
+
+// Pre-remplir depuis localStorage au chargement
+(function(){
+  const t=localStorage.getItem("aip_cms_token");
+  if(t){ document.getElementById("token").value=t; document.getElementById("remember").checked=true; }
+})();
 
 async function ghGet(file){
   const tk=document.getElementById("token").value;
@@ -39,6 +46,9 @@ async function ghGet(file){
 }
 
 async function loadAll(){
+  const tk=document.getElementById("token").value;
+  if(!tk){ alert("Entre ton token GitHub d'abord"); return; }
+  if(document.getElementById("remember").checked){ localStorage.setItem("aip_cms_token", tk); }
   const forms=document.getElementById("forms");
   forms.innerHTML="<p>Chargement...</p>";
   let h="";
