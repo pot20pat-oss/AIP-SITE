@@ -132,8 +132,9 @@ function parentGo(sec){show(sec,document.querySelector('nav a[data-sec="'+sec+'"
 function scrollToPreview(sec){
   const p=document.getElementById("preview");
   if(!p.classList.contains("show")){p.classList.add("show");updatePreview();}
-  const fr=document.getElementById("pframe");
-  if(fr&&fr.contentWindow)setTimeout(()=>fr.contentWindow.postMessage({scrollTo:sec},"*"),500);
+  const sel={hero:"#accueil",services:".services-grid",avis:"#avis-accueil",footer:".site-footer"}[sec];
+  const t=document.querySelector("#pframe "+sel);
+  if(t){setTimeout(()=>{t.scrollIntoView({behavior:"smooth",block:"center"});t.style.outline="3px solid #22c55e";setTimeout(()=>t.style.outline="",2500);},400);}
 }
 function liveEdit(sec,k,v){
   liveData[sec].data[k]=v;
@@ -251,7 +252,7 @@ async function updatePreview(){
     try{
       const tpl=await ghGetRaw("index.html");
       let html=tpl.text;
-      html=html.replace("<head>","<head>\n<base href=\"https://atelierpotvin.ca/\">");
+      html=html.replace(/<\/head>/i,'<link rel="stylesheet" href="https://atelierpotvin.ca/styles.css"></head>');
       for(const f of Object.keys(FILES)){
         const d=liveData[f].data;
         for(const k of Object.keys(d)){
@@ -262,7 +263,7 @@ async function updatePreview(){
       const fallback=["wrench","tool","bug","dollar"],fallbackCre=["globe","phone","user","help"];
       const linksDep=["services.html","depannage-nicolet.html","virus.html","tarifs.html"];
       const linksCre=["services.html#creation","services.html#creation","apropos.html","faq.html"];
-      const icoFor=(x,i,fb)=>x.icon?`<img src="assets/${x.icon}" alt="" style="width:30px;height:30px;object-fit:contain">`:icSvg(fb[i]);
+      const icoFor=(x,i,fb)=>x.icon?`<img src="https://atelierpotvin.ca/assets/${x.icon}" alt="" style="width:30px;height:30px;object-fit:contain">`:icSvg(fb[i]);
       const card=(x,href,i,fb)=>`<a class="card" href="${href}"><div class="card-ico" style="font-size:30px;line-height:1;display:flex;align-items:center">${icoFor(x,i,fb)}</div><h3>${x.title}</h3><p>${x.desc}</p></a>`;
       const depCards=svc.depannage.map((x,i)=>card(x,linksDep[i],i,fallback)).join("\n");
       const creCards=svc.creation.map((x,i)=>card(x,linksCre[i],i,fallbackCre)).join("\n");
@@ -278,11 +279,16 @@ async function updatePreview(){
       html=html.replace('<section class="section section-alt" id="explorer">','<section class="section section-alt cms-edit" id="explorer" onclick="parentGo(\'services\')">');
       html=html.replace('<section class="section" id="avis-accueil">','<section class="section cms-edit" id="avis-accueil" onclick="parentGo(\'avis\')">');
       html=html.replace('<footer class="site-footer">','<footer class="site-footer cms-edit" onclick="parentGo(\'footer\')">');
-      html+=`<script>window.parentGo=sec=>window.parent.show(sec,window.parent.document.querySelector('nav a[data-sec="'+sec+'"]'));
-      const m={hero:'#accueil',services:'.services-grid',avis:'#avis-accueil',footer:'.site-footer'};
-      window.addEventListener('message',e=>{const s=e.data&&e.data.scrollTo;if(!s)return;const t=document.querySelector(m[s]);if(t){t.scrollIntoView({behavior:'smooth',block:'center'});t.style.outline='3px solid #22c55e';setTimeout(()=>t.style.outline='',2500);}});<\/script>`;
-      document.getElementById("pframe").srcdoc=html;
-    }catch(e){/* preview silencieux */}
+      const pf=document.getElementById("pframe");
+      pf.innerHTML=html;
+      pf.querySelectorAll(".cms-edit").forEach(el=>{el.style.cursor="pointer";el.style.position="relative";
+        el.addEventListener("mouseenter",()=>{el.style.outline="2px dashed #6366f1";});
+        el.addEventListener("mouseleave",()=>{el.style.outline="";});});
+    }catch(e){
+      console.error("updatePreview error:",e);
+      const pf=document.getElementById("pframe");
+      if(pf)pf.innerHTML='<p style="padding:20px;color:#dc2626;font-family:sans-serif">Erreur preview: '+(e.message||e)+'</p>';
+    }
   },300);
 }
 function icSvg(kind){
