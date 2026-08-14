@@ -1,0 +1,9 @@
+name = "aip-cms-auth"
+main = "index.js"
+compatibility_date = "2024-09-23"
+
+# Route sur le domaine principal (pas de sous-domaine a decouvrir)
+routes = [
+  { pattern = "atelierpotvin.ca/auth", custom_domain = true },
+  { pattern = "atelierpotvin.ca/callback", custom_domain = true }
+]
