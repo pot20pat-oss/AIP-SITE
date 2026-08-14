@@ -37,29 +37,31 @@ const FILES={
 };
 const IMGDESC={
   "photo.jpg":{cat:"Accueil",desc:"Photo de Patrick (accueil + à propos)",size:"1024×1280",fmt:"jpg/png",max:"2 Mo"},
-  "hero-bg.jpg":{cat:"Accueil",desc:"Fond page d'accueil",size:"1600×900",fmt:"jpg",max:"1.5 Mo"},
-  "hero-pattern.png":{cat:"Accueil",desc:"Motif déco accueil",size:"400×400",fmt:"png",max:"500 Ko"},
-  "pattern.png":{cat:"Général",desc:"Motif déco général",size:"400×400",fmt:"png",max:"500 Ko"},
+  "hero-repair.jpg":{cat:"Accueil",desc:"Image principale page d'accueil",size:"1600×900",fmt:"jpg",max:"1.5 Mo"},
+  "hero-tech.jpg":{cat:"Accueil",desc:"Image techno accueil",size:"1600×900",fmt:"jpg",max:"1.5 Mo"},
+  "bg-mesh.png":{cat:"Accueil",desc:"Fond décoratif",size:"400×400",fmt:"png",max:"500 Ko"},
   "atelier-ram.jpg":{cat:"Services",desc:"Atelier — mémoire RAM",size:"1200×800",fmt:"jpg",max:"1 Mo"},
   "atelier-soudure.jpg":{cat:"Services",desc:"Atelier — soudure",size:"1200×800",fmt:"jpg",max:"1 Mo"},
   "atelier-ecran.jpg":{cat:"Services",desc:"Atelier — écrans",size:"1200×800",fmt:"jpg",max:"1 Mo"},
-  "reparation.jpg":{cat:"Services",desc:"Réparation",size:"1200×800",fmt:"jpg",max:"1 Mo"},
-  "virus.jpg":{cat:"Services",desc:"Virus/sécurité",size:"1200×800",fmt:"jpg",max:"1 Mo"},
-  "reseau.jpg":{cat:"Services",desc:"Réseau",size:"1200×800",fmt:"jpg",max:"1 Mo"},
-  "sauvegarde.jpg":{cat:"Services",desc:"Sauvegarde",size:"1200×800",fmt:"jpg",max:"1 Mo"},
-  "siteweb.jpg":{cat:"Services",desc:"Site web",size:"1200×800",fmt:"jpg",max:"1 Mo"},
+  "repair-workstation.jpg":{cat:"Services",desc:"Poste de réparation",size:"1200×800",fmt:"jpg",max:"1 Mo"},
+  "security-workstation.jpg":{cat:"Services",desc:"Sécurité / virus",size:"1200×800",fmt:"jpg",max:"1 Mo"},
+  "network-backup.jpg":{cat:"Services",desc:"Réseau & sauvegarde",size:"1200×800",fmt:"jpg",max:"1 Mo"},
+  "web-dev-workstation.jpg":{cat:"Services",desc:"Création web",size:"1200×800",fmt:"jpg",max:"1 Mo"},
+  "remote-monitoring.jpg":{cat:"Services",desc:"Assistance à distance",size:"1200×800",fmt:"jpg",max:"1 Mo"},
   "formation.jpg":{cat:"Services",desc:"Formation",size:"1200×800",fmt:"jpg",max:"1 Mo"},
+  "installation.jpg":{cat:"Services",desc:"Installation",size:"1200×800",fmt:"jpg",max:"1 Mo"},
+  "reparation2.jpg":{cat:"Services",desc:"Réparation 2",size:"1200×800",fmt:"jpg",max:"1 Mo"},
+  "reseau-router.jpg":{cat:"Services",desc:"Routeur réseau",size:"1200×800",fmt:"jpg",max:"1 Mo"},
+  "debug.jpg":{cat:"Services",desc:"Débogage",size:"1200×800",fmt:"jpg",max:"1 Mo"},
+  "remote.jpg":{cat:"Services",desc:"Bureau distant",size:"1200×800",fmt:"jpg",max:"1 Mo"},
+  "web-dev.jpg":{cat:"Services",desc:"Développement web",size:"1200×800",fmt:"jpg",max:"1 Mo"},
+  "app-dev.jpg":{cat:"Services",desc:"Développement application",size:"1200×800",fmt:"jpg",max:"1 Mo"},
   "logo.png":{cat:"Branding",desc:"Logo entreprise",size:"200×200",fmt:"png",max:"300 Ko"},
-  "logo-site.jpg":{cat:"Branding",desc:"Logo site",size:"200×200",fmt:"jpg/png",max:"300 Ko"},
-  "logoiqui.png":{cat:"Branding",desc:"Logo secondaire",size:"200×200",fmt:"png",max:"300 Ko"},
-  "favicon.ico":{cat:"Branding",desc:"Icône onglet",size:"64×64",fmt:"ico",max:"100 Ko"},
-  "og-image.jpg":{cat:"Réseaux",desc:"Image partage réseaux",size:"1200×630",fmt:"jpg",max:"1 Mo"},
-  "tsp.jpg":{cat:"Réseaux",desc:"Image TSP",size:"1200×630",fmt:"jpg",max:"1 Mo"},
-  "fb.jpg":{cat:"Réseaux",desc:"Image Facebook",size:"1200×630",fmt:"jpg",max:"1 Mo"},
-  "phone.svg":{cat:"Icônes",desc:"Icône téléphone",size:"24×24",fmt:"svg",max:"50 Ko"},
-  "mail.svg":{cat:"Icônes",desc:"Icône courriel",size:"24×24",fmt:"svg",max:"50 Ko"}
+  "apercu-bois.png":{cat:"Branding",desc:"Aperçu démo Bois Morphée",size:"600×400",fmt:"png",max:"300 Ko"},
+  "apercu-fabri.png":{cat:"Branding",desc:"Aperçu démo Fabri-Meuble",size:"600×400",fmt:"png",max:"300 Ko"},
+  "apercu-houlec.png":{cat:"Branding",desc:"Aperçu démo Houlec",size:"600×400",fmt:"png",max:"300 Ko"}
 };
-const IMGCAT=["Accueil","Services","Branding","Réseaux","Icônes","Général"];
+const IMGCAT=["Accueil","Services","Branding"];
 let cache={}, liveData={};
 function headers(){return{Authorization:"Bearer "+document.getElementById("token").value,Accept:"application/vnd.github+json"};}
 function toB64(s){return btoa(unescape(encodeURIComponent(s)));}
@@ -171,7 +173,7 @@ function renderImages(panel){
     for(const name of names){
       const m=IMGDESC[name];
       h+=`<div class="imgrow">
-        <img src="assets/${name}" onerror="this.style.opacity=.2" id="prev-${name}">
+        <img src="https://atelierpotvin.ca/assets/${name}" onerror="this.style.display='none'" id="prev-${name}">
         <div style="flex:1">
           <div class="name">${name}</div>
           <div class="desc">${m.desc}</div>
