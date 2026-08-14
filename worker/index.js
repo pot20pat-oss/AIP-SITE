@@ -119,6 +119,10 @@ async function handleTelegramWebhook(request, env, ctx) {
   try {
     const u = await request.json();
     const msg = u?.message?.text || '';
+    if (/^\/start/i.test(msg)) {
+      await sendTelegram(env, `👋 <b>Bot AIP — Gestion des rendez-vous</b>\n\nQuand un client demande un RDV sur le site, tu reçois une alerte avec une référence (ex: LABC123).\n\nPour <b>confirmer</b> un rendez-vous, réponds :\n<code>CONFIRMER LABC123 mardi 14h</code>\n\nLe client verra la confirmation dans le chat du site.`);
+      return new Response('ok');
+    }
     const m = msg.match(/CONFIRMER\s+(L\w+)\s+(.+)/i);
     if (m && env.AIP_CONTACTS) {
       const id = m[1]; const cren = m[2].trim();
