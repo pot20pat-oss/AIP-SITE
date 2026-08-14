@@ -43,7 +43,7 @@
     "aggregateRating": {
       "@type": "AggregateRating",
       "ratingValue": "5.0",
-      "reviewCount": "X"
+      "reviewCount": "10"
     }
   }
   </script>
@@ -73,15 +73,15 @@
   <section class="hero" id="accueil">
     <div class="container hero-inner">
       <div class="hero-copy">
-        <span class="eyebrow">{{hero_eyebrow}}</span>
-        <h1>{{hero_h1}}</h1>
-        <p class="lead">{{hero_lead}}</p>
-        <p class="hero-intro">{{hero_intro}}</p>
+        <span class="eyebrow">Nicolet · Québec</span>
+        <h1>Dépannage informatique à Nicolet, sans jargon.</h1>
+        <p class="lead">Ordinateur lent, infecté, en panne, ou problème d'installation ou de réseau ? Patrick vous aide à Nicolet, Trois-Rivières et Bécancour — à domicile ou à distance — pour remettre votre informatique en ordre, rapidement et honnêtement.</p>
+        <p class="hero-intro">Bonjour, moi c'est Patrick. Depuis 40 ans, j'aide les particuliers et les petites entreprises à résoudre leurs problèmes informatiques simplement, sans jargon.</p>
         <div class="hero-actions">
-          <a href="tel:8193802999" class="btn btn-primary">{{hero_cta_primary}}</a>
-          <a href="contact.html" class="btn btn-ghost">{{hero_cta_secondary}}</a>
+          <a href="tel:8193802999" class="btn btn-primary">📞 Parler à Patrick</a>
+          <a href="contact.html" class="btn btn-ghost">Décrire mon problème</a>
         </div>
-        <p class="hero-note">{{hero_note}}</p>
+        <p class="hero-note">Diagnostic clair avant toute réparation — appelez pour connaître rapidement la disponibilité et le coût prévu.</p>
         <ul class="hero-points">
           <li>✓ Service informatique local à Nicolet</li>
           <li>✓ 40 ans d'expérience en dépannage</li>
@@ -112,12 +112,50 @@
 
       <h3 class="offer-label">🔧 Dépannage informatique</h3>
       <div class="cards">
-{{dep_cards}}
+        <a class="card" href="services.html">
+          <div class="card-ico">🛠️</div>
+          <h3>Services</h3>
+          <p>Réparation, virus, assistance à distance, réseau et sauvegardes.</p>
+        </a>
+        <a class="card" href="depannage-nicolet.html">
+          <div class="card-ico">🔧</div>
+          <h3>Dépannage Nicolet</h3>
+          <p>Page dédiée au dépannage à Nicolet et environs.</p>
+        </a>
+        <a class="card" href="virus.html">
+          <div class="card-ico">🐞</div>
+          <h3>Suppression de virus</h3>
+          <p>Virus, écrans bleus, lenteurs — on nettoie et sécurise.</p>
+        </a>
+        <a class="card" href="tarifs.html">
+          <div class="card-ico">💲</div>
+          <h3>Tarifs</h3>
+          <p>Diagnostic, dépannage à distance, taux horaire.</p>
+        </a>
       </div>
 
       <h3 class="offer-label offer-label-2">💡 Création numérique sur mesure</h3>
       <div class="cards">
-{{cre_cards}}
+        <a class="card" href="services.html#creation">
+          <div class="card-ico">🌐</div>
+          <h3>Sites web vitrines</h3>
+          <p>Site professionnel clair, hébergé, optimisé local. Dès 1500 $.</p>
+        </a>
+        <a class="card" href="services.html#creation">
+          <div class="card-ico">📱</div>
+          <h3>Applications sur mesure</h3>
+          <p>Outils web et logiciels adaptés à votre entreprise. Sur estimation.</p>
+        </a>
+        <a class="card" href="apropos.html">
+          <div class="card-ico">👤</div>
+          <h3>À propos</h3>
+          <p>Patrick, 40 ans d'expérience, avis clients et approche.</p>
+        </a>
+        <a class="card" href="faq.html">
+          <div class="card-ico">❓</div>
+          <h3>FAQ</h3>
+          <p>Prix, délais, garantie, confidentialité — réponses claires.</p>
+        </a>
       </div>
     </div>
   </section>
@@ -127,10 +165,24 @@
     <div class="container">
       <div class="section-head">
         <span class="eyebrow">Ce que disent les clients</span>
-        <h2>5.0★ sur Google · {{avis_count}} avis</h2>
+        <h2>5.0★ sur Google · 10 avis</h2>
       </div>
       <div class="cards">
-{{reviews_block}}
+        <article class="card review">
+          <div class="stars">★★★★★</div>
+          <p>« Service impeccable. J'ai jamais vu quelqu'un d'autant serviable et professionnel en informatique. Je recommande fortement ses services, il est expert dans son domaine. »</p>
+          <span class="review-author">— Alex Therrien (Google)</span>
+        </article>
+        <article class="card review">
+          <div class="stars">★★★★★</div>
+          <p>« Un gros problème de micro, j'ai gossé dessus pendant 2 mois, il a trouvé le problème en 10 min. Super beau service, très professionnel. »</p>
+          <span class="review-author">— Etienne Therrien (Google)</span>
+        </article>
+        <article class="card review">
+          <div class="stars">★★★★★</div>
+          <p>« Service dépannage au top. Ce fut très facile de rejoindre M. Potvin et service hors pair pour résoudre mon problème d'informatique, le tout avec un langage clair et de l'humour. Merci. »</p>
+          <span class="review-author">— Solange Poulin (Google)</span>
+        </article>
       </div>
     </div>
   </section>
@@ -142,7 +194,7 @@
         <img class="brand-logo" src="assets/logo.png" alt="AIP Atelier Informatique Potvin" />
         <span class="brand-text">Atelier Informatique Potvin</span>
       </div>
-      <p class="muted small">{{footer_copyright}}</p>
+      <p class="muted small">© 2026 AIP — Atelier Informatique Potvin. 462 Rue D. N. St Cyr, Nicolet, Québec. Tous droits réservés.</p>
       <nav class="footer-links">
         <a href="index.html">Accueil</a>
         <a href="services.html">Services</a>
@@ -151,8 +203,8 @@
         <a href="contact.html">Contact</a>
       </nav>
       <div class="footer-contact">
-        <a href="tel:8193802999">📞 {{footer_phone}}</a>
-        <span>{{footer_address}}</span>
+        <a href="tel:8193802999">📞 819 380-2999</a>
+        <span>462 Rue D. N. St Cyr, Nicolet, QC J3T 1H3</span>
       </div>
     </div>
   </footer>

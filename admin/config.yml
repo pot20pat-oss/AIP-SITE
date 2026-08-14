@@ -1,0 +1,67 @@
+backend:
+  name: github
+  repo: pot20pat-oss/AIP-SITE
+  branch: main
+
+# Chemin de base : Decap sert depuis /admin, contenu dans /content
+media_folder: "assets"
+public_folder: "assets"
+
+# Collections = ce que tu peux éditer dans l'interface
+collections:
+  - name: "site"
+    label: "Contenu du site"
+    files:
+      - name: "hero"
+        label: "Hero (accueil)"
+        file: "content/hero.json"
+        fields:
+          - { name: eyebrow, label: "Surtitre (ex: Nicolet · Québec)" }
+          - { name: h1, label: "Titre principal" }
+          - { name: lead, label: "Texte d'accroche", widget: text }
+          - { name: intro, label: "Présentation Patrick", widget: text }
+          - { name: cta_primary, label: "Bouton principal (texte)" }
+          - { name: cta_secondary, label: "Bouton secondaire (texte)" }
+          - { name: note, label: "Note diagnostic", widget: text }
+      - name: "footer"
+        label: "Footer (coordonnées)"
+        file: "content/footer.json"
+        fields:
+          - { name: phone, label: "Téléphone (format 819 380-2999)" }
+          - { name: address, label: "Adresse" }
+          - { name: copyright, label: "Texte copyright", widget: text }
+      - name: "tarifs"
+        label: "Tarifs"
+        file: "content/tarifs.json"
+        fields:
+          - { name: diagnostic, label: "Prix diagnostic ($)" }
+          - { name: remote, label: "Prix dépannage à distance ($)" }
+          - { name: horaire, label: "Taux horaire ($)" }
+          - { name: site, label: "Prix site web vitrine ($)" }
+      - name: "avis"
+        label: "Avis Google"
+        file: "content/avis.json"
+        fields:
+          - { name: count, label: "Nombre d'avis", widget: number }
+          - name: reviews
+            label: "Témoignages (accueil)"
+            widget: list
+            fields:
+              - { name: text, label: "Texte", widget: text }
+              - { name: author, label: "Auteur" }
+      - name: "services"
+        label: "Cartes services (accueil)"
+        file: "content/services.json"
+        fields:
+          - name: depannage
+            label: "Bloc Dépannage"
+            widget: list
+            fields:
+              - { name: title, label: "Titre carte" }
+              - { name: desc, label: "Description", widget: text }
+          - name: creation
+            label: "Bloc Création"
+            widget: list
+            fields:
+              - { name: title, label: "Titre carte" }
+              - { name: desc, label: "Description", widget: text }

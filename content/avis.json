@@ -1,0 +1,17 @@
+{
+  "count": 10,
+  "reviews": [
+    {
+      "text": "Service impeccable. J'ai jamais vu quelqu'un d'autant serviable et professionnel en informatique. Je recommande fortement ses services, il est expert dans son domaine.",
+      "author": "Alex Therrien (Google)"
+    },
+    {
+      "text": "Un gros problème de micro, j'ai gossé dessus pendant 2 mois, il a trouvé le problème en 10 min. Super beau service, très professionnel.",
+      "author": "Etienne Therrien (Google)"
+    },
+    {
+      "text": "Service dépannage au top. Ce fut très facile de rejoindre M. Potvin et service hors pair pour résoudre mon problème d'informatique, le tout avec un langage clair et de l'humour. Merci.",
+      "author": "Solange Poulin (Google)"
+    }
+  ]
+}

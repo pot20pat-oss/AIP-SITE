@@ -1,0 +1,15 @@
+name = "aip-contact"
+main = "index.js"
+compatibility_date = "2025-01-01"
+
+# KV namespace pour stocker les soumissions
+[[kv_namespaces]]
+binding = "AIP_CONTACTS"
+id = "6ac387156fa8456890f4ccf15017e95d"
+
+# Email Routing binding (optionnel)
+# Nécessite : domaine sur Cloudflare + Email Routing activé + adresse source configurée.
+# Si tu ne veux pas d'email auto, commente ce bloc ; le worker stocke quand même dans KV.
+[[send_email]]
+name = "SEND_EMAIL"
+destination_address = "contact@atelierpotvin.ca"

@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Contact — AIP Atelier Informatique Potvin | Nicolet</title>
+  <meta name="description" content="Contactez AIP Atelier Informatique Potvin à Nicolet : téléphone 819 380-2999, courriel, adresse et formulaire de demande rapide. Service honnête et rapide." />
+  <meta name="keywords" content="contact dépanneur Nicolet, téléphone AIP, soumission informatique, 819 380-2999" />
+  <meta name="author" content="Patrick Potvin" />
+  <meta name="geo.region" content="CA-QC" />
+  <meta name="geo.placename" content="Nicolet" />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Contact — AIP Atelier Informatique Potvin" />
+  <meta property="og:description" content="Parlons de votre problème. Téléphone, courriel, adresse et formulaire rapide." />
+  <meta property="og:image" content="assets/logo.png" />
+  <meta property="og:url" content="https://atelierpotvin.ca/contact.html" />
+  <meta name="twitter:card" content="summary" />
+  <link rel="icon" type="image/png" href="assets/logo.png" />
+  <link rel="icon" type="image/x-icon" href="favicon.ico" />
+  <link rel="apple-touch-icon" href="assets/logo.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <!-- Header -->
+  <header class="site-header" id="header">
+    <div class="container nav">
+      <a class="brand" href="index.html">
+        <img class="brand-logo" src="assets/logo.png" alt="AIP Atelier Informatique Potvin" />
+        <span class="brand-text">Atelier Informatique Potvin</span>
+      </a>
+      <button class="nav-toggle" id="navToggle" aria-label="Menu" aria-expanded="false" aria-controls="navLinks">☰</button>
+      <nav class="nav-links" id="navLinks">
+        <a href="index.html#services">Services</a>
+        <a href="index.html#avis">Avis</a>
+        <a href="index.html#realisations">Réalisations</a>
+        <a href="index.html#tech">Technologie</a>
+        <a href="tarifs.html">Tarifs</a>
+        <a href="index.html#pourquoi">Pourquoi nous</a>
+        <a href="contact.html">Contact</a>
+        <a href="contact.html" class="btn btn-primary nav-cta">Nous joindre</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Contact -->
+  <section class="section" id="contact">
+    <div class="container contact">
+      <div class="contact-copy">
+        <span class="eyebrow">Contact</span>
+        <h2>Parlons de votre problème.</h2>
+        <p class="muted">Appelez directement ou écrivez — on revient vers vous rapidement.</p>
+        <ul class="contact-list">
+          <li><span>Téléphone</span><a href="tel:8193802999">819 380-2999</a></li>
+          <li><span>Courriel</span><a href="mailto:contact@atelierpotvin.ca">contact@atelierpotvin.ca</a></li>
+          <li><span>Adresse</span>462 Rue D. N. St Cyr, Nicolet, QC J3T 1H3</li>
+          <li><span>Zones</span>Nicolet, Trois-Rivières, Bécancour (50 km)</li>
+          <li><span>Horaires</span>Lun-Ven 9h-17h · Urgences soirs/WE</li>
+          <li><span>Avis Google</span><a href="https://www.google.com/search?q=AIP+Atelier+Informatique+Potvin+Nicolet" target="_blank" rel="noopener">5.0★ · 10 avis</a></li>
+        </ul>
+        <div class="map-wrap">
+          <iframe class="map-embed" title="Carte — AIP Atelier Informatique Potvin, Nicolet"
+            loading="lazy" referrerpolicy="no-referrer-when-downgrade"
+            src="https://maps.google.com/maps?q=462+Rue+D.N.+St+Cyr+Nicolet+QC+J3T+1H3&z=15&output=embed"></iframe>
+          <div class="map-links">
+            <a href="https://www.google.com/maps/search/?api=1&query=46.2307%2C-72.5590" target="_blank" rel="noopener">Google Maps</a>
+            <a href="https://www.bing.com/maps?cp=46.2307~-72.5590&lvl=15" target="_blank" rel="noopener">Bing Maps</a>
+            <a href="https://www.openstreetmap.org/?mlat=46.2307&mlon=-72.5590#map=15/46.2307/-72.5590" target="_blank" rel="noopener">OpenStreetMap</a>
+          </div>
+        </div>
+      </div>
+      <div class="contact-card">
+        <div class="contact-glow"></div>
+        <h3>Demande rapide</h3>
+        <p class="muted small">Laissez vos coordonnées, on vous rappelle.</p>
+        <form id="contactForm" action="https://aip-contact.pot20pat.workers.dev" method="POST">
+          <input type="text" name="nom" placeholder="Votre nom" required />
+          <input type="tel" name="tel" placeholder="Téléphone" required />
+          <input type="email" name="email" placeholder="Courriel (facultatif)" />
+          <select name="type" required>
+            <option value="" disabled selected>Type de problème…</option>
+            <option value="lent">Ordinateur lent</option>
+            <option value="virus">Virus / écran bleu</option>
+            <option value="wifi">Wi-Fi / réseau</option>
+            <option value="imprimante">Imprimante</option>
+            <option value="installation">Installation</option>
+            <option value="autre">Autre</option>
+          </select>
+          <textarea name="message" rows="4" placeholder="Décrivez votre problème…" required></textarea>
+          <label class="consent"><input type="checkbox" name="consentement" required /> J'accepte d'être recontacté au sujet de ma demande.</label>
+          <button type="submit" class="btn btn-primary full">Envoyer la demande</button>
+          <p id="formStatus" class="form-note" style="display:none;color:#34d399;"></p>
+        </form>
+        <p class="form-note">Ou écrivez directement à <a href="mailto:contact@atelierpotvin.ca">contact@atelierpotvin.ca</a> / appelez au <a href="tel:8193802999">819 380-2999</a>.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <div class="brand">
+        <img class="brand-logo" src="assets/logo.png" alt="AIP Atelier Informatique Potvin" />
+        <span class="brand-text">Atelier Informatique Potvin</span>
+      </div>
+      <p class="muted small">© 2026 AIP — Atelier Informatique Potvin. 462 Rue D. N. St Cyr, Nicolet, Québec. Tous droits réservés.</p>
+      <nav class="footer-links">
+        <a href="index.html#services">Services</a>
+        <a href="contact.html">Contact</a>
+        <a href="tel:8193802999">819 380-2999</a>
+      </nav>
+    </div>
+  </footer>
+
+
+  <script src="script.js"></script>
+</body>
+</html>
