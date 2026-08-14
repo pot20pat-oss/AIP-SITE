@@ -115,7 +115,18 @@ function show(sec,el){
     const val=String(liveData[sec].data[k]??"");
     h+=`<label>${f.label}</label>`;
     if(f.type==="area")h+=`<textarea id="f-${sec}-${k}" oninput="liveEdit('${sec}','${k}',this.value)">${val.replace(/</g,"&lt;")}</textarea>`;
-    else h+=`<input type="text" id="f-${sec}-${k}" value="${val.replace(/"/g,"&quot;")}" oninput="liveEdit('${sec}','${k}',this.value)" />`;
+    else h+=`<input type="text" id="f-${sec}-${k}" value="${val.replace(/"/g,"&quot;")}" oninput="liveEdit('${sec}','${k}',this.value)" ${k==='cta'&&!val?'placeholder="Décrire mon problème"':''} />`;
+  }
+  if(sec==="avis"){
+    h+=`<h4 style="margin-top:20px">Avis clients (nom + citation)</h4><div id="avis-items">`;
+    (liveData.avis.data.reviews||[]).forEach((r,i)=>{
+      h+=`<div style="border:1px solid var(--line);border-radius:10px;padding:10px;margin:8px 0;display:flex;flex-direction:column;gap:6px">
+        <input type="text" id="f-avis-rev-name-${i}" value="${(r.author||"").replace(/"/g,"&quot;")}" placeholder="Nom du client" oninput="liveEditReview(${i},'author',this.value)" style="font-weight:600">
+        <textarea id="f-avis-rev-text-${i}" placeholder="Citation" oninput="liveEditReview(${i},'text',this.value)">${(r.text||"").replace(/</g,"&lt;")}</textarea>
+        <button class="btn btn-ghost" onclick="removeReview(${i})">Retirer cet avis</button>
+      </div>`;
+    });
+    h+=`</div><button class="btn btn-ghost" onclick="addReview()">+ Ajouter un avis</button>`;
   }
   if(sec==="services"){
     h+=`<h4 style="margin-top:20px">Icônes des cartes (SVG) + libellés commerciaux</h4>`;
@@ -149,6 +160,24 @@ function liveEditCta(key,idx,v){
   liveData.services.data[key][idx].cta=v;
   updatePreview();
 }
+function ensureReviews(){if(!liveData.avis.data.reviews)liveData.avis.data.reviews=[];}
+function liveEditReview(i,field,v){
+  ensureReviews();
+  liveData.avis.data.reviews[i]=liveData.avis.data.reviews[i]||{};
+  liveData.avis.data.reviews[i][field]=v;
+  updatePreview();
+  const m=document.getElementById("m-avis");if(m&&!m.textContent.includes("✓")){m.className="msg";m.textContent="";}
+}
+function addReview(){
+  ensureReviews();
+  liveData.avis.data.reviews.push({author:"",text:""});
+  show("avis",document.querySelector('nav a[data-sec="avis"]'));
+}
+function removeReview(i){
+  ensureReviews();
+  liveData.avis.data.reviews.splice(i,1);
+  show("avis",document.querySelector('nav a[data-sec="avis"]'));
+}
 async function save(sec){
   const m=document.getElementById("m-"+sec);
   const data={...cache[sec].data};
@@ -159,6 +188,7 @@ async function save(sec){
     if(err){m.className="msg err";m.textContent="✗ "+f.label+": "+err;return;}
     data[k]=v;
   }
+  if(sec==="avis"){ensureReviews();data.reviews=liveData.avis.data.reviews;}
   m.className="msg";m.textContent="Enregistrement...";
   setState("publishing","Publication en cours…");
   try{
@@ -227,7 +257,7 @@ async function previewThenUpload(name,input){
   try{
     const r0=await fetch(`https://api.github.com/repos/${REPO}/contents/assets/${name}?ref=${BRANCH}`,{headers:headers()});
     const sha=r0.ok?(await r0.json()).sha:undefined;
-    const b64=await fileToB64(file);
+    const b64=await compressToWebP(file,maxBytes);
     const r=await fetch(`https://api.github.com/repos/${REPO}/contents/assets/${name}`,{method:"PUT",headers:headers(),
       body:JSON.stringify({message:"CMS: img "+name,content:b64,sha})});
     if(!r.ok){const t=await r.text();throw new Error("PUT "+r.status+" "+t.slice(0,300));}
@@ -235,6 +265,21 @@ async function previewThenUpload(name,input){
     toast("✓ "+name+" remplacée");
     updatePreview();
   }catch(e){console.error(e);const msg="✗ "+name+": "+e.message;toast(msg,false);if(errBox)errBox.textContent=msg;}
+}
+// Convertit en WebP (qualité 0.85) si plus léger que l'original, sinon garde l'original
+async function compressToWebP(file,maxBytes){
+  if(!window.OffscreenCanvas && !document.createElement("canvas").getContext)return await fileToB64(file);
+  try{
+    const bmp=await createImageBitmap(file);
+    const cvs=document.createElement("canvas");
+    cvs.width=bmp.width;cvs.height=bmp.height;
+    const ctx=cvs.getContext("2d");
+    ctx.drawImage(bmp,0,0);
+    const webp=cvs.toDataURL("image/webp",0.85);
+    const orig=await fileToB64(file);
+    if(webp.length<orig.length)return webp.split(",")[1];
+    return orig.split(",")[1];
+  }catch(e){return (await fileToB64(file)).split(",")[1];}
 }
 function uploadIcon(key,idx,input){
   const file=input.files[0];
