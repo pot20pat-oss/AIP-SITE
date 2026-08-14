@@ -115,6 +115,16 @@ function show(sec,el){
     if(f.type==="area")h+=`<textarea id="f-${sec}-${k}" oninput="liveEdit('${sec}','${k}',this.value)">${val.replace(/</g,"&lt;")}</textarea>`;
     else h+=`<input type="text" id="f-${sec}-${k}" value="${val.replace(/"/g,"&quot;")}" oninput="liveEdit('${sec}','${k}',this.value)" />`;
   }
+  if(sec==="services"){
+    h+=`<h4 style="margin-top:20px">Icônes des cartes (SVG)</h4>`;
+    liveData.services.data.depannage.concat(liveData.services.data.creation).forEach((x,i)=>{
+      const key=i<4?"depannage":"creation";const idx=i<4?i:i-4;
+      const cur=liveData.services.data[key][idx].icon||"";
+      h+=`<div style="display:flex;align-items:center;gap:10px;margin:6px 0"><span style="width:140px">${x.title}</span>`+
+        `<input type="file" accept=".svg,image/svg+xml" onchange="uploadIcon('${key}',${idx},this)">`+
+        `<span style="font-size:12px;color:#64748b">${cur?("actuel: "+cur):"défaut"}</span></div>`;
+    });
+  }
   h+=`<div style="margin-top:18px;display:flex;gap:10px;align-items:center"><button class="btn" onclick="save('${sec}')">Enregistrer</button><button class="btn btn-ghost" onclick="scrollToPreview('${sec}')">👁 Voir dans le preview</button><span class="msg" id="m-${sec}"></span></div></div>`;
   panel.innerHTML=h;
 }
@@ -122,9 +132,8 @@ function parentGo(sec){show(sec,document.querySelector('nav a[data-sec="'+sec+'"
 function scrollToPreview(sec){
   const p=document.getElementById("preview");
   if(!p.classList.contains("show")){p.classList.add("show");updatePreview();}
-  const sel={hero:"#accueil",services:".services-grid",avis:"#avis-accueil",footer:".site-footer"}[sec];
-  const t=document.querySelector("#pframe "+sel);
-  if(t){setTimeout(()=>{t.scrollIntoView({behavior:"smooth",block:"center"});t.style.outline="3px solid #22c55e";setTimeout(()=>t.style.outline="",2500);},400);}
+  const fr=document.getElementById("pframe");
+  if(fr&&fr.contentWindow)setTimeout(()=>fr.contentWindow.postMessage({scrollTo:sec},"*"),500);
 }
 function liveEdit(sec,k,v){
   liveData[sec].data[k]=v;
@@ -202,46 +211,79 @@ async function previewThenUpload(name,input){
     updatePreview();
   }catch(e){console.error(e);const msg="✗ "+name+": "+e.message;toast(msg,false);if(errBox)errBox.textContent=msg;}
 }
+function uploadIcon(key,idx,input){
+  const file=input.files[0];
+  if(!file)return;
+  if(file.type!=="image/svg+xml"&&!file.name.endsWith(".svg")){toast("✗ icône: seulement SVG",false);return;}
+  const name="icone-"+key+"-"+idx+".svg";
+  toast("Envoi "+name+"...");
+  file.arrayBuffer().then(async buf=>{
+    const b64=btoa(String.fromCharCode(...new Uint8Array(buf)));
+    try{
+      const r0=await fetch(`https://api.github.com/repos/${REPO}/contents/assets/${name}?ref=${BRANCH}`,{headers:headers()});
+      const sha=r0.ok?(await r0.json()).sha:undefined;
+      const r=await fetch(`https://api.github.com/repos/${REPO}/contents/assets/${name}`,{method:"PUT",headers:headers(),
+        body:JSON.stringify({message:"CMS: icon "+name,content:b64,sha})});
+      if(!r.ok)throw new Error("PUT "+r.status);
+      liveData.services.data[key][idx].icon=name;
+      // sauvegarde services.json
+      const sd={...cache.services.data};
+      for(const kk of Object.keys(FILES.services.fields))sd[kk]=liveData.services.data[kk];
+      sd.depannage=liveData.services.data.depannage;
+      sd.creation=liveData.services.data.creation;
+      const rr=await ghPutRaw(`content/services.json`,toB64(JSON.stringify(sd,null,2)),cache.services.sha,"CMS: icons");
+      if(!rr.ok)throw new Error("save services "+rr.status);
+      cache.services=await ghGetRaw("content/services.json");
+      liveData.services=cache.services;
+      toast("✓ "+name+" installée");
+      updatePreview();
+    }catch(e){console.error(e);toast("✗ "+name+": "+e.message,false);}
+  });
+}
 function parseMax(s){const n=parseInt(s);if(s.includes("Mo"))return n*1e6;if(s.includes("Ko"))return n*1024;return 8e6;}
 function fileToB64(file){return new Promise((res,rej)=>{const fr=new FileReader();fr.onload=()=>res(fr.result.split(",")[1]);fr.onerror=rej;fr.readAsDataURL(file);});}
+let previewTimer=null;
 async function updatePreview(){
   const pw=document.getElementById("preview");
   if(!pw.classList.contains("show"))return;
-  try{
-    const tpl=await ghGetRaw("index.html");
-    let html=tpl.text;
-    for(const f of Object.keys(FILES)){
-      const d=liveData[f].data;
-      for(const k of Object.keys(d)){
-        html=html.split("{{"+f+"_"+k+"}}").join(d[k]);
+  clearTimeout(previewTimer);
+  previewTimer=setTimeout(async()=>{
+    try{
+      const tpl=await ghGetRaw("index.html");
+      let html=tpl.text;
+      html=html.replace("<head>","<head>\n<base href=\"https://atelierpotvin.ca/\">");
+      for(const f of Object.keys(FILES)){
+        const d=liveData[f].data;
+        for(const k of Object.keys(d)){
+          html=html.split("{{"+f+"_"+k+"}}").join(d[k]);
+        }
       }
-    }
-    const svc=liveData.services.data;
-    const iconsDep=[icSvg("wrench"),icSvg("tool"),icSvg("bug"),icSvg("dollar")];
-    const iconsCre=[icSvg("globe"),icSvg("phone"),icSvg("user"),icSvg("help")];
-    const linksDep=["services.html","depannage-nicolet.html","virus.html","tarifs.html"];
-    const linksCre=["services.html#creation","services.html#creation","apropos.html","faq.html"];
-    const card=(t,d,href,ico)=>`<a class="card" href="${href}"><div class="card-ico" style="font-size:30px;line-height:1">${ico}</div><h3>${t}</h3><p>${d}</p></a>`;
-    const depCards=svc.depannage.map((x,i)=>card(x.title,x.desc,linksDep[i],iconsDep[i])).join("\n");
-    const creCards=svc.creation.map((x,i)=>card(x.title,x.desc,linksCre[i],iconsCre[i])).join("\n");
-    const revs=liveData.avis.data.reviews.map(r=>`<article class="card review"><div class="stars">★★★★★</div><p>« ${r.text} »</p><span class="review-author">— ${r.author}</span></article>`).join("\n");
-    html=html.replace(/{{avis_count}}/g,liveData.avis.data.count);
-    html=html.replace(/{{footer_phone}}/g,liveData.footer.data.phone);
-    html=html.replace(/{{footer_copyright}}/g,liveData.footer.data.copyright);
-    html=html.replace(/{{reviews_block}}/g,revs);
-    html=html.replace(/{{dep_cards}}/g,depCards);
-    html=html.replace(/{{cre_cards}}/g,creCards);
-    // liens cliquables vers les sections CMS
-    html=html.replace('<section class="hero" id="accueil">','<section class="hero cms-edit" id="accueil" onclick="parentGo(\'hero\')">');
-    html=html.replace('<section class="section section-alt" id="explorer">','<section class="section section-alt cms-edit" id="explorer" onclick="parentGo(\'services\')">');
-    html=html.replace('<section class="section" id="avis-accueil">','<section class="section cms-edit" id="avis-accueil" onclick="parentGo(\'avis\')">');
-    html=html.replace('<footer class="site-footer">','<footer class="site-footer cms-edit" onclick="parentGo(\'footer\')">');
-    const pf=document.getElementById("pframe");
-    pf.innerHTML=html;
-    pf.querySelectorAll(".cms-edit").forEach(el=>{el.style.cursor="pointer";el.style.position="relative";
-      el.addEventListener("mouseenter",()=>{el.style.outline="2px dashed #6366f1";});
-      el.addEventListener("mouseleave",()=>{el.style.outline="";});});
-  }catch(e){/* preview silencieux */}
+      const svc=liveData.services.data;
+      const fallback=["wrench","tool","bug","dollar"],fallbackCre=["globe","phone","user","help"];
+      const linksDep=["services.html","depannage-nicolet.html","virus.html","tarifs.html"];
+      const linksCre=["services.html#creation","services.html#creation","apropos.html","faq.html"];
+      const icoFor=(x,i,fb)=>x.icon?`<img src="assets/${x.icon}" alt="" style="width:30px;height:30px;object-fit:contain">`:icSvg(fb[i]);
+      const card=(x,href,i,fb)=>`<a class="card" href="${href}"><div class="card-ico" style="font-size:30px;line-height:1;display:flex;align-items:center">${icoFor(x,i,fb)}</div><h3>${x.title}</h3><p>${x.desc}</p></a>`;
+      const depCards=svc.depannage.map((x,i)=>card(x,linksDep[i],i,fallback)).join("\n");
+      const creCards=svc.creation.map((x,i)=>card(x,linksCre[i],i,fallbackCre)).join("\n");
+      const revs=liveData.avis.data.reviews.map(r=>`<article class="card review"><div class="stars">★★★★★</div><p>« ${r.text} »</p><span class="review-author">— ${r.author}</span></article>`).join("\n");
+      html=html.replace(/{{avis_count}}/g,liveData.avis.data.count);
+      html=html.replace(/{{footer_phone}}/g,liveData.footer.data.phone);
+      html=html.replace(/{{footer_copyright}}/g,liveData.footer.data.copyright);
+      html=html.replace(/{{reviews_block}}/g,revs);
+      html=html.replace(/{{dep_cards}}/g,depCards);
+      html=html.replace(/{{cre_cards}}/g,creCards);
+      // liens cliquables vers les sections CMS (via parentGo dans l'iframe)
+      html=html.replace('<section class="hero" id="accueil">','<section class="hero cms-edit" id="accueil" onclick="parentGo(\'hero\')">');
+      html=html.replace('<section class="section section-alt" id="explorer">','<section class="section section-alt cms-edit" id="explorer" onclick="parentGo(\'services\')">');
+      html=html.replace('<section class="section" id="avis-accueil">','<section class="section cms-edit" id="avis-accueil" onclick="parentGo(\'avis\')">');
+      html=html.replace('<footer class="site-footer">','<footer class="site-footer cms-edit" onclick="parentGo(\'footer\')">');
+      html+=`<script>window.parentGo=sec=>window.parent.show(sec,window.parent.document.querySelector('nav a[data-sec="'+sec+'"]'));
+      const m={hero:'#accueil',services:'.services-grid',avis:'#avis-accueil',footer:'.site-footer'};
+      window.addEventListener('message',e=>{const s=e.data&&e.data.scrollTo;if(!s)return;const t=document.querySelector(m[s]);if(t){t.scrollIntoView({behavior:'smooth',block:'center'});t.style.outline='3px solid #22c55e';setTimeout(()=>t.style.outline='',2500);}});<\/script>`;
+      document.getElementById("pframe").srcdoc=html;
+    }catch(e){/* preview silencieux */}
+  },300);
 }
 function icSvg(kind){
   const p={

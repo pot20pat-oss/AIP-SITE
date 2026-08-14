@@ -1,14 +1,14 @@
 {
   "depannage": [
-    { "title": "Services", "desc": "Réparation, virus, assistance à distance, réseau et sauvegardes." },
-    { "title": "Dépannage Nicolet", "desc": "Page dédiée au dépannage à Nicolet et environs." },
-    { "title": "Suppression de virus", "desc": "Virus, écrans bleus, lenteurs — on nettoie et sécurise." },
-    { "title": "Tarifs", "desc": "Diagnostic, dépannage à distance, taux horaire." }
+    { "title": "Services", "desc": "Réparation, virus, assistance à distance, réseau et sauvegardes.", "icon": "" },
+    { "title": "Dépannage Nicolet", "desc": "Page dédiée au dépannage à Nicolet et environs.", "icon": "" },
+    { "title": "Suppression de virus", "desc": "Virus, écrans bleus, lenteurs — on nettoie et sécurise.", "icon": "" },
+    { "title": "Tarifs", "desc": "Diagnostic, dépannage à distance, taux horaire.", "icon": "" }
   ],
   "creation": [
-    { "title": "Sites web vitrines", "desc": "Site professionnel clair, hébergé, optimisé local. Dès 1500 $." },
-    { "title": "Applications sur mesure", "desc": "Outils web et logiciels adaptés à votre entreprise. Sur estimation." },
-    { "title": "À propos", "desc": "Patrick, 40 ans d'expérience, avis clients et approche." },
-    { "title": "FAQ", "desc": "Prix, délais, garantie, confidentialité — réponses claires." }
+    { "title": "Sites web vitrines", "desc": "Site professionnel clair, hébergé, optimisé local. Dès 1500 $.", "icon": "" },
+    { "title": "Applications sur mesure", "desc": "Outils web et logiciels adaptés à votre entreprise. Sur estimation.", "icon": "" },
+    { "title": "À propos", "desc": "Patrick, 40 ans d'expérience, avis clients et approche.", "icon": "" },
+    { "title": "FAQ", "desc": "Prix, délais, garantie, confidentialité — réponses claires.", "icon": "" }
   ]
 }
