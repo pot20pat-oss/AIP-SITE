@@ -1,17 +1,11 @@
 backend:
-  name: github
+  name: netlify
   repo: pot20pat-oss/AIP-SITE
   branch: main
-  app_id: OV231i0okhxBEag2bsYS
-  auth_endpoint: https://atelierpotvin.ca/auth
-  auth_token_endpoint: https://atelierpotvin.ca/callback
-  auth_scope: repo
 
-# Chemin de base : Decap sert depuis /admin, contenu dans /content
 media_folder: "assets"
 public_folder: "assets"
 
-# Collections = ce que tu peux éditer dans l'interface
 collections:
   - name: "site"
     label: "Contenu du site"
