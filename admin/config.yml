@@ -2,6 +2,8 @@ backend:
   name: github
   repo: pot20pat-oss/AIP-SITE
   branch: main
+  app_id: Iv23liddYvHcst7O196d
+  app_secret: fe2b6c3859817be31067a11b7bd548eb70711d4a
 
 # Chemin de base : Decap sert depuis /admin, contenu dans /content
 media_folder: "assets"
