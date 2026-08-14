@@ -5,94 +5,155 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>CMS — Atelier Potvin</title>
 <style>
-  :root{--bg:#0f172a;--card:#1e293b;--acc:#6366f1;--txt:#e2e8f0;--mut:#94a3b8;--line:#334155;--ok:#22c55e;--err:#ef4444}
+  :root{
+    --bg:#0b1120;--panel:#111827;--card:#1e293b;--acc:#6366f1;--acc2:#818cf8;
+    --txt:#e2e8f0;--mut:#94a3b8;--line:#334155;--ok:#22c55e;--err:#ef4444;--warn:#f59e0b;
+  }
   *{box-sizing:border-box}
-  body{margin:0;font-family:Segoe UI,system-ui,sans-serif;background:var(--bg);color:var(--txt);display:flex;min-height:100vh}
-  .side{width:240px;background:#0b1120;border-right:1px solid var(--line);padding:24px 16px;position:fixed;height:100vh;overflow:auto}
-  .side h1{font-size:18px;margin:0 0 4px;color:#fff}
-  .side .sub{font-size:12px;color:var(--mut);margin-bottom:24px}
-  .nav a{display:block;padding:10px 12px;border-radius:8px;color:var(--mut);text-decoration:none;margin-bottom:4px;font-size:14px}
-  .nav a:hover,.nav a.active{background:var(--card);color:#fff}
-  .main{margin-left:240px;flex:1;padding:32px}
-  .topbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:24px;gap:16px;flex-wrap:wrap}
-  .topbar input{padding:10px 12px;border-radius:8px;border:1px solid var(--line);background:var(--card);color:var(--txt);font-size:14px}
-  .btnb{background:var(--acc);color:#fff;border:none;padding:10px 18px;border-radius:8px;font-weight:600;cursor:pointer;font-size:14px}
-  .btnb:hover{filter:brightness(1.1)}
-  .chk{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--mut)}
-  .grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}
-  @media(max-width:900px){.grid{grid-template-columns:1fr}.side{width:100%;position:relative;height:auto}.main{margin-left:0}}
-  .card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:20px}
-  .card h3{margin:0 0 16px;font-size:15px;color:#fff;display:flex;justify-content:space-between;align-items:center}
-  .card h3 .msg{font-size:12px;font-weight:400}
-  .msg.ok{color:var(--ok)} .msg.err{color:var(--err)}
-  label{display:block;font-size:12px;color:var(--mut);margin:12px 0 4px}
-  input.f,textarea.f{width:100%;padding:10px 12px;border-radius:8px;border:1px solid var(--line);background:#0b1120;color:var(--txt);font-size:14px;font-family:inherit}
-  textarea.f{min-height:90px;resize:vertical}
-  .wy{border:1px solid var(--line);border-radius:8px;background:#0b1120;padding:10px 12px;min-height:80px;color:var(--txt);font-size:14px}
-  .wy:focus{outline:1px solid var(--acc)}
-  .img-row{display:flex;gap:10px;align-items:center;margin:10px 0;flex-wrap:wrap}
-  .img-row span{font-size:13px;flex:1;min-width:120px}
-  .img-row input[type=file]{font-size:12px;flex:2}
-  .img-row button{background:var(--line);color:#fff;border:none;padding:8px 12px;border-radius:6px;cursor:pointer;font-size:12px}
-  .img-row button:hover{background:var(--acc)}
-  .hidden{display:none}
+  body{margin:0;font-family:"Segoe UI",system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--txt);display:flex;min-height:100vh;font-size:14px}
+  /* Sidebar */
+  .side{width:250px;background:linear-gradient(180deg,#0d1426,#0b1120);border-right:1px solid var(--line);padding:24px 16px;position:fixed;height:100vh;overflow:auto}
+  .brand{display:flex;align-items:center;gap:10px;margin-bottom:6px}
+  .brand .logo{width:36px;height:36px;border-radius:9px;background:linear-gradient(135deg,var(--acc),var(--acc2));display:flex;align-items:center;justify-content:center;font-weight:800;color:#fff;font-size:16px}
+  .brand h1{font-size:16px;margin:0;color:#fff;line-height:1.1}
+  .brand .sub{font-size:11px;color:var(--mut);margin-top:2px}
+  .nav{margin-top:28px;display:flex;flex-direction:column;gap:4px}
+  .nav a{display:flex;align-items:center;gap:10px;padding:11px 13px;border-radius:9px;color:var(--mut);text-decoration:none;font-size:13.5px;transition:.15s;position:relative}
+  .nav a:hover{background:var(--card);color:#fff}
+  .nav a.active{background:var(--card);color:#fff;box-shadow:inset 3px 0 0 var(--acc)}
+  .nav a .dot{width:7px;height:7px;border-radius:50%;background:var(--mut);margin-left:auto}
+  .nav a .dot.mod{background:var(--warn)} .nav a .dot.ok{background:var(--ok)}
+  .side-foot{margin-top:28px;font-size:11px;color:var(--mut);line-height:1.5}
+  /* Main */
+  .main{margin-left:250px;flex:1;padding:28px 32px;max-width:1400px}
+  .topbar{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-bottom:26px;flex-wrap:wrap;padding-bottom:18px;border-bottom:1px solid var(--line)}
+  .topbar h2{margin:0;font-size:20px;font-weight:700}
+  .topbar .right{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+  .token-wrap{display:flex;align-items:center;gap:8px;background:var(--card);padding:6px 10px;border-radius:9px;border:1px solid var(--line)}
+  .token-wrap input{background:transparent;border:none;color:var(--txt);font-size:13px;width:220px;outline:none}
+  .btnb{background:linear-gradient(135deg,var(--acc),var(--acc2));color:#fff;border:none;padding:9px 16px;border-radius:9px;font-weight:600;cursor:pointer;font-size:13px;transition:.15s}
+  .btnb:hover{filter:brightness(1.12)}
+  .btnb.ghost{background:var(--card);color:var(--txt);border:1px solid var(--line)}
+  .btnb.green{background:linear-gradient(135deg,#16a34a,#22c55e)}
+  .chk{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--mut)}
+  /* Layout */
+  .layout{display:grid;grid-template-columns:1fr 420px;gap:24px;align-items:start}
+  @media(max-width:1100px){.layout{grid-template-columns:1fr}.preview-box{display:none}}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:22px;margin-bottom:18px}
+  .card h3{margin:0 0 4px;font-size:15px;color:#fff;display:flex;align-items:center;gap:8px}
+  .card h3 .stat{margin-left:auto;font-size:11px;font-weight:500;padding:3px 9px;border-radius:20px;background:var(--bg);color:var(--mut)}
+  .card h3 .stat.mod{background:rgba(245,158,11,.15);color:var(--warn)}
+  .card h3 .stat.ok{background:rgba(34,197,94,.15);color:var(--ok)}
+  .card h3 .stat.err{background:rgba(239,68,68,.15);color:var(--err)}
+  label{display:block;font-size:11.5px;color:var(--mut);margin:14px 0 5px;text-transform:uppercase;letter-spacing:.4px}
+  input.f,textarea.f{width:100%;padding:10px 12px;border-radius:9px;border:1px solid var(--line);background:var(--bg);color:var(--txt);font-size:14px;font-family:inherit;transition:.15s}
+  input.f:focus,textarea.f:focus{outline:none;border-color:var(--acc);box-shadow:0 0 0 3px rgba(99,102,241,.2)}
+  textarea.f{min-height:84px;resize:vertical}
+  .wy{border:1px solid var(--line);border-radius:9px;background:var(--bg);padding:10px 12px;min-height:84px;color:var(--txt);font-size:14px;line-height:1.5;transition:.15s}
+  .wy:focus{outline:none;border-color:var(--acc);box-shadow:0 0 0 3px rgba(99,102,241,.2)}
+  .actions{display:flex;gap:10px;margin-top:18px}
+  /* Preview */
+  .preview-box{position:sticky;top:28px}
+  .preview-box .pv-head{font-size:12px;color:var(--mut);text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px;display:flex;align-items:center;gap:6px}
+  .pv-frame{background:#fff;border-radius:14px;overflow:hidden;box-shadow:0 20px 50px -20px rgba(0,0,0,.6);color:#0f172a}
+  .pv-hero{background:linear-gradient(135deg,#0f172a,#1e293b);color:#fff;padding:22px}
+  .pv-hero .ey{font-size:11px;color:#94a3b8;text-transform:uppercase;letter-spacing:1px}
+  .pv-hero h1{font-size:19px;margin:8px 0;line-height:1.2}
+  .pv-hero h1 .a{color:#818cf8}
+  .pv-hero p{font-size:12.5px;color:#cbd5e1;margin:6px 0;line-height:1.5}
+  .pv-hero .cta{display:inline-block;background:#6366f1;color:#fff;padding:7px 14px;border-radius:8px;font-size:12px;font-weight:600;margin-top:8px}
+  .pv-cards{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:14px;background:#f1f5f9}
+  .pv-card{background:#fff;border-radius:9px;padding:10px;border:1px solid #e2e8f0}
+  .pv-card .t{font-size:12px;font-weight:700;color:#1e293b}
+  .pv-card .d{font-size:11px;color:#64748b;margin-top:3px;line-height:1.4}
+  .pv-foot{background:#0f172a;color:#fff;padding:14px;font-size:11px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:6px}
+  .pv-foot .ph{color:#818cf8;font-weight:600}
+  /* Images */
+  .img-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:14px}
+  .img-cell{background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:10px;text-align:center}
+  .img-cell .nm{font-size:10.5px;color:var(--mut);word-break:break-all;margin-bottom:8px}
+  .img-cell .thumb{width:100%;height:70px;background:#1e293b;border-radius:7px;display:flex;align-items:center;justify-content:center;color:var(--mut);font-size:10px;overflow:hidden}
+  .img-cell .thumb img{width:100%;height:100%;object-fit:cover}
+  .img-cell input{font-size:10px;margin:8px 0;width:100%}
+  .img-cell button{background:var(--line);color:#fff;border:none;padding:6px 10px;border-radius:6px;cursor:pointer;font-size:11px;width:100%}
+  .img-cell button:hover{background:var(--acc)}
   .tab{display:none} .tab.active{display:block}
+  .toast{position:fixed;bottom:24px;right:24px;background:var(--card);border:1px solid var(--line);padding:14px 20px;border-radius:11px;box-shadow:0 10px 30px -10px rgba(0,0,0,.5);transform:translateY(100px);opacity:0;transition:.3s;font-size:13px;z-index:99}
+  .toast.show{transform:translateY(0);opacity:1}
+  .toast.ok{border-left:4px solid var(--ok)} .toast.err{border-left:4px solid var(--err)}
 </style>
 </head>
 <body>
 <div class="side">
-  <h1>CMS Atelier Potvin</h1>
-  <div class="sub">Édition du site</div>
-  <nav class="nav">
+  <div class="brand">
+    <div class="logo">A</div>
+    <div><h1>Atelier Potvin</h1><div class="sub">CMS — édition du site</div></div>
+  </div>
+  <nav class="nav" id="nav">
     <a href="#" class="active" data-tab="content">📝 Contenu</a>
     <a href="#" data-tab="images">🖼️ Images</a>
   </nav>
+  <div class="side-foot">
+    Connecté via GitHub API.<br>Token en session seulement.
+  </div>
 </div>
 <div class="main">
   <div class="topbar">
-    <div class="chk"><input type="checkbox" id="remember"><label for="remember" style="margin:0">Se souvenir du token</label></div>
-    <div style="display:flex;gap:10px;align-items:center">
-      <input id="token" type="password" placeholder="Token GitHub ghp_..." style="width:260px">
+    <h2 id="page-title">Contenu du site</h2>
+    <div class="right">
+      <div class="token-wrap">
+        <span style="color:var(--mut);font-size:12px">🔑</span>
+        <input id="token" type="password" placeholder="Token GitHub ghp_...">
+      </div>
+      <div class="chk"><input type="checkbox" id="remember"><label for="remember" style="margin:0;cursor:pointer">Session</label></div>
       <button class="btnb" onclick="loadAll()">Charger</button>
     </div>
   </div>
 
   <div class="tab active" id="tab-content">
-    <div class="grid" id="forms"></div>
+    <div class="layout">
+      <div id="forms"></div>
+      <div class="preview-box">
+        <div class="pv-head">👁️ Aperçu live (accueil)</div>
+        <div class="pv-frame" id="pv"></div>
+      </div>
+    </div>
   </div>
 
   <div class="tab" id="tab-images">
     <div class="card">
-      <h3>Images du site (assets/)</h3>
-      <div id="img-forms"></div>
+      <h3>Images du site <span class="stat">assets/</span></h3>
+      <div class="img-grid" id="img-forms"></div>
     </div>
   </div>
-
-  <p style="margin-top:24px"><a href="index.html" style="color:var(--mut)">← Retour au site</a></p>
 </div>
+<div class="toast" id="toast"></div>
 
 <script>
 const REPO="pot20pat-oss/AIP-SITE", BRANCH="main";
 const FILES={
-  hero:{label:"Accueil — Hero",fields:{eyebrow:"Surtitre (ex: Nicolet · Québec)",h1:"Titre principal H1",lead:"Paragraphe lead",intro:"Paragraphe intro (40 ans)",points:"Points (un par ligne)",cta:"Texte bouton principal",cta2:"Texte bouton secondaire",note:"Note sous boutons"}},
-  footer:{label:"Pied de page",fields:{copyright:"Copyright",phone:"Téléphone",address:"Adresse"}},
-  tarifs:{label:"Tarifs",fields:{diagnostic:"Diagnostic ($)",remote:"Assistance à distance ($)",horaire:"À l'heure ($)",site:"Site web ($)"}},
-  avis:{label:"Avis Google",fields:{count:"Nombre d'avis (chiffre)"}},
-  services:{label:"Cartes services (accueil)",fields:{dep1:"Carte 1 — titre",dep1d:"Carte 1 — description",dep2:"Carte 2 — titre",dep2d:"Carte 2 — description",dep3:"Carte 3 — titre",dep3d:"Carte 3 — description",dep4:"Carte 4 — titre",dep4d:"Carte 4 — description",cre1:"Création 1 — titre",cre1d:"Création 1 — description",cre2:"Création 2 — titre",cre2d:"Création 2 — description",cre3:"Création 3 — titre",cre3d:"Création 3 — description",cre4:"Création 4 — titre",cre4d:"Création 4 — description"}}
+  hero:{label:"Accueil — Hero",icon:"🏠",fields:{eyebrow:"Surtitre",h1:"Titre H1",lead:"Paragraphe lead",intro:"Intro (40 ans)",points:"Points (1 par ligne)",cta:"Bouton principal",cta2:"Bouton secondaire",note:"Note sous boutons"}},
+  footer:{label:"Pied de page",icon:"📞",fields:{copyright:"Copyright",phone:"Téléphone",address:"Adresse"}},
+  tarifs:{label:"Tarifs",icon:"💲",fields:{diagnostic:"Diagnostic ($)",remote:"À distance ($)",horaire:"À l'heure ($)",site:"Site web ($)"}},
+  avis:{label:"Avis Google",icon:"⭐",fields:{count:"Nombre d'avis"}},
+  services:{label:"Cartes services",icon:"🛠️",fields:{dep1:"Carte 1 titre",dep1d:"Carte 1 desc",dep2:"Carte 2 titre",dep2d:"Carte 2 desc",dep3:"Carte 3 titre",dep3d:"Carte 3 desc",dep4:"Carte 4 titre",dep4d:"Carte 4 desc",cre1:"Création 1 titre",cre1d:"Création 1 desc",cre2:"Création 2 titre",cre2d:"Création 2 desc",cre3:"Création 3 titre",cre3d:"Création 3 desc",cre4:"Création 4 titre",cre4d:"Création 4 desc"}}
 };
 const IMGS=["photo.jpg","atelier-ram.jpg","atelier-soudure.jpg","atelier-ecran.jpg","atelier-micro.jpg","atelier-cable.jpg","atelier-carte.jpg","hero-bg.jpg","hero-office.jpg","hero-laptop.jpg","hero-circuit.jpg","logo.png","favicon.ico","icon-192.png","icon-512.png","og-image.jpg","service-virus.jpg","service-reseau.jpg","service-sauvegarde.jpg","service-formation.jpg","creation-site.jpg","creation-app.jpg","creation-automatisation.jpg","creation-formations.jpg"];
+const state={};
 
 (function(){const t=sessionStorage.getItem("aip_cms_token");if(t){document.getElementById("token").value=t;document.getElementById("remember").checked=true;}})();
-
 document.querySelectorAll(".nav a").forEach(a=>a.onclick=()=>{
   document.querySelectorAll(".nav a").forEach(x=>x.classList.remove("active"));
   a.classList.add("active");
   document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"));
   document.getElementById("tab-"+a.dataset.tab).classList.add("active");
+  document.getElementById("page-title").textContent=a.dataset.tab==="images"?"Images du site":"Contenu du site";
   return false;
 });
-
 function headers(tk){return{Authorization:"Bearer "+tk,Accept:"application/vnd.github+json"}}
+function toB64(s){return btoa(unescape(encodeURIComponent(s)));}
+function toast(t,ok){const e=document.getElementById("toast");e.textContent=t;e.className="toast show "+(ok?"ok":"err");setTimeout(()=>e.className="toast",2600);}
+function setStat(f,s){const e=document.querySelector(`.nav a[data-tab="content"]`);}
 async function ghGet(file){
   const tk=document.getElementById("token").value;
   const r=await fetch(`https://api.github.com/repos/${REPO}/contents/content/${file}.json?ref=${BRANCH}`,{headers:headers(tk)});
@@ -103,104 +164,85 @@ async function ghGet(file){
 async function ghPut(path,content,sha,tk){
   const body={message:"CMS: maj "+path,content,branch:BRANCH};
   if(sha)body.sha=sha;
-  const r=await fetch(`https://api.github.com/repos/${REPO}/contents/${path}`,{method:"PUT",headers:{...headers(tk),"Content-Type":"application/json"},body:JSON.stringify(body)});
-  return r;
+  return await fetch(`https://api.github.com/repos/${REPO}/contents/${path}`,{method:"PUT",headers:{...headers(tk),"Content-Type":"application/json"},body:JSON.stringify(body)});
 }
-function toB64(s){return btoa(unescape(encodeURIComponent(s)));}
-
+function validate(f,data){
+  if(f==="tarifs")for(const k of["diagnostic","remote","horaire","site"])if(!/^\d+(\.\d{1,2})?$/.test(String(data[k])))return"Prix "+k+" doit être un nombre";
+  if(f==="avis")if(!/^\d+$/.test(String(data.count)))return"Nombre d'avis doit être un entier";
+  if(f==="footer")if(!/^[\d ()+-]{6,}$/.test(String(data.phone)))return"Téléphone invalide";
+  return null;
+}
 async function loadAll(){
   const tk=document.getElementById("token").value;
-  if(!tk){alert("Entre ton token GitHub");return;}
-  if(document.getElementById("remember").checked){
-    sessionStorage.setItem("aip_cms_token",tk);
-    alert("Token mémorisé pour cette session seulement (onglet ouvert). Ne reste pas après fermeture. Poste partagé = décoche la case.");
-  }
-  const forms=document.getElementById("forms");forms.innerHTML="<p style='color:var(--mut)'>Chargement...</p>";
+  if(!tk){toast("Entre ton token GitHub",false);return;}
+  if(document.getElementById("remember").checked){sessionStorage.setItem("aip_cms_token",tk);toast("Token mémorisé (session)",true);}
+  const forms=document.getElementById("forms");forms.innerHTML='<div class="card">Chargement…</div>';
   let h="";
   try{
     for(const [f,cfg] of Object.entries(FILES)){
       const {data}=await ghGet(f);
-      h+=`<div class="card"><h3>${cfg.label} <span class="msg" id="m-${f}"></span></h3>`;
+      state[f]={orig:JSON.stringify(data),cur:data};
+      h+=`<div class="card" id="card-${f}"><h3>${cfg.icon} ${cfg.label}<span class="stat" id="st-${f}">chargé</span></h3>`;
       for(const [k,lab] of Object.entries(cfg.fields)){
-        const val=String(data[k] ?? "");
+        const val=String(data[k]??"");
         const wy=val.includes("\n")||val.length>80;
         h+=`<label>${lab}</label>`;
-        h+= wy ? `<div class="wy" contenteditable="true" id="wy-${f}-${k}">${val.replace(/\n/g,"<br>")}</div>` : `<input class="f" id="in-${f}-${k}" value="${val.replace(/"/g,'&quot;')}">`;
+        h+= wy?`<div class="wy" contenteditable="true" id="wy-${f}-${k}" oninput="markMod('${f}')">${val.replace(/\n/g,"<br>")}</div>`:`<input class="f" id="in-${f}-${k}" value="${val.replace(/"/g,'&quot;')}" oninput="markMod('${f}')">`;
       }
-      h+=`<button class="btnb" style="margin-top:16px" onclick="preview('${f}')">Aperçu</button> <button class="btnb" style="margin-top:16px;background:var(--ok)" onclick="save('${f}')">Sauver ${cfg.label}</button><div id="pv-${f}" class="hidden" style="margin-top:12px;padding:12px;background:#0b1120;border-radius:8px;font-size:13px;white-space:pre-wrap"></div></div>`;
+      h+=`<div class="actions"><button class="btnb green" onclick="save('${f}')">Enregistrer</button><button class="btnb ghost" onclick="resetF('${f}')">Annuler</button></div></div>`;
     }
     forms.innerHTML=h;
-  }catch(e){forms.innerHTML='<p class="msg err">Erreur: '+e.message+'</p>';}
+    renderPreview();
+  }catch(e){forms.innerHTML='<div class="card"><span class="stat err">Erreur: '+e.message+'</span></div>';}
   loadImgs();
 }
-function fieldVal(f,k,wy){
-  if(wy){return document.getElementById("wy-"+f+"-"+k).innerText;}
-  return document.getElementById("in-"+f+"-"+k).value;
-}
-async function preview(f){
-  const cfg=FILES[f];
-  const out=document.getElementById("pv-"+f);
-  let d={};
-  try{
-    const {data}=await ghGet(f);
-    for(const k of Object.keys(cfg.fields)){
-      const wy=String(data[k]??"").includes("\n")||String(data[k]??"").length>80;
-      d[k]=fieldVal(f,k,wy);
-    }
-    const err=validate(f,d);
-    out.classList.remove("hidden");
-    out.innerHTML=(err?'<span class="msg err">'+err+'</span>\n\n':'')+"Contenu qui sera sauvegardé :\n\n"+JSON.stringify(d,null,2);
-  }catch(e){out.classList.remove("hidden");out.innerHTML="Erreur: "+e.message;}
-}
+function fieldVal(f,k,wy){return wy?document.getElementById("wy-"+f+"-"+k).innerText:document.getElementById("in-"+f+"-"+k).value;}
+function markMod(f){const st=document.getElementById("st-"+f);if(st&&st.textContent==="chargé"){st.textContent="modifié";st.className="stat mod";}}
+function resetF(f){loadAll();}
 async function save(f){
-  const tk=document.getElementById("token").value;
-  const cfg=FILES[f];
+  const tk=document.getElementById("token").value,cfg=FILES[f];
   try{
     const {sha,data}=await ghGet(f);
-    for(const k of Object.keys(cfg.fields)){
-      const wy=String(data[k]??"").includes("\n")||String(data[k]??"").length>80;
-      data[k]=fieldVal(f,k,wy);
-    }
+    for(const k of Object.keys(cfg.fields)){const wy=String(data[k]??"").includes("\n")||String(data[k]??"").length>80;data[k]=fieldVal(f,k,wy);}
     const err=validate(f,data);
-    if(err){setStatus(f,err);return;}
+    if(err){document.getElementById("st-"+f).textContent="erreur";document.getElementById("st-"+f).className="stat err";toast(err,false);return;}
     const r=await ghPut(`content/${f}.json`,toB64(JSON.stringify(data,null,2)),sha,tk);
-    setStatus(f, r.ok?"enregistré":"erreur GitHub "+r.status);
-  }catch(e){setStatus(f,"erreur: "+e.message);}
+    if(r.ok){document.getElementById("st-"+f).textContent="enregistré ✓";document.getElementById("st-"+f).className="stat ok";state[f].orig=JSON.stringify(data);toast(cfg.label+" enregistré",true);renderPreview();}
+    else{toast("Erreur GitHub "+r.status,false);}
+  }catch(e){toast("Erreur: "+e.message,false);}
 }
-function validate(f,data){
-  if(f==="tarifs"){
-    for(const k of ["diagnostic","remote","horaire","site"]){
-      if(!/^\d+(\.\d{1,2})?$/.test(String(data[k]))) return "Prix "+k+" doit être un nombre (ex: 45)";
-    }
-  }
-  if(f==="avis"){
-    if(!/^\d+$/.test(String(data.count))) return "Nombre d'avis doit être un entier";
-  }
-  if(f==="footer"){
-    if(!/^[\d ()+-]{6,}$/.test(String(data.phone))) return "Téléphone invalide";
-  }
-  return null;
-}
-function setStatus(f,txt){
-  const ok=/enregistré/.test(txt);
-  document.getElementById("m-"+f).innerHTML='<span class="msg '+(ok?"ok":"err")+'">'+txt+'</span>';
+function renderPreview(){
+  const h=state.hero?.cur||{},s=state.services?.cur||{},ft=state.footer?.cur||{},t=state.tarifs?.cur||{};
+  document.getElementById("pv").innerHTML=`
+    <div class="pv-hero">
+      <div class="ey">${h.eyebrow||""}</div>
+      <h1>${(h.h1||"").replace("sans jargon",'<span class="a">sans jargon</span>')}</h1>
+      <p>${h.lead||""}</p><p>${h.intro||""}</p>
+      <span class="cta">${h.cta||"Nous joindre"}</span>
+    </div>
+    <div class="pv-cards">
+      <div class="pv-card"><div class="t">${s.dep1||""}</div><div class="d">${s.dep1d||""}</div></div>
+      <div class="pv-card"><div class="t">${s.dep2||""}</div><div class="d">${s.dep2d||""}</div></div>
+      <div class="pv-card"><div class="t">${s.cre1||""}</div><div class="d">${s.cre1d||""}</div></div>
+      <div class="pv-card"><div class="t">${s.cre2||""}</div><div class="d">${s.cre2d||""}</div></div>
+    </div>
+    <div class="pv-foot"><span>${ft.copyright||""}</span><span class="ph">📞 ${ft.phone||""}</span></div>`;
 }
 function loadImgs(){
   const box=document.getElementById("img-forms");
-  box.innerHTML=IMGS.map(n=>`<div class="img-row"><span>${n}</span><input type="file" id="file-${n}" accept="image/*"><button onclick="upImg('${n}')">Upload</button></div>`).join("");
+  box.innerHTML=IMGS.map(n=>`<div class="img-cell"><div class="nm">${n}</div><div class="thumb"><img src="assets/${n}?t=${Date.now()}" onerror="this.parentNode.innerHTML='Aperçu'"></div><input type="file" id="file-${n}" accept="image/*"><button onclick="upImg('${n}')">Remplacer</button></div>`).join("");
 }
 async function upImg(name){
-  const tk=document.getElementById("token").value;
-  const file=document.getElementById("file-"+name).files[0];
-  if(!file){alert("Choisis un fichier");return;}
-  const buf=await file.arrayBuffer();
-  const b64=btoa(String.fromCharCode(...new Uint8Array(buf)));
+  const tk=document.getElementById("token").value,file=document.getElementById("file-"+name).files[0];
+  if(!file){toast("Choisis un fichier",false);return;}
+  if(file.size>8e6){toast("Fichier > 8 Mo (trop lourd)",false);return;}
+  const buf=await file.arrayBuffer(),b64=btoa(String.fromCharCode(...new Uint8Array(buf)));
   try{
     const r=await fetch(`https://api.github.com/repos/${REPO}/contents/assets/${name}?ref=${BRANCH}`,{headers:headers(tk)});
     const sha=r.ok?(await r.json()).sha:null;
     const res=await ghPut(`assets/${name}`,b64,sha,tk);
-    alert(res.ok?name+" remplacé ✓":("Erreur "+res.status));
-  }catch(e){alert("Erreur: "+e.message);}
+    if(res.ok){toast(name+" remplacé ✓",true);loadImgs();}else toast("Erreur "+res.status,false);
+  }catch(e){toast("Erreur: "+e.message,false);}
 }
 </script>
 </body>
