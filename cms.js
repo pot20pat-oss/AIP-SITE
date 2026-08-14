@@ -118,12 +118,13 @@ function show(sec,el){
   h+=`<div style="margin-top:18px;display:flex;gap:10px;align-items:center"><button class="btn" onclick="save('${sec}')">Enregistrer</button><button class="btn btn-ghost" onclick="scrollToPreview('${sec}')">👁 Voir dans le preview</button><span class="msg" id="m-${sec}"></span></div></div>`;
   panel.innerHTML=h;
 }
+function parentGo(sec){show(sec,document.querySelector('nav a[data-sec="'+sec+'"]'));}
 function scrollToPreview(sec){
   const p=document.getElementById("preview");
   if(!p.classList.contains("show")){p.classList.add("show");updatePreview();}
-  const map={hero:"hero",services:"services",avis:"avis",footer:"footer"};
-  const fr=document.getElementById("pframe");
-  if(fr&&fr.contentWindow)setTimeout(()=>fr.contentWindow.postMessage({scrollTo:map[sec]||sec},"*"),400);
+  const sel={hero:"#accueil",services:".services-grid",avis:"#avis-accueil",footer:".site-footer"}[sec];
+  const t=document.querySelector("#pframe "+sel);
+  if(t){setTimeout(()=>{t.scrollIntoView({behavior:"smooth",block:"center"});t.style.outline="3px solid #22c55e";setTimeout(()=>t.style.outline="",2500);},400);}
 }
 function liveEdit(sec,k,v){
   liveData[sec].data[k]=v;
@@ -204,11 +205,11 @@ async function previewThenUpload(name,input){
 function parseMax(s){const n=parseInt(s);if(s.includes("Mo"))return n*1e6;if(s.includes("Ko"))return n*1024;return 8e6;}
 function fileToB64(file){return new Promise((res,rej)=>{const fr=new FileReader();fr.onload=()=>res(fr.result.split(",")[1]);fr.onerror=rej;fr.readAsDataURL(file);});}
 async function updatePreview(){
-  if(!document.getElementById("preview").classList.contains("show"))return;
+  const pw=document.getElementById("preview");
+  if(!pw.classList.contains("show"))return;
   try{
     const tpl=await ghGetRaw("index.html");
     let html=tpl.text;
-    html=html.replace("<head>","<head>\n<base href=\"https://atelierpotvin.ca/\">\n<style>.cms-edit{cursor:pointer;outline:2px dashed transparent;transition:outline .15s}.cms-edit:hover{outline:2px dashed #6366f1;background:rgba(99,102,241,.06)}.cms-edit::after{content:'✎ modifier';position:absolute;top:6px;right:6px;background:#6366f1;color:#fff;font:12px sans-serif;padding:2px 6px;border-radius:4px;opacity:0}.cms-edit:hover::after{opacity:1}</style>\n<script>window.addEventListener('DOMContentLoaded',()=>{const M={accueil:'hero',explorer:'services',avis-accueil:'avis','site-footer':'footer'};for(const id in M){const el=document.getElementById(id);if(el){el.classList.add('cms-edit');el.style.position='relative';el.onclick=()=>window.parent.show(M[id],window.parent.document.querySelector('nav a[data-sec=\"'+M[id]+'\"]'));}}const cards=document.querySelectorAll('.services-grid .card');cards.forEach(c=>{c.classList.add('cms-edit');c.style.position='relative';c.onclick=e=>{e.preventDefault();window.parent.show('services',window.parent.document.querySelector('nav a[data-sec=\"services\"]'));}});window.addEventListener('message',e=>{const s=e.data&&e.data.scrollTo;if(!s)return;const sel={hero:'#accueil',services:'.services-grid',avis:'#avis-accueil',footer:'.site-footer'}[s];const t=document.querySelector(sel);if(t){t.scrollIntoView({behavior:'smooth',block:'center'});t.style.outline='3px solid #22c55e';setTimeout(()=>t.style.outline='',2500);}}});});<\/script>");
     for(const f of Object.keys(FILES)){
       const d=liveData[f].data;
       for(const k of Object.keys(d)){
@@ -216,10 +217,11 @@ async function updatePreview(){
       }
     }
     const svc=liveData.services.data;
-    const iconsDep=["🛠️","🔧","🐞","💲"],iconsCre=["🌐","📱","👤","❓"];
+    const iconsDep=[icSvg("wrench"),icSvg("tool"),icSvg("bug"),icSvg("dollar")];
+    const iconsCre=[icSvg("globe"),icSvg("phone"),icSvg("user"),icSvg("help")];
     const linksDep=["services.html","depannage-nicolet.html","virus.html","tarifs.html"];
     const linksCre=["services.html#creation","services.html#creation","apropos.html","faq.html"];
-    const card=(t,d,href,ico)=>`<a class="card" href="${href}"><div class="card-ico" style="font-size:30px;line-height:1;font-family:'Segoe UI Emoji','Apple Color Emoji','Noto Color Emoji',sans-serif">${ico}</div><h3>${t}</h3><p>${d}</p></a>`;
+    const card=(t,d,href,ico)=>`<a class="card" href="${href}"><div class="card-ico" style="font-size:30px;line-height:1">${ico}</div><h3>${t}</h3><p>${d}</p></a>`;
     const depCards=svc.depannage.map((x,i)=>card(x.title,x.desc,linksDep[i],iconsDep[i])).join("\n");
     const creCards=svc.creation.map((x,i)=>card(x.title,x.desc,linksCre[i],iconsCre[i])).join("\n");
     const revs=liveData.avis.data.reviews.map(r=>`<article class="card review"><div class="stars">★★★★★</div><p>« ${r.text} »</p><span class="review-author">— ${r.author}</span></article>`).join("\n");
@@ -229,8 +231,30 @@ async function updatePreview(){
     html=html.replace(/{{reviews_block}}/g,revs);
     html=html.replace(/{{dep_cards}}/g,depCards);
     html=html.replace(/{{cre_cards}}/g,creCards);
-    document.getElementById("pframe").srcdoc=html;
+    // liens cliquables vers les sections CMS
+    html=html.replace('<section class="hero" id="accueil">','<section class="hero cms-edit" id="accueil" onclick="parentGo(\'hero\')">');
+    html=html.replace('<section class="section section-alt" id="explorer">','<section class="section section-alt cms-edit" id="explorer" onclick="parentGo(\'services\')">');
+    html=html.replace('<section class="section" id="avis-accueil">','<section class="section cms-edit" id="avis-accueil" onclick="parentGo(\'avis\')">');
+    html=html.replace('<footer class="site-footer">','<footer class="site-footer cms-edit" onclick="parentGo(\'footer\')">');
+    const pf=document.getElementById("pframe");
+    pf.innerHTML=html;
+    pf.querySelectorAll(".cms-edit").forEach(el=>{el.style.cursor="pointer";el.style.position="relative";
+      el.addEventListener("mouseenter",()=>{el.style.outline="2px dashed #6366f1";});
+      el.addEventListener("mouseleave",()=>{el.style.outline="";});});
   }catch(e){/* preview silencieux */}
+}
+function icSvg(kind){
+  const p={
+    wrench:'<path d="M14.7 6.3a4 4 0 0 0-5.4 5.4L3 18v3h3l6.3-6.3a4 4 0 0 0 5.4-5.4l-2.4 2.4-2-2 2.4-2.4z"/>',
+    tool:'<path d="M3 3l7 7-2 2-7-7 2-2zM14 14l7 7-2 2-7-7 2-2z"/>',
+    bug:'<path d="M12 2v4M12 18v4M4 12H2M22 12h-2M6 6L4 4M20 4l-2 2M6 18l-2 2M18 20l2-2M8 12a4 4 0 0 0 8 0 4 4 0 0 0-8 0z"/>',
+    dollar:'<path d="M12 1v22M16 5a4 4 0 0 0-4-2c-2 0-4 1-4 3s2 3 4 3 4 1 4 3-2 3-4 3a4 4 0 0 1-4-2"/>',
+    globe:'<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a15 15 0 0 1 0 18M12 3a15 15 0 0 0 0 18"/>',
+    phone:'<path d="M5 4h4l2 4-2 2a12 12 0 0 0 6 6l2-2 4 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2z"/>',
+    user:'<circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/>',
+    help:'<circle cx="12" cy="12" r="9"/><path d="M9 9a3 3 0 0 1 6 0c0 2-3 3-3 5M12 17h.01"/>'
+  }[kind]||'';
+  return '<svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#4338ca" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">'+p+'</svg>';
 }
 function togglePreview(){
   const p=document.getElementById("preview");
