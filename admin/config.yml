@@ -3,7 +3,6 @@ backend:
   repo: pot20pat-oss/AIP-SITE
   branch: main
   app_id: OV231i0okhxBEag2bsYS
-  base_url: https://atelierpotvin.ca
   auth_endpoint: https://atelierpotvin.ca/auth
   auth_token_endpoint: https://atelierpotvin.ca/callback
   auth_scope: repo

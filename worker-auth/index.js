@@ -9,7 +9,7 @@ export default {
 
     const p = url.pathname.replace(/\/$/, "");
     // Demarre l'OAuth GitHub
-    if (p === "/auth") {
+    if (p === "/auth" || p.startsWith("/auth")) {
       const gh = new URL("https://github.com/login/oauth/authorize");
       gh.searchParams.set("client_id", CLIENT_ID);
       gh.searchParams.set("redirect_uri", url.origin + "/callback");
