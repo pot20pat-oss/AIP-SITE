@@ -7,8 +7,9 @@ export default {
     const url = new URL(request.url);
     const path = url.pathname;
 
+    const p = url.pathname.replace(/\/$/, "");
     // Demarre l'OAuth GitHub
-    if (path === "/auth") {
+    if (p === "/auth") {
       const gh = new URL("https://github.com/login/oauth/authorize");
       gh.searchParams.set("client_id", CLIENT_ID);
       gh.searchParams.set("redirect_uri", url.origin + "/callback");
@@ -18,7 +19,7 @@ export default {
     }
 
     // GitHub redirige ici avec le code
-    if (path === "/callback") {
+    if (p === "/callback") {
       const code = url.searchParams.get("code");
       if (!code) return new Response("Code manquant", { status: 400 });
 
