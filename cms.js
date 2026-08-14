@@ -88,9 +88,9 @@ async function loadAll(){
 function show(sec,el){
   document.querySelectorAll("nav a").forEach(a=>a.classList.remove("active"));
   el.classList.add("active");
-  document.getElementById("crumb").textContent=FILES[sec].crumb;
   const panel=document.getElementById("panel");
-  if(sec==="images"){renderImages(panel);return;}
+  if(sec==="images"){document.getElementById("crumb").textContent="Photos du site";renderImages(panel);return;}
+  document.getElementById("crumb").textContent=FILES[sec].crumb;
   let h=`<div class="card"><h3>${FILES[sec].label}</h3><p class="hint">Modifie le texte, puis « Enregistrer ». Le changement apparaît sur le site en quelques minutes. L'aperçu à droite se met à jour en direct.</p>`;
   for(const k of Object.keys(FILES[sec].fields)){
     const f=FILES[sec].fields[k];
