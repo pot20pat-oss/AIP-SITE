@@ -137,15 +137,16 @@ async function uploadImg(name,input){
   if(file.size>8e6){toast("Image trop grosse (max 8 Mo)",false);return;}
   toast("Envoi de "+name+"...");
   try{
+    console.log("uploadImg",name,file.name,file.size);
     const r0=await fetch(`https://api.github.com/repos/${REPO}/contents/assets/${name}?ref=${BRANCH}`,{headers:headers()});
     const sha=r0.ok?(await r0.json()).sha:undefined;
     const b64=await fileToB64(file);
     const r=await fetch(`https://api.github.com/repos/${REPO}/contents/assets/${name}`,{method:"PUT",headers:headers(),
       body:JSON.stringify({message:"CMS: img "+name,content:b64,sha})});
-    if(!r.ok)throw new Error("PUT "+r.status);
+    if(!r.ok){const t=await r.text();throw new Error("PUT "+r.status+" "+t.slice(0,200));}
     toast("✓ "+name+" remplacée");
     updatePreview();
-  }catch(e){toast("✗ "+name+": "+e.message,false);}
+  }catch(e){console.error(e);toast("✗ "+name+": "+e.message,false);}
 }
 function fileToB64(file){return new Promise((res,rej)=>{const fr=new FileReader();fr.onload=()=>res(fr.result.split(",")[1]);fr.onerror=rej;fr.readAsDataURL(file);});}
 async function updatePreview(){
