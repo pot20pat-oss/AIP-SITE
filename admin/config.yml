@@ -4,6 +4,7 @@ backend:
   branch: main
   app_id: OV231i0okhxBEag2bsYS
   app_secret: df68d1c48d472290a64fef0702efc7c6dbbb9c32
+  auth_scope: repo
 
 # Chemin de base : Decap sert depuis /admin, contenu dans /content
 media_folder: "assets"
