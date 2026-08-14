@@ -1,14 +1,14 @@
 {
   "depannage": [
-    { "title": "Services", "desc": "Réparation, virus, assistance à distance, réseau et sauvegardes.", "icon": "" },
-    { "title": "Dépannage Nicolet", "desc": "Page dédiée au dépannage à Nicolet et environs.", "icon": "" },
-    { "title": "Suppression de virus", "desc": "Virus, écrans bleus, lenteurs — on nettoie et sécurise.", "icon": "" },
-    { "title": "Tarifs", "desc": "Diagnostic, dépannage à distance, taux horaire.", "icon": "" }
+    { "title": "Services", "desc": "Réparation, virus, assistance à distance, réseau et sauvegardes.", "icon": "", "cta": "Faire réparer mon ordinateur" },
+    { "title": "Dépannage Nicolet", "desc": "Page dédiée au dépannage à Nicolet et environs.", "icon": "", "cta": "Dépanner près de chez moi" },
+    { "title": "Suppression de virus", "desc": "Virus, écrans bleus, lenteurs — on nettoie et sécurise.", "icon": "", "cta": "Enlever un virus rapidement" },
+    { "title": "Tarifs", "desc": "Diagnostic, dépannage à distance, taux horaire.", "icon": "", "cta": "Obtenir un prix rapidement" }
   ],
   "creation": [
-    { "title": "Sites web vitrines", "desc": "Site professionnel clair, hébergé, optimisé local. Dès 1500 $.", "icon": "" },
-    { "title": "Applications sur mesure", "desc": "Outils web et logiciels adaptés à votre entreprise. Sur estimation.", "icon": "" },
-    { "title": "À propos", "desc": "Patrick, 40 ans d'expérience, avis clients et approche.", "icon": "" },
-    { "title": "FAQ", "desc": "Prix, délais, garantie, confidentialité — réponses claires.", "icon": "" }
+    { "title": "Sites web vitrines", "desc": "Site professionnel clair, hébergé, optimisé local. Dès 1500 $.", "icon": "", "cta": "Lancer mon site web" },
+    { "title": "Applications sur mesure", "desc": "Outils web et logiciels adaptés à votre entreprise. Sur estimation.", "icon": "", "cta": "Automatiser mon entreprise" },
+    { "title": "À propos", "desc": "Patrick, 40 ans d'expérience, avis clients et approche.", "icon": "", "cta": "Faire connaissance" },
+    { "title": "FAQ", "desc": "Prix, délais, garantie, confidentialité — réponses claires.", "icon": "", "cta": "Poser mes questions" }
   ]
 }

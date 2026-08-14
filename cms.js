@@ -118,13 +118,14 @@ function show(sec,el){
     else h+=`<input type="text" id="f-${sec}-${k}" value="${val.replace(/"/g,"&quot;")}" oninput="liveEdit('${sec}','${k}',this.value)" />`;
   }
   if(sec==="services"){
-    h+=`<h4 style="margin-top:20px">Icônes des cartes (SVG)</h4>`;
+    h+=`<h4 style="margin-top:20px">Icônes des cartes (SVG) + libellés commerciaux</h4>`;
     liveData.services.data.depannage.concat(liveData.services.data.creation).forEach((x,i)=>{
       const key=i<4?"depannage":"creation";const idx=i<4?i:i-4;
       const cur=liveData.services.data[key][idx].icon||"";
-      h+=`<div style="display:flex;align-items:center;gap:10px;margin:6px 0"><span style="width:140px">${x.title}</span>`+
+      h+=`<div style="display:flex;align-items:center;gap:10px;margin:6px 0"><span style="width:160px">${x.title}</span>`+
         `<input type="file" accept=".svg,image/svg+xml" onchange="uploadIcon('${key}',${idx},this)">`+
         `<span style="font-size:12px;color:#64748b">${cur?("actuel: "+cur):"défaut"}</span></div>`;
+      h+=`<div style="margin:2px 0 10px 170px"><input type="text" id="f-services-cta-${key}-${idx}" value="${(liveData.services.data[key][idx].cta||"").replace(/"/g,"&quot;")}" oninput="liveEditCta('${key}',${idx},this.value)" placeholder="Libellé orienté client (ex: Faire réparer mon ordi)" style="width:320px"></div>`;
     });
   }
   h+=`<div style="margin-top:18px;display:flex;gap:10px;align-items:center;flex-wrap:wrap"><button class="btn" onclick="save('${sec}')">Enregistrer les modifications</button><button class="btn btn-ghost" onclick="scrollToPreview('${sec}')">👁 Voir dans le preview</button><button class="btn btn-ghost" onclick="revert('${sec}')">Rétablir la dernière version</button><button class="btn btn-ghost" onclick="window.open('https://atelierpotvin.ca/','_blank')">Voir le site publié</button><span class="msg" id="m-${sec}"></span></div></div>`;
@@ -143,6 +144,10 @@ function liveEdit(sec,k,v){
   updatePreview();
   const m=document.getElementById("m-"+sec);
   if(m&&!m.textContent.includes("✓")){m.className="msg";m.textContent="";}
+}
+function liveEditCta(key,idx,v){
+  liveData.services.data[key][idx].cta=v;
+  updatePreview();
 }
 async function save(sec){
   const m=document.getElementById("m-"+sec);
@@ -283,7 +288,7 @@ async function updatePreview(){
       const linksDep=["services.html","depannage-nicolet.html","virus.html","tarifs.html"];
       const linksCre=["services.html#creation","services.html#creation","apropos.html","faq.html"];
       const icoFor=(x,i,fb)=>x.icon?`<img src="https://atelierpotvin.ca/assets/${x.icon}" alt="" style="width:30px;height:30px;object-fit:contain">`:icSvg(fb[i]);
-      const card=(x,href,i,fb)=>`<a class="card" href="${href}"><div class="card-ico" style="font-size:30px;line-height:1;display:flex;align-items:center">${icoFor(x,i,fb)}</div><h3>${x.title}</h3><p>${x.desc}</p></a>`;
+      const card=(x,href,i,fb)=>`<a class="card" href="${href}"><div class="card-ico" style="font-size:30px;line-height:1;display:flex;align-items:center">${icoFor(x,i,fb)}</div><h3>${x.title}</h3><p class="card-cta">${x.cta||""}</p><p>${x.desc}</p></a>`;
       const depCards=svc.depannage.map((x,i)=>card(x,linksDep[i],i,fallback)).join("\n");
       const creCards=svc.creation.map((x,i)=>card(x,linksCre[i],i,fallbackCre)).join("\n");
       const revs=liveData.avis.data.reviews.map(r=>`<article class="card review"><div class="stars">★★★★★</div><p>« ${r.text} »</p><span class="review-author">— ${r.author}</span></article>`).join("\n");
