@@ -82,7 +82,7 @@ const FILES={
 };
 const IMGS=["photo.jpg","atelier-ram.jpg","atelier-soudure.jpg","atelier-ecran.jpg","atelier-micro.jpg","atelier-cable.jpg","atelier-carte.jpg","hero-bg.jpg","hero-office.jpg","hero-laptop.jpg","hero-circuit.jpg","logo.png","favicon.ico","icon-192.png","icon-512.png","og-image.jpg","service-virus.jpg","service-reseau.jpg","service-sauvegarde.jpg","service-formation.jpg","creation-site.jpg","creation-app.jpg","creation-automatisation.jpg","creation-formations.jpg"];
 
-(function(){const t=localStorage.getItem("aip_cms_token");if(t){document.getElementById("token").value=t;document.getElementById("remember").checked=true;}})();
+(function(){const t=sessionStorage.getItem("aip_cms_token");if(t){document.getElementById("token").value=t;document.getElementById("remember").checked=true;}})();
 
 document.querySelectorAll(".nav a").forEach(a=>a.onclick=()=>{
   document.querySelectorAll(".nav a").forEach(x=>x.classList.remove("active"));
@@ -98,7 +98,7 @@ async function ghGet(file){
   const r=await fetch(`https://api.github.com/repos/${REPO}/contents/content/${file}.json?ref=${BRANCH}`,{headers:headers(tk)});
   if(!r.ok) throw new Error("GET "+r.status);
   const j=await r.json();
-  return {sha:j.sha,data:JSON.parse(atob(j.content))};
+  return {sha:j.sha,data:JSON.parse(decodeURIComponent(escape(atob(j.content))))};
 }
 async function ghPut(path,content,sha,tk){
   const body={message:"CMS: maj "+path,content,branch:BRANCH};
@@ -111,7 +111,10 @@ function toB64(s){return btoa(unescape(encodeURIComponent(s)));}
 async function loadAll(){
   const tk=document.getElementById("token").value;
   if(!tk){alert("Entre ton token GitHub");return;}
-  if(document.getElementById("remember").checked)localStorage.setItem("aip_cms_token",tk);
+  if(document.getElementById("remember").checked){
+    sessionStorage.setItem("aip_cms_token",tk);
+    alert("Token mémorisé pour cette session seulement (onglet ouvert). Ne reste pas après fermeture. Poste partagé = décoche la case.");
+  }
   const forms=document.getElementById("forms");forms.innerHTML="<p style='color:var(--mut)'>Chargement...</p>";
   let h="";
   try{
@@ -124,7 +127,7 @@ async function loadAll(){
         h+=`<label>${lab}</label>`;
         h+= wy ? `<div class="wy" contenteditable="true" id="wy-${f}-${k}">${val.replace(/\n/g,"<br>")}</div>` : `<input class="f" id="in-${f}-${k}" value="${val.replace(/"/g,'&quot;')}">`;
       }
-      h+=`<button class="btnb" style="margin-top:16px" onclick="save('${f}')">Sauver ${cfg.label}</button></div>`;
+      h+=`<button class="btnb" style="margin-top:16px" onclick="preview('${f}')">Aperçu</button> <button class="btnb" style="margin-top:16px;background:var(--ok)" onclick="save('${f}')">Sauver ${cfg.label}</button><div id="pv-${f}" class="hidden" style="margin-top:12px;padding:12px;background:#0b1120;border-radius:8px;font-size:13px;white-space:pre-wrap"></div></div>`;
     }
     forms.innerHTML=h;
   }catch(e){forms.innerHTML='<p class="msg err">Erreur: '+e.message+'</p>';}
@@ -134,18 +137,53 @@ function fieldVal(f,k,wy){
   if(wy){return document.getElementById("wy-"+f+"-"+k).innerText;}
   return document.getElementById("in-"+f+"-"+k).value;
 }
+async function preview(f){
+  const cfg=FILES[f];
+  const out=document.getElementById("pv-"+f);
+  let d={};
+  try{
+    const {data}=await ghGet(f);
+    for(const k of Object.keys(cfg.fields)){
+      const wy=String(data[k]??"").includes("\n")||String(data[k]??"").length>80;
+      d[k]=fieldVal(f,k,wy);
+    }
+    const err=validate(f,d);
+    out.classList.remove("hidden");
+    out.innerHTML=(err?'<span class="msg err">'+err+'</span>\n\n':'')+"Contenu qui sera sauvegardé :\n\n"+JSON.stringify(d,null,2);
+  }catch(e){out.classList.remove("hidden");out.innerHTML="Erreur: "+e.message;}
+}
 async function save(f){
   const tk=document.getElementById("token").value;
   const cfg=FILES[f];
   try{
     const {sha,data}=await ghGet(f);
     for(const k of Object.keys(cfg.fields)){
-      const wy=String(data[k]||"").includes("\n")||String(data[k]||"").length>80;
+      const wy=String(data[k]??"").includes("\n")||String(data[k]??"").length>80;
       data[k]=fieldVal(f,k,wy);
     }
+    const err=validate(f,data);
+    if(err){setStatus(f,err);return;}
     const r=await ghPut(`content/${f}.json`,toB64(JSON.stringify(data,null,2)),sha,tk);
-    document.getElementById("m-"+f).innerHTML=r.ok?'<span class="msg ok">✓ Sauvegardé</span>':'<span class="msg err">Erreur '+r.status+'</span>';
-  }catch(e){document.getElementById("m-"+f).innerHTML='<span class="msg err">'+e.message+'</span>';}
+    setStatus(f, r.ok?"enregistré":"erreur GitHub "+r.status);
+  }catch(e){setStatus(f,"erreur: "+e.message);}
+}
+function validate(f,data){
+  if(f==="tarifs"){
+    for(const k of ["diagnostic","remote","horaire","site"]){
+      if(!/^\d+(\.\d{1,2})?$/.test(String(data[k]))) return "Prix "+k+" doit être un nombre (ex: 45)";
+    }
+  }
+  if(f==="avis"){
+    if(!/^\d+$/.test(String(data.count))) return "Nombre d'avis doit être un entier";
+  }
+  if(f==="footer"){
+    if(!/^[\d ()+-]{6,}$/.test(String(data.phone))) return "Téléphone invalide";
+  }
+  return null;
+}
+function setStatus(f,txt){
+  const ok=/enregistré/.test(txt);
+  document.getElementById("m-"+f).innerHTML='<span class="msg '+(ok?"ok":"err")+'">'+txt+'</span>';
 }
 function loadImgs(){
   const box=document.getElementById("img-forms");
