@@ -115,8 +115,15 @@ function show(sec,el){
     if(f.type==="area")h+=`<textarea id="f-${sec}-${k}" oninput="liveEdit('${sec}','${k}',this.value)">${val.replace(/</g,"&lt;")}</textarea>`;
     else h+=`<input type="text" id="f-${sec}-${k}" value="${val.replace(/"/g,"&quot;")}" oninput="liveEdit('${sec}','${k}',this.value)" />`;
   }
-  h+=`<div style="margin-top:18px"><button class="btn" onclick="save('${sec}')">Enregistrer</button><span class="msg" id="m-${sec}"></span></div></div>`;
+  h+=`<div style="margin-top:18px;display:flex;gap:10px;align-items:center"><button class="btn" onclick="save('${sec}')">Enregistrer</button><button class="btn btn-ghost" onclick="scrollToPreview('${sec}')">👁 Voir dans le preview</button><span class="msg" id="m-${sec}"></span></div></div>`;
   panel.innerHTML=h;
+}
+function scrollToPreview(sec){
+  const p=document.getElementById("preview");
+  if(!p.classList.contains("show")){p.classList.add("show");updatePreview();}
+  const map={hero:"hero",services:"services",avis:"avis",footer:"footer"};
+  const fr=document.getElementById("pframe");
+  if(fr&&fr.contentWindow)setTimeout(()=>fr.contentWindow.postMessage({scrollTo:map[sec]||sec},"*"),400);
 }
 function liveEdit(sec,k,v){
   liveData[sec].data[k]=v;
@@ -201,7 +208,7 @@ async function updatePreview(){
   try{
     const tpl=await ghGetRaw("index.html");
     let html=tpl.text;
-    html=html.replace("<head>","<head>\n<base href=\"https://atelierpotvin.ca/\">\n<style>.cms-edit{cursor:pointer;outline:2px dashed transparent;transition:outline .15s}.cms-edit:hover{outline:2px dashed #6366f1;background:rgba(99,102,241,.06)}.cms-edit::after{content:'✎ modifier';position:absolute;top:6px;right:6px;background:#6366f1;color:#fff;font:12px sans-serif;padding:2px 6px;border-radius:4px;opacity:0}.cms-edit:hover::after{opacity:1}</style>\n<script>window.addEventListener('DOMContentLoaded',()=>{const M={accueil:'hero',explorer:'services',avis-accueil:'avis','site-footer':'footer'};for(const id in M){const el=document.getElementById(id);if(el){el.classList.add('cms-edit');el.style.position='relative';el.onclick=()=>window.parent.show(M[id],window.parent.document.querySelector('nav a[data-sec=\"'+M[id]+'\"]'));}}const cards=document.querySelectorAll('.services-grid .card');cards.forEach(c=>{c.classList.add('cms-edit');c.style.position='relative';c.onclick=e=>{e.preventDefault();window.parent.show('services',window.parent.document.querySelector('nav a[data-sec=\"services\"]'));}});});<\/script>");
+    html=html.replace("<head>","<head>\n<base href=\"https://atelierpotvin.ca/\">\n<style>.cms-edit{cursor:pointer;outline:2px dashed transparent;transition:outline .15s}.cms-edit:hover{outline:2px dashed #6366f1;background:rgba(99,102,241,.06)}.cms-edit::after{content:'✎ modifier';position:absolute;top:6px;right:6px;background:#6366f1;color:#fff;font:12px sans-serif;padding:2px 6px;border-radius:4px;opacity:0}.cms-edit:hover::after{opacity:1}</style>\n<script>window.addEventListener('DOMContentLoaded',()=>{const M={accueil:'hero',explorer:'services',avis-accueil:'avis','site-footer':'footer'};for(const id in M){const el=document.getElementById(id);if(el){el.classList.add('cms-edit');el.style.position='relative';el.onclick=()=>window.parent.show(M[id],window.parent.document.querySelector('nav a[data-sec=\"'+M[id]+'\"]'));}}const cards=document.querySelectorAll('.services-grid .card');cards.forEach(c=>{c.classList.add('cms-edit');c.style.position='relative';c.onclick=e=>{e.preventDefault();window.parent.show('services',window.parent.document.querySelector('nav a[data-sec=\"services\"]'));}});window.addEventListener('message',e=>{const s=e.data&&e.data.scrollTo;if(!s)return;const sel={hero:'#accueil',services:'.services-grid',avis:'#avis-accueil',footer:'.site-footer'}[s];const t=document.querySelector(sel);if(t){t.scrollIntoView({behavior:'smooth',block:'center'});t.style.outline='3px solid #22c55e';setTimeout(()=>t.style.outline='',2500);}}});});<\/script>");
     for(const f of Object.keys(FILES)){
       const d=liveData[f].data;
       for(const k of Object.keys(d)){
@@ -212,7 +219,7 @@ async function updatePreview(){
     const iconsDep=["🛠️","🔧","🐞","💲"],iconsCre=["🌐","📱","👤","❓"];
     const linksDep=["services.html","depannage-nicolet.html","virus.html","tarifs.html"];
     const linksCre=["services.html#creation","services.html#creation","apropos.html","faq.html"];
-    const card=(t,d,href,ico)=>`<a class="card" href="${href}"><div class="card-ico" style="font-size:30px;line-height:1">${ico}</div><h3>${t}</h3><p>${d}</p></a>`;
+    const card=(t,d,href,ico)=>`<a class="card" href="${href}"><div class="card-ico" style="font-size:30px;line-height:1;font-family:'Segoe UI Emoji','Apple Color Emoji','Noto Color Emoji',sans-serif">${ico}</div><h3>${t}</h3><p>${d}</p></a>`;
     const depCards=svc.depannage.map((x,i)=>card(x.title,x.desc,linksDep[i],iconsDep[i])).join("\n");
     const creCards=svc.creation.map((x,i)=>card(x.title,x.desc,linksCre[i],iconsCre[i])).join("\n");
     const revs=liveData.avis.data.reviews.map(r=>`<article class="card review"><div class="stars">★★★★★</div><p>« ${r.text} »</p><span class="review-author">— ${r.author}</span></article>`).join("\n");
