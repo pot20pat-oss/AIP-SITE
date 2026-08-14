@@ -119,7 +119,7 @@ async function loadAll(){
       const {data}=await ghGet(f);
       h+=`<div class="card"><h3>${cfg.label} <span class="msg" id="m-${f}"></span></h3>`;
       for(const [k,lab] of Object.entries(cfg.fields)){
-        const val=data[k]||"";
+        const val=String(data[k] ?? "");
         const wy=val.includes("\n")||val.length>80;
         h+=`<label>${lab}</label>`;
         h+= wy ? `<div class="wy" contenteditable="true" id="wy-${f}-${k}">${val.replace(/\n/g,"<br>")}</div>` : `<input class="f" id="in-${f}-${k}" value="${val.replace(/"/g,'&quot;')}">`;
