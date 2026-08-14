@@ -73,7 +73,7 @@ for d in ["assets", "worker", "admin"]:
     src = os.path.join(ROOT, d)
     if os.path.exists(src):
         shutil.copytree(src, os.path.join(DIST, d), dirs_exist_ok=True)
-for f in ["styles.css", "script.js", "favicon.ico", "cms.js"]:
+for f in ["styles.css", "script.js", "bot.js", "favicon.ico", "cms.js"]:
     if os.path.exists(os.path.join(ROOT, f)):
         shutil.copy2(os.path.join(ROOT, f), os.path.join(DIST, f))
 
