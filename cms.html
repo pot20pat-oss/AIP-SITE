@@ -32,7 +32,7 @@ const FILES=["hero","footer","tarifs","avis","services"];
 
 async function ghGet(file){
   const tk=document.getElementById("token").value;
-  const r=await fetch(`https://api.github.com/repos/${REPO}/contents/content/${file}.json?ref=${BRANCH}`,{headers:{Authorization:"token "+tk,Accept:"application/vnd.github.v3+json"}});
+  const r=await fetch(`https://api.github.com/repos/${REPO}/contents/content/${file}.json?ref=${BRANCH}`,{headers:{Authorization:"Bearer "+tk,Accept:"application/vnd.github.v3+json"}});
   const d=await r.json();
   if(d.content) return {text:decodeURIComponent(escape(atob(d.content.replace(/\n/g,"")))), sha:d.sha};
   return {text:"{}", sha:null};
@@ -57,7 +57,7 @@ async function save(e,f){
   const content=document.querySelector(`form[onsubmit="save(event,'${f}')"] textarea`).value;
   const {sha}=await ghGet(f);
   const encoded=btoa(unescape(encodeURIComponent(content)));
-  const r=await fetch(`https://api.github.com/repos/${REPO}/contents/content/${f}.json`,{method:"PUT",headers:{Authorization:"token "+tk,"Content-Type":"application/json",Accept:"application/vnd.github.v3+json"},body:JSON.stringify({message:"CMS: maj "+f,content:encoded,sha,branch:BRANCH})});
+  const r=await fetch(`https://api.github.com/repos/${REPO}/contents/content/${f}.json`,{method:"PUT",headers:{Authorization:"Bearer "+tk,"Content-Type":"application/json",Accept:"application/vnd.github.v3+json"},body:JSON.stringify({message:"CMS: maj "+f,content:encoded,sha,branch:BRANCH})});
   const m=document.getElementById("m-"+f);
   if(r.ok){ m.innerHTML=' <span class="msg">✓ Sauvegardé</span>'; }
   else { m.innerHTML=' <span class="err">Erreur '+r.status+'</span>'; }
