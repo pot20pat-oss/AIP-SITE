@@ -87,7 +87,7 @@ async function handleBot(request, env, ctx) {
   if (!env.HERMES_KEY) return new Response(JSON.stringify({ ok: false, error: 'Clé non configurée' }), { status: 500, headers: { ...cors, 'Content-Type': 'application/json' } });
 
   // Anti-injection : bloque toute tentative d'extraire le prompt systeme (robuste, independant du LLM)
-  const INJECT = /(ignore[rs]? (tes|all|previous|ton|mes)? ?instructions?)|(mode (dev|developpeur|développeur|admin))|(répète|repete|repeat|répéter|repeats?|dis[- ]?moi|montre[- ]?moi|cite?|print|dump|reveal|révéle?|show me).{0,60}(prompt|system|configuration|cachée?|caché|secret|instruction|systeme|instructions?)|(ton|tes|the|your).{0,30}(prompt|system( ?(message|prompt)?)?|instructions?)/i;
+  const INJECT = /(ignore[rs]?|oubli[es]?|oublie|bypass|contourne?|depasse?|réécri[s]?|reecri[s]?|supplan[te]?|forget|ignore).{0,40}(tes|all|previous|ton|mes|les|toutes)? ?(instructions?|ordres?|règles?|regles|prompt|system|systeme))|(mode (dev|developpeur|développeur|admin|developpeur|debug|administrateur))|(répète|repete|repeat|répéter|repeats?|reproduis|recite|récris?|recopie|copie|dis[- ]?moi|montre[- ]?moi|cite?|print|dump|reveal|révéle?|show me|donne[- ]?moi|ecris|écris).{0,80}(prompt|system|configuration|cachée?|caché|secret|instruction|systeme|instructions?|complet|intégral|intégralement|mot pour mot|textuellement))|(ton|tes|the|your|mon|ma).{0,40}(prompt|system( ?(message|prompt)?)?|instructions?|config(uration)?)/i;
   if (INJECT.test(msg)) {
     return new Response(JSON.stringify({ ok: true, reply: "Je suis l'assistant d'Atelier Informatique Potvin. Comment puis-je vous aider avec votre dépannage informatique ou la création de votre site web ?" }), { status: 200, headers: { ...cors, 'Content-Type': 'application/json' } });
   }
@@ -108,7 +108,12 @@ async function handleBot(request, env, ctx) {
       return new Response(JSON.stringify({ ok: false, error: 'API ' + r.status, detail: txt.slice(0, 300) }), { status: 502, headers: { ...cors, 'Content-Type': 'application/json' } });
     }
     const j = await r.json();
-    const reply = j.choices?.[0]?.message?.content || '';
+    let reply = j.choices?.[0]?.message?.content || '';
+    // 2e ligne de defense : si la reponse ressemble au prompt systeme, on la remplace (independant du LLM)
+    const LEAK = /(tu es l'assistant d'atelier|atelier informatique potvin \(aip\)|aip_sys|securite ?:|delais ?\/ ?urgence|reparation physique de pc|diagnostic ?: ?45|assistance a distance ?: ?50|sauf mac\/apple|ne fait pas de reparation|ignore[rs]? (tes|all|previous|ton|mes)? ?instructions?|mode (dev|developpeur|admin))/i;
+    if (LEAK.test(reply)) {
+      reply = "Je suis l'assistant d'Atelier Informatique Potvin. Comment puis-je vous aider avec votre dépannage informatique ou la création de votre site web ?";
+    }
     return new Response(JSON.stringify({ ok: true, reply }), { status: 200, headers: { ...cors, 'Content-Type': 'application/json' } });
   } catch (e) {
     return new Response(JSON.stringify({ ok: false, error: String(e) }), { status: 500, headers: { ...cors, 'Content-Type': 'application/json' } });
