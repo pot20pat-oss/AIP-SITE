@@ -62,7 +62,7 @@ const IMGDESC={
   "apercu-houlec.png":{cat:"Branding",desc:"Aperçu démo Houlec",size:"600×400",fmt:"png",max:"300 Ko"}
 };
 const IMGCAT=["Accueil","Services","Branding"];
-let cache={}, liveData={};
+let cache={}, liveData={}, history={data:[]};
 function headers(){return{Authorization:"Bearer "+document.getElementById("token").value,Accept:"application/vnd.github+json"};}
 function toB64(s){return btoa(unescape(encodeURIComponent(s)));}
 function toast(m,ok){const t=document.getElementById("toast");t.textContent=m;t.className="toast show";setTimeout(()=>t.className="toast",2600);}
@@ -97,6 +97,7 @@ async function loadAll(){
   document.getElementById("app").style.display="flex";
   try{
     for(const f of Object.keys(FILES))cache[f]=await ghGetRaw(`content/${f}.json`);
+    try{history=await ghGetRaw("content/history.json");}catch(e){history={data:[]};}
     liveData=JSON.parse(JSON.stringify(cache));
     show("hero",document.querySelector('nav a[data-sec="hero"]'));
     updatePreview();
@@ -108,6 +109,7 @@ function show(sec,el){
   el.classList.add("active");
   const panel=document.getElementById("panel");
   if(sec==="images"){document.getElementById("crumb").textContent="Photos du site";renderImages(panel);return;}
+  if(sec==="history"){showHistory(panel);return;}
   document.getElementById("crumb").textContent=FILES[sec].crumb;
   let h=`<div class="card"><h3>${FILES[sec].label}</h3><p class="hint">Modifie le texte, puis « Enregistrer ». Le changement apparaît sur le site en quelques minutes. L'aperçu à droite se met à jour en direct.</p>`;
   for(const k of Object.keys(FILES[sec].fields)){
@@ -115,7 +117,18 @@ function show(sec,el){
     const val=String(liveData[sec].data[k]??"");
     h+=`<label>${f.label}</label>`;
     if(f.type==="area")h+=`<textarea id="f-${sec}-${k}" oninput="liveEdit('${sec}','${k}',this.value)">${val.replace(/</g,"&lt;")}</textarea>`;
-    else h+=`<input type="text" id="f-${sec}-${k}" value="${val.replace(/"/g,"&quot;")}" oninput="liveEdit('${sec}','${k}',this.value)" />`;
+    else h+=`<input type="text" id="f-${sec}-${k}" value="${val.replace(/"/g,"&quot;")}" oninput="liveEdit('${sec}','${k}',this.value)" ${k==='cta'&&!val?'placeholder="Décrire mon problème"':''} />`;
+  }
+  if(sec==="avis"){
+    h+=`<h4 style="margin-top:20px">Avis clients (nom + citation)</h4><div id="avis-items">`;
+    (liveData.avis.data.reviews||[]).forEach((r,i)=>{
+      h+=`<div style="border:1px solid var(--line);border-radius:10px;padding:10px;margin:8px 0;display:flex;flex-direction:column;gap:6px">
+        <input type="text" id="f-avis-rev-name-${i}" value="${(r.author||"").replace(/"/g,"&quot;")}" placeholder="Nom du client" oninput="liveEditReview(${i},'author',this.value)" style="font-weight:600">
+        <textarea id="f-avis-rev-text-${i}" placeholder="Citation" oninput="liveEditReview(${i},'text',this.value)">${(r.text||"").replace(/</g,"&lt;")}</textarea>
+        <button class="btn btn-ghost" onclick="removeReview(${i})">Retirer cet avis</button>
+      </div>`;
+    });
+    h+=`</div><button class="btn btn-ghost" onclick="addReview()">+ Ajouter un avis</button>`;
   }
   if(sec==="services"){
     h+=`<h4 style="margin-top:20px">Icônes des cartes (SVG) + libellés commerciaux</h4>`;
@@ -149,6 +162,24 @@ function liveEditCta(key,idx,v){
   liveData.services.data[key][idx].cta=v;
   updatePreview();
 }
+function ensureReviews(){if(!liveData.avis.data.reviews)liveData.avis.data.reviews=[];}
+function liveEditReview(i,field,v){
+  ensureReviews();
+  liveData.avis.data.reviews[i]=liveData.avis.data.reviews[i]||{};
+  liveData.avis.data.reviews[i][field]=v;
+  updatePreview();
+  const m=document.getElementById("m-avis");if(m&&!m.textContent.includes("✓")){m.className="msg";m.textContent="";}
+}
+function addReview(){
+  ensureReviews();
+  liveData.avis.data.reviews.push({author:"",text:""});
+  show("avis",document.querySelector('nav a[data-sec="avis"]'));
+}
+function removeReview(i){
+  ensureReviews();
+  liveData.avis.data.reviews.splice(i,1);
+  show("avis",document.querySelector('nav a[data-sec="avis"]'));
+}
 async function save(sec){
   const m=document.getElementById("m-"+sec);
   const data={...cache[sec].data};
@@ -159,6 +190,8 @@ async function save(sec){
     if(err){m.className="msg err";m.textContent="✗ "+f.label+": "+err;return;}
     data[k]=v;
   }
+  if(sec==="avis"){ensureReviews();data.reviews=liveData.avis.data.reviews;}
+  const prev=cache[sec].data; // version actuelle avant écrasement
   m.className="msg";m.textContent="Enregistrement...";
   setState("publishing","Publication en cours…");
   try{
@@ -166,6 +199,8 @@ async function save(sec){
     if(!r.ok)throw new Error("PUT "+r.status);
     cache[sec]=await ghGetRaw(`content/${sec}.json`);
     liveData[sec]=cache[sec];
+    // historique : snapshot de la version remplacée
+    await pushHistory(sec,prev);
     m.className="msg ok";m.textContent="✓ Enregistré";
     toast("✓ "+FILES[sec].label+" mis à jour");
     const now=new Date();
@@ -175,6 +210,42 @@ async function save(sec){
     dirty[sec]=false;
     sessionStorage.removeItem("aip_draft_"+sec);
   }catch(e){m.className="msg err";m.textContent="✗ Erreur: "+e.message;setState("idle","✗ Erreur d'enregistrement");}
+}
+async function pushHistory(sec,snapshot){
+  try{
+    const now=new Date();
+    const entry={sec,ts:now.toISOString(),label:FILES[sec].label,stamp:now.toLocaleString("fr-CA"),data:JSON.parse(JSON.stringify(snapshot))};
+    let arr=history.data||[];
+    arr.unshift(entry); // plus récent en premier
+    if(arr.length>10)arr=arr.slice(0,10);
+    history.data=arr;
+    let sha;try{sha=(await ghGetRaw("content/history.json")).sha;}catch(e){sha=undefined;}
+    await ghPutRaw("content/history.json",toB64(JSON.stringify(history.data,null,2)),sha,"CMS: historique");
+  }catch(e){console.error("pushHistory",e);}
+}
+function showHistory(panel){
+  document.getElementById("crumb").textContent="Historique des versions";
+  let h=`<div class="card"><h3>10 dernières versions</h3><p class="hint">Chaque sauvegarde garde la version précédente. Cliquez « Restaurer » pour la remettre dans l'éditeur (puis Enregistrer pour publier).</p>`;
+  const arr=history.data||[];
+  if(!arr.length){h+=`<p style="color:#64748b">Aucune version enregistrée pour l'instant.</p></div>`;panel.innerHTML=h;return;}
+  arr.forEach((e,i)=>{
+    const preview=Object.keys(e.data).slice(0,3).map(k=>k+": "+(String(e.data[k]).slice(0,40))).join(" · ");
+    h+=`<div style="border:1px solid var(--line);border-radius:10px;padding:10px;margin:8px 0">
+      <div style="font-weight:600">${e.label} — ${e.stamp}</div>
+      <div style="font-size:12px;color:#64748b;margin:4px 0">${preview}${Object.keys(e.data).length>3?"…":""}</div>
+      <button class="btn btn-ghost" onclick="restoreHistory(${i})">Restaurer cette version</button>
+    </div>`;
+  });
+  h+=`</div>`;
+  panel.innerHTML=h;
+}
+async function restoreHistory(i){
+  const e=history.data[i];
+  if(!e)return;
+  if(!confirm("Restaurer la version du "+e.label+" ("+e.stamp+") ? Cela charge la version dans l'éditeur. Enregistrez ensuite pour publier."))return;
+  liveData[e.sec]=JSON.parse(JSON.stringify({sha:cache[e.sec].sha,data:e.data}));
+  show(e.sec,document.querySelector('nav a[data-sec="'+e.sec+'"]'));
+  toast("Version restaurée dans l'éditeur — cliquez Enregistrer pour publier");
 }
 function setState(cls,msg){
   const s=document.getElementById("save-state");
@@ -227,7 +298,7 @@ async function previewThenUpload(name,input){
   try{
     const r0=await fetch(`https://api.github.com/repos/${REPO}/contents/assets/${name}?ref=${BRANCH}`,{headers:headers()});
     const sha=r0.ok?(await r0.json()).sha:undefined;
-    const b64=await fileToB64(file);
+    const b64=await compressToWebP(file,maxBytes);
     const r=await fetch(`https://api.github.com/repos/${REPO}/contents/assets/${name}`,{method:"PUT",headers:headers(),
       body:JSON.stringify({message:"CMS: img "+name,content:b64,sha})});
     if(!r.ok){const t=await r.text();throw new Error("PUT "+r.status+" "+t.slice(0,300));}
@@ -235,6 +306,21 @@ async function previewThenUpload(name,input){
     toast("✓ "+name+" remplacée");
     updatePreview();
   }catch(e){console.error(e);const msg="✗ "+name+": "+e.message;toast(msg,false);if(errBox)errBox.textContent=msg;}
+}
+// Convertit en WebP (qualité 0.85) si plus léger que l'original, sinon garde l'original
+async function compressToWebP(file,maxBytes){
+  if(!window.OffscreenCanvas && !document.createElement("canvas").getContext)return await fileToB64(file);
+  try{
+    const bmp=await createImageBitmap(file);
+    const cvs=document.createElement("canvas");
+    cvs.width=bmp.width;cvs.height=bmp.height;
+    const ctx=cvs.getContext("2d");
+    ctx.drawImage(bmp,0,0);
+    const webp=cvs.toDataURL("image/webp",0.85);
+    const orig=await fileToB64(file);
+    if(webp.length<orig.length)return webp.split(",")[1];
+    return orig.split(",")[1];
+  }catch(e){return (await fileToB64(file)).split(",")[1];}
 }
 function uploadIcon(key,idx,input){
   const file=input.files[0];

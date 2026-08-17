@@ -69,7 +69,17 @@
       const r = await fetch(BOT_API, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
       const j = await r.json();
       busy.remove();
-      if (j.ok) addMsg('bot', escapeHtml(j.reply));
+      if (j.ok) {
+        addMsg('bot', escapeHtml(j.reply));
+        if (j.leadId) {
+          const ref = document.createElement('div');
+          ref.className = 'bot-msg bot-bot';
+          ref.id = 'rdv-status-' + j.leadId;
+          ref.innerHTML = `Réf <b>${j.leadId}</b> — en attente de confirmation par Patrick…`;
+          msgs.appendChild(ref);
+          pollStatus(j.leadId);
+        }
+      }
       else addMsg('bot', 'Erreur lors de l’envoi. Appelez Patrick au <strong>819 380-2999</strong>.');
     } catch { busy.remove(); addMsg('bot', 'Problème de connexion. Appelez Patrick au <strong>819 380-2999</strong>.'); }
   });
@@ -99,6 +109,22 @@
       addMsg('bot', 'Désolé, problème de connexion. Appelez Patrick au <strong>819 380-2999</strong>.');
     }
   });
+
+  function pollStatus(leadId) {
+    const ref = document.getElementById('rdv-status-' + leadId);
+    const tick = async () => {
+      try {
+        const r = await fetch(BOT_API + '/status?id=' + encodeURIComponent(leadId));
+        const j = await r.json();
+        if (j.ok && j.lead && j.lead.status === 'confirme') {
+          if (ref) ref.innerHTML = `✅ <b>${leadId}</b> confirmé par Patrick : ${escapeHtml(j.lead.confirmCreneau)}`;
+          return; // arrêt du poll
+        }
+      } catch {}
+      setTimeout(tick, 8000); // re-poll toutes les 8s
+    };
+    setTimeout(tick, 4000);
+  }
 
   function escapeHtml(s) {
     return s.replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));

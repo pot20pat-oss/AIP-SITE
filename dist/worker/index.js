@@ -27,7 +27,9 @@ export default {
     const path = url.pathname;
 
     if (path === '/bot') return handleBot(request, env, ctx);
+    if (path === '/bot/status') return handleStatus(request, env, ctx);
     if (path === '/bot/telegram') return handleTelegramWebhook(request, env, ctx);
+    if (path === '/bot/setwebhook') return handleSetWebhook(request, env, ctx);
     return handleContact(request, env, ctx);
   },
 };
@@ -58,7 +60,7 @@ async function handleBot(request, env, ctx) {
   let data;
   try { data = await request.json(); } catch { return new Response('Requête invalide', { status: 400, headers: cors }); }
 
-  // Mode rendez-vous : collecte structurée -> Telegram
+  // Mode rendez-vous : collecte structurée -> Telegram + KV
   if (data.mode === 'rdv') {
     const nom = (data.nom || '').toString().slice(0, 100).trim();
     const tel = (data.tel || '').toString().slice(0, 40).trim();
@@ -66,9 +68,13 @@ async function handleBot(request, env, ctx) {
     const cren = (data.creneau || '').toString().slice(0, 200).trim();
     if (!nom || !tel) return new Response(JSON.stringify({ ok: false, error: 'Nom et téléphone requis' }), { status: 422, headers: { ...cors, 'Content-Type': 'application/json' } });
 
-    const txt = `🔔 <b>Nouvelle demande de rendez-vous AIP</b>\n\n👤 <b>${nom}</b>\n📞 ${tel}\n🛠 <b>Problème :</b> ${prob || '(non précisé)'}\n📅 <b>Creneau souhaité :</b> ${cren || '(non précisé)'}\n\nConfirme le creneau ou recontacte le client.`;
+    const leadId = 'L' + Date.now().toString(36).toUpperCase();
+    const lead = { leadId, nom, tel, prob, cren, status: 'attente', confirmCreneau: '', ts: new Date().toISOString() };
+    if (env.AIP_CONTACTS) { try { await env.AIP_CONTACTS.put('lead:' + leadId, JSON.stringify(lead)); } catch {} }
+
+    const txt = `🔔 <b>Nouvelle demande de rendez-vous AIP</b> [${leadId}]\n\n👤 <b>${nom}</b>\n📞 ${tel}\n🛠 <b>Problème :</b> ${prob || '(non précisé)'}\n📅 <b>Créneau souhaité :</b> ${cren || '(non précisé)'}\n\nPour confirmer, réponds : <code>CONFIRMER ${leadId} &lt;créneau exact&gt;</code>`;
     const sent = await sendTelegram(env, txt);
-    return new Response(JSON.stringify({ ok: true, sent, reply: `Merci ${nom} ! Votre demande de rendez-vous a été envoyée à Patrick. Il vous contactera au ${tel} pour confirmer le créneau.` }), { status: 200, headers: { ...cors, 'Content-Type': 'application/json' } });
+    return new Response(JSON.stringify({ ok: true, sent, leadId, reply: `Merci ${nom} ! Votre demande (réf ${leadId}) a été envoyée à Patrick. Il vous contactera au ${tel} pour confirmer le créneau.` }), { status: 200, headers: { ...cors, 'Content-Type': 'application/json' } });
   }
 
   const msg = (data.message || '').toString().slice(0, 2000);
@@ -98,15 +104,47 @@ async function handleBot(request, env, ctx) {
   }
 }
 
-// Webhook Telegram (Tranche B - boucle 2 sens) : Patrick répond -> on stocke le créneau confirmé
+// Statut d'un lead (polling widget)
+async function handleStatus(request, env, ctx) {
+  const id = new URL(request.url).searchParams.get('id');
+  if (!id) return new Response(JSON.stringify({ ok: false }), { status: 400, headers: { 'Content-Type': 'application/json' } });
+  let lead = null;
+  if (env.AIP_CONTACTS) { try { const v = await env.AIP_CONTACTS.get('lead:' + id); if (v) lead = JSON.parse(v); } catch {} }
+  return new Response(JSON.stringify({ ok: true, lead }), { status: 200, headers: { 'Content-Type': 'application/json' } });
+}
+
+// Webhook Telegram : Patrick écrit "CONFIRMER LXXXX <créneau>"
 async function handleTelegramWebhook(request, env, ctx) {
   if (request.method !== 'POST') return new Response('POST only', { status: 405 });
   try {
     const u = await request.json();
-    // logique minimal : on stocke le dernier message de Patrick dans KV (à lier au lead plus tard)
-    console.log('TG update', JSON.stringify(u).slice(0, 300));
+    const msg = u?.message?.text || '';
+    if (/^\/start/i.test(msg)) {
+      await sendTelegram(env, `👋 <b>Bot AIP — Gestion des rendez-vous</b>\n\nQuand un client demande un RDV sur le site, tu reçois une alerte avec une référence (ex: LABC123).\n\nPour <b>confirmer</b> un rendez-vous, réponds :\n<code>CONFIRMER LABC123 mardi 14h</code>\n\nLe client verra la confirmation dans le chat du site.`);
+      return new Response('ok');
+    }
+    const m = msg.match(/CONFIRMER\s+(L\w+)\s+(.+)/i);
+    if (m && env.AIP_CONTACTS) {
+      const id = m[1]; const cren = m[2].trim();
+      const v = await env.AIP_CONTACTS.get('lead:' + id);
+      if (v) {
+        const lead = JSON.parse(v);
+        lead.status = 'confirme'; lead.confirmCreneau = cren;
+        await env.AIP_CONTACTS.put('lead:' + id, JSON.stringify(lead));
+        await sendTelegram(env, `✅ Rendez-vous ${id} confirmé : ${cren}\nClient : ${lead.nom} (${lead.tel})`);
+      }
+    }
     return new Response('ok');
   } catch { return new Response('err', { status: 400 }); }
+}
+
+// Branche le webhook Telegram sur cette route
+async function handleSetWebhook(request, env, ctx) {
+  if (!env.TG_BOT_TOKEN) return new Response('no token', { status: 500 });
+  const url = `https://aip-contact.pot20pat.workers.dev/bot/telegram`;
+  const r = await fetch(`https://api.telegram.org/bot${env.TG_BOT_TOKEN}/setWebhook?url=${encodeURIComponent(url)}`);
+  const j = await r.json();
+  return new Response(JSON.stringify(j), { status: 200, headers: { 'Content-Type': 'application/json' } });
 }
 
 async function handleContact(request, env, ctx) {

@@ -294,6 +294,8 @@ a { color: inherit; text-decoration: none; }
 .mobile-cta .cta-remote { background: linear-gradient(135deg, #1d4ed8, #2563eb); }
 @media (max-width: 620px) {
   .mobile-cta { display: flex; }
+  #bot-toggle { bottom: 140px; right: 16px; padding: 10px 14px; font-size: 13px; }
+  #bot-win { bottom: 200px; right: 12px; width: calc(100vw - 24px); height: 65vh; }
 }
 
 /* FAQ */
