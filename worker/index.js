@@ -87,7 +87,7 @@ async function handleBot(request, env, ctx) {
   if (!env.HERMES_KEY) return new Response(JSON.stringify({ ok: false, error: 'Clé non configurée' }), { status: 500, headers: { ...cors, 'Content-Type': 'application/json' } });
 
   // Anti-injection : bloque toute tentative d'extraire le prompt systeme (robuste, independant du LLM)
-  const INJECT = /(ignore[rs]? (tes|all|previous|ton|mes)? ?instructions?)|(prompt( systeme?| system|\b)|reveal|révéle?|dis[- ]?moi|montre[- ]?moi|cite?|print|dump).{0,60}(prompt|system|configuration|cachée?|caché|secret|instruction|systeme)/i;
+  const INJECT = /(ignore[rs]? (tes|all|previous|ton|mes)? ?instructions?)|(mode (dev|developpeur|développeur|admin))|(répète|repete|repeat|répéter|repeats?|dis[- ]?moi|montre[- ]?moi|cite?|print|dump|reveal|révéle?|show me).{0,60}(prompt|system|configuration|cachée?|caché|secret|instruction|systeme|instructions?)|(ton|tes|the|your).{0,30}(prompt|system( ?(message|prompt)?)?|instructions?)/i;
   if (INJECT.test(msg)) {
     return new Response(JSON.stringify({ ok: true, reply: "Je suis l'assistant d'Atelier Informatique Potvin. Comment puis-je vous aider avec votre dépannage informatique ou la création de votre site web ?" }), { status: 200, headers: { ...cors, 'Content-Type': 'application/json' } });
   }
